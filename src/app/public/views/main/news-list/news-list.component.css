@@ -1,0 +1,112 @@
+.mycustom-pagination a {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  font-family: "Inter", sans-serif;
+  margin: 5px;
+  transition: 0.3s all ease;
+}
+
+.mycustom-pagination a.active {
+  background: #000000;
+  color: #ffffff;
+}
+
+.mycustom-pagination a.active:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.mycustom-pagination a:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.mycustom-pagination a.prev,
+.mycustom-pagination a.next {
+  width: auto !important;
+  border-radius: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mycustom-pagination a.prev:hover,
+.mycustom-pagination a.next:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.post-entry-2 .author {
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 500;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.page-title {
+  font-size: 70px;
+  color: #000000;
+}
+
+.post-entry-2 {
+  margin-bottom: 30px;
+}
+
+.post-entry-2 .post-meta {
+  font-size: 11px;
+  letter-spacing: 0.07rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  color: rgba(0, 0, 0, 0.4);
+  margin-bottom: 10px;
+}
+
+.post-entry-2 .thumbnail {
+  flex: 0 0 65%;
+}
+
+@media (max-width: 960px) {
+  .post-entry-2 .thumbnail {
+    flex: 0 0 100%;
+    margin-bottom: 20px;
+  }
+}
+
+.post-entry-2.half .thumbnail {
+  flex: 0 0 50%;
+}
+
+@media (max-width: 768px) {
+  .post-entry-2.half .thumbnail {
+    flex: 0 0 100%;
+    margin-bottom: 20px;
+  }
+}
+
+.post-entry-2.small-img .thumbnail {
+  flex: 0 0 30%;
+}
+
+@media (max-width: 768px) {
+  .post-entry-2.small-img .thumbnail {
+    flex: 0 0 100%;
+    margin-bottom: 20px;
+  }
+}
+.author .name h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-family: "Inter", sans-serif;
+}
+
+a {
+  color: #212529;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #15171a;
+  text-decoration: none;
+}

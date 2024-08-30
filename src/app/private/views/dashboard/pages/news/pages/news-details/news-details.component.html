@@ -1,0 +1,216 @@
+<main id="main" class="main">
+  @if (loading) {
+  <div>Cargando informacion</div>
+  }@else {
+  <div class="pagetitle">
+    <h1>Detalles</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="index.html">Noticias</a></li>
+        <li class="breadcrumb-item active">Detalles</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section dashboard">
+    <div class="row">
+      <!-- Left side columns -->
+      <div class="col-lg-5">
+        <div class="row">
+          <!-- Reports -->
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Imagen</h5>
+                <!--//FIXED =========================================================================================================0 -->
+
+                <div class="card shadow-lg border border-5">
+                  <img
+                    [src]="imagePreview | image"
+                    class="img-fluid"
+                    alt="No image"
+                    style="aspect-ratio: 16/9"
+                    (click)="photoInput.click()"
+                  />
+                </div>
+
+                <div class="border border-danger">
+                  <pre>Fromulario es valido?: {{ myForm.valid | json }} </pre>
+                  <pre>
+FileSource : {{ myForm.controls["fileSource"].value | json }} </pre
+                  >
+                  <pre>File : {{ myForm.controls["file"].value | json }} </pre>
+                  >
+                </div>
+
+                <!-- ----------------------------- -->
+
+                <!--//FIXED =========================================================================================================0 -->
+              </div>
+            </div>
+          </div>
+          <!-- End Reports -->
+        </div>
+      </div>
+      <!-- End Left side columns -->
+
+      <!-- Right side columns -->
+      <div class="col-lg-7">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Formulario</h5>
+            <!-- fixed -->
+
+            <div class="">
+              <form [formGroup]="myForm">
+                <div class="row g-3">
+                  <div class="col-sm-6">
+                    <label class="form-label">Titulo</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="title"
+                      formControlName="title"
+                      [class]="getValidationClasses('title')"
+                    />
+
+                    @if (isValidField('title')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("title") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-sm-6">
+                    <label class="form-label">Fecha de publicación</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="publicationDate"
+                      formControlName="publicationDate"
+                      [class]="getValidationClasses('publicationDate')"
+                    />
+                    @if (isValidField('title')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("publicationDate") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Párrafo 1</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="paragraph"
+                      formControlName="description_1"
+                      [class]="getValidationClasses('description_1')"
+                    />
+                    @if (isValidField('title')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("description_1") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Descripción 2</label>
+
+                    <textarea
+                      class="form-control"
+                      formControlName="description_2"
+                    >
+                    </textarea>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Descripción 3</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="description3"
+                      formControlName="description_3"
+                    />
+                  </div>
+                </div>
+
+                <div class="row gy-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Autor</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="autor"
+                      formControlName="author"
+                      [class]="getValidationClasses('author')"
+                    />
+                    @if (isValidField('title')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("author") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Tag</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="tag"
+                      formControlName="tag"
+                      [class]="getValidationClasses('tag')"
+                    />
+                    @if (isValidField('title')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("tag") }}
+                    </span>
+                    }
+                  </div>
+                  <div class="col-md-12">
+                    <label class="form-label">Imagen</label>
+                    <input
+                      class="form-control"
+                      type="file"
+                      id="file"
+                      (change)="onFileSelected($event)"
+                      formControlName="file"
+                      [class]="getValidationClasses('file')"
+                      #photoInput
+                    />
+                    @if (isValidField('file')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("file") }}
+                    </span>
+                    }
+                  </div>
+                </div>
+
+                <hr />
+                <div class="d-flex justify-content-between">
+                  <button
+                    class="btn btn-primary btn-lg"
+                    type="submit"
+                    [disabled]="myForm.invalid"
+                    (click)="onSubmit()"
+                  >
+                    Actualizar
+                  </button>
+                  <button class="btn btn-danger btn-lg" (click)="onDelete()">
+                    Eliminar
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- fixed -->
+          </div>
+        </div>
+      </div>
+      <!-- End Right side columns -->
+    </div>
+  </section>
+  <!-- End #main -->
+  }
+</main>

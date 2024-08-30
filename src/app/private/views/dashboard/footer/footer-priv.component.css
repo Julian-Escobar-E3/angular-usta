@@ -1,0 +1,21 @@
+/*--------------------------------------------------------------
+# Footer
+--------------------------------------------------------------*/
+.footer-priv {
+  padding: 20px 0;
+  font-size: 14px;
+  transition: all 0.3s;
+  border-top: 1px solid #cddfff;
+}
+
+.footer-priv .copyright {
+  text-align: center;
+  color: #012970;
+}
+
+.footer-priv .credits {
+  padding-top: 5px;
+  text-align: center;
+  font-size: 13px;
+  color: #012970;
+}

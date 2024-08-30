@@ -1,0 +1,48 @@
+<section class="container">
+  <div class="section-header d-flex justify-content-between align-items-center">
+    <h2>Eventos</h2>
+    <div><a href="category.html" class="more">See All Culture</a></div>
+  </div>
+
+  <div class="album py-5">
+    <div class="container-fluid">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
+        @for (item of items; track $index) {
+
+        <div class="col">
+          <div class="card">
+            <div class="row g-0">
+              <div class="col-md-6">
+                <img
+                  src="https://fastly.picsum.photos/id/1032/800/500.jpg?hmac=G1HBzp83fJ5riY8F0dr9A9ifM-PWOlwLE8Yh73Zak3I"
+                  class="img-fluid h-100"
+                  alt="..."
+                />
+              </div>
+              <div class="col-md-6">
+                <div class="card-body">
+                  <div class="card-title d-flex justify-content-between">
+                    <h5 class="">Card title</h5>
+                    <h6 class="fecha">2001-03-11</h6>
+                  </div>
+                  <p class="card-text">
+                    This is a wider card with supporting text below as a natural
+                    lead-in to additional content. This content is a little bit
+                    longer.
+                  </p>
+                  <p class="card-text">
+                    <small class="text-body-secondary"
+                      ><a href=""> ver más</a>
+                    </small>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Culture Category Section -->

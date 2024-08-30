@@ -1,0 +1,33 @@
+```
+└── 📁main
+    └── 📁events-details
+        └── events-details.component.html
+        └── events-details.component.ts
+    └── 📁events-list
+        └── events-list.component.html
+        └── events-list.component.ts
+    └── 📁login
+        └── login.component.html
+        └── login.component.ts
+    └── main.component.html
+    └── main.component.ts
+    └── main.routes.ts
+    └── 📁news-details
+        └── news-details.component.html
+        └── news-details.component.ts
+    └── 📁news-list
+        └── news-list.component.html
+        └── news-list.component.ts
+    └── 📁sections
+        └── 📁events-section
+            └── events-section.component.html
+            └── events-section.component.ts
+        └── 📁news-section
+            └── news-section.component.html
+            └── news-section.component.ts
+        └── sections.component.html
+        └── sections.component.ts
+        └── 📁swiper-section
+            └── swiper-section.component.html
+            └── swiper-section.component.ts
+```

@@ -1,0 +1,103 @@
+<main id="main" class="main">
+  @if (graduatesService.graduatesListIsLoading()) {
+  <div>Cargando informacion</div>
+  }@else {
+  <app-title
+    title="administrar graduados"
+    section="administrar eventos"
+  ></app-title>
+
+  <section class="section dashboard">
+    <div class="row">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title d-flex justify-content-between mb-3 mt-2">
+            <h5>
+              Egresados
+              <i class="bi bi-person-hearts"></i>
+            </h5>
+
+            <div class="d-flex align-items-center">
+              <button
+                class="btn btn-sm btn-primary"
+                (click)="goToPreviousPage()"
+                [disabled]="offset === 0"
+              >
+                <i class="bi bi-arrow-left"></i>
+                <span> anterior</span>
+              </button>
+              <span
+                class="badge bg-primary me-1 ms-1"
+                style="font-size: 18px"
+                >{{ currentPage }}</span
+              >
+              <button
+                class="btn btn-sm btn-primary"
+                (click)="goToNextPage()"
+                [disabled]="!graduatesService.graduatesListhasMore()"
+              >
+                <span>siguiente </span>
+                <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <!-- fixed -->
+
+          @if(graduatesService.graduatesListIsLoading()){
+          <p>CARGANDO</p>
+          }@else {
+          <table class="table table-hover border">
+            <thead class="table-primary">
+              <tr>
+                @for (column of columns; track $index) {
+                <th style="width: auto" class="text-center">
+                  {{ column | titlecase }}
+                </th>
+                }
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (graduate of graduatesService.graduatesList()?.data ; track
+              $index) {
+              <tr>
+                @for (rows of rows; track $index) {
+
+                <td class="text-center">{{ graduate[rows] }}</td>
+                }
+                <td class="text-center">
+                  <span
+                    class="badge"
+                    [class]="graduate.job ? 'bg-success' : 'bg-danger'"
+                  >
+                    {{ graduate.job ? "Aplica" : "No Aplica" }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span
+                    class="badge"
+                    [class]="
+                      graduate.postgraduate_degree ? 'bg-success' : 'bg-danger'
+                    "
+                  >
+                    {{ graduate.postgraduate_degree ? "Aplica" : "No Aplica" }}
+                  </span>
+                </td>
+                <td></td>
+              </tr>
+              }@empty {
+              <div class="d-flex justify-content-center mt-2">
+                No hay información que mostrar
+              </div>
+              }
+            </tbody>
+          </table>
+          }
+
+          <!-- fixed -->
+        </div>
+      </div>
+    </div>
+  </section>
+  }
+</main>

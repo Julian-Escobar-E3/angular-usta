@@ -1,0 +1,12 @@
+.section-header {
+  border-bottom: 2px solid #000000;
+}
+
+.section-header h2 {
+  font-size: 50px;
+  color: #000000;
+}
+
+.section-header p {
+  margin-bottom: 0;
+}
