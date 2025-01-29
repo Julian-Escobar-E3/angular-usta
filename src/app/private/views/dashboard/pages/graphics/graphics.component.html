@@ -1,24 +1,37 @@
-<main id="main" class="main">
-  <app-title title="reportes graduados" section="graficas"></app-title>
-  <section class="section contact">
-    <div class="row">
-      <div class="card">
-        <div class="card-body">
-          <div class="row gy-4 mt-4 border border-danger">
-            <div class="col-xl-12">
-              <div class="row">
-                @for (item of graphics; track $index) {
+<main id="main">
+  <app-title
+    title="reportes"
+    section="graficas"
+  ></app-title>
 
-                <div class="col-lg-3">
-                  <a [routerLink]="[item.ruta]">
-                    <div class="info-box card d-flex align-items-center">
-                      <i [class]="item.icono"></i>
-                      <h3 class="mt-4">{{ item.nombre }}</h3>
-                    </div>
-                  </a>
-                </div>
-                }
+  <section class="section option">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title mb-4">
+          <a [routerLink]="['../']">
+            <i class="bi bi-arrow-left"></i>
+          </a>
+          <h3 class="text-center">
+            {{ "empleabilidad de egresados" | titlecase }}
+          </h3>
+          <hr />
+        </div>
+        <div class="row gy-4">
+          <div class="col-xl-12">
+            <div class="row">
+              @for (item of graphics; track $index) {
+
+              <div class="col-lg-4">
+                <a [routerLink]="[item.path]">
+                  <div class="info-box card d-flex align-items-center">
+                    <i [class]="item.icon"></i>
+                    <h3 class="mt-4 text-center">
+                      {{ item.name | titlecase }}
+                    </h3>
+                  </div>
+                </a>
               </div>
+              }
             </div>
           </div>
         </div>
@@ -26,4 +39,3 @@
     </div>
   </section>
 </main>
-<!-- End #main -->

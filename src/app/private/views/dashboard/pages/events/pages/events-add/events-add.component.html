@@ -4,27 +4,193 @@
   }@else {
   -->
   <div class="pagetitle">
-    <app-title
-      title="administrar eventos"
-      section="administrar eventos"
-    ></app-title>
-
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a style="text-decoration: none">Inicio</a>
-        </li>
-        <li class="breadcrumb-item active">Evento</li>
-      </ol>
-    </nav>
+    <app-title title="eventos" section="crear evento"></app-title>
   </div>
   <section class="section dashboard">
     <div class="row">
-      <div class="card">
-        <div class="card-body">
-          <!-- fixed -->
+      <!-- Left side columns -->
+      <div class="col-lg-5">
+        <div class="row">
+          <!-- Reports -->
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Imagen</h5>
+                <!--//FIXED =========================================================================================================0 -->
+
+                <div class="card shadow-lg border border-5">
+                  <img
+                    [src]="imagePreview | image"
+                    class="img-fluid"
+                    alt="No image"
+                    style="aspect-ratio: 16/9"
+                    (click)="photoInput.click()"
+                  />
+                </div>
+
+                <!--//FIXED =========================================================================================================0 -->
+              </div>
+            </div>
+          </div>
+          <!-- End Reports -->
         </div>
       </div>
+      <!-- End Left side columns -->
+
+      <!-- Right side columns -->
+      <div class="col-lg-7">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Formulario</h5>
+            <!-- fixed -->
+
+            <div class="">
+              <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+                <div class="row g-3">
+                  <div class="col-sm-6">
+                    <label class="form-label">Titulo</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="title"
+                      formControlName="title"
+                      [class]="getValidationClasses('title')"
+                    />
+
+                    @if (isValidField('title')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("title") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-sm-6">
+                    <label class="form-label">Fecha del evento</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="eventDate"
+                      formControlName="eventDate"
+                      [class]="getValidationClasses('eventDate')"
+                    />
+                    @if (isValidField('eventDate')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("eventDate") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Descripción 1</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="paragraph"
+                      formControlName="description_1"
+                      [class]="getValidationClasses('description_1')"
+                    />
+                    @if (isValidField('description_1')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("description_1") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Descripción 2</label>
+                    <!-- <input
+                      type="text"
+                      class="form-control"
+                      id="description2"
+                      formControlName="description2"
+                      style="height: 5rem"
+                    /> -->
+
+                    <textarea
+                      class="form-control"
+                      formControlName="description_2"
+                    >
+                    </textarea>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Descripción 3</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="description3"
+                      formControlName="description_3"
+                    />
+                  </div>
+                </div>
+
+                <div class="row gy-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Ubicación</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="location"
+                      formControlName="location"
+                      [class]="getValidationClasses('location')"
+                    />
+                    @if (isValidField('location')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("location") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Estado</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="state"
+                      formControlName="state"
+                      [class]="getValidationClasses('state')"
+                    />
+                    @if (isValidField('state')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("state") }}
+                    </span>
+                    }
+                  </div>
+                  <div class="col-md-12">
+                    <label class="form-label">Imagen</label>
+                    <input
+                      class="form-control"
+                      type="file"
+                      id="file"
+                      (change)="onFileSelected($event)"
+                      formControlName="file"
+                      [class]="getValidationClasses('file')"
+                      #photoInput
+                    />
+                    @if (isValidField('file')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("file") }}
+                    </span>
+                    }
+                  </div>
+                </div>
+
+                <hr />
+                <button
+                  class="w-100 btn btn-primary btn-lg mt-3"
+                  type="submit"
+                  [disabled]="myForm.invalid"
+                >
+                  Agregar
+                </button>
+              </form>
+            </div>
+
+            <!-- fixed -->
+          </div>
+        </div>
+      </div>
+      <!-- End Right side columns -->
     </div>
   </section>
   <!-- } -->

@@ -1,29 +1,47 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ValidatorService } from '@shared/validators/services/validator.service';
 import { NewsService } from '../../services/news.service';
-import { ImagePipe } from '@shared/pipes/image.pipe';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { createFormData } from '@utilities/createFormData';
 
-import { DeleteDialogService } from '../../../../../../services/deleteDialog.service';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
+
+import { ImagePipe } from '@shared/pipes/image.pipe';
+import { ValidatorService } from '@shared/validators/services/validator.service';
+import { TitleComponent } from '@shared/title/title.component';
+import { DeleteDialogService } from '@private/services/deleteDialog.service';
 
 @Component({
   selector: 'app-news-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, ImagePipe],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    ImagePipe,
+    TitleComponent,
+  ],
   templateUrl: './news-details.component.html',
   styles: ``,
 })
-export default class NewsDetailsComponent implements OnInit {
+export default class NewsDetailsComponent implements OnInit, OnChanges {
+  ngOnChanges(): void {
+    console.log('Method not implemented.');
+  }
   private _router = inject(Router);
   private _activatedRoute = inject(ActivatedRoute);
   private _id = this._activatedRoute.snapshot.paramMap.get('id');
@@ -72,8 +90,9 @@ export default class NewsDetailsComponent implements OnInit {
 
     try {
       await firstValueFrom(this._newsService.updateNews(this._id!, formData));
-      const message = this._newsService.newsMessage()?.msg;
+      const message = this._newsService.newsMessage()?.message.ES;
       this._toastrService.success(message, 'Todo Correcto');
+      this._newsService.getNewsByID(this._id!);
       this._router.navigate(['admin/news']);
     } catch (error) {
       this._toastrService.error(
@@ -84,7 +103,6 @@ export default class NewsDetailsComponent implements OnInit {
   }
 
   onDelete(): void {
-    alert('Click en delete');
     this._deleteDialogService.confirmDelete(
       this._newsService.deleteNews(this._id!),
       '/admin/news'

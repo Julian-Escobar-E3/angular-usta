@@ -1,0 +1,15 @@
+<main id="main">
+  <app-title
+    title="reportes"
+    section="graficas"
+    [subSection]="'modalidad de trabajo'"
+  ></app-title>
+
+  <section class="section">
+    <bar-chart
+      [keysArray]="keysArray"
+      [valuesArray]="valuesArray"
+      [title]="'modalidad de trabajo de egresados'"
+    />
+  </section>
+</main>

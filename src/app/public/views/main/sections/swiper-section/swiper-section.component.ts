@@ -23,21 +23,23 @@ register();
 })
 export class SwiperSectionComponent implements OnInit {
   data: ISwiperData[] = [
-    {
-      id: 1,
-      img: 'https://fastly.picsum.photos/id/61/900/500.jpg?hmac=jTNxS39sz11fYRHAhIY7kQEYWsCtgZmGglq4sHvXEHs',
-      link: 'https://graduados.usta.edu.co/index.php/bolsa-de-empleo/que-es-la-bolsa-de-empleo',
-    },
-    {
-      id: 2,
-      img: 'https://fastly.picsum.photos/id/947/1947/843.jpg?hmac=yKvxOnWD3_nh8OXzTcsPegtqo8TssKgAXV18PMGe6Aw',
-      link: 'https://graduados.usta.edu.co/index.php/bolsa-de-empleo/que-es-la-bolsa-de-empleo',
-    },
-    {
-      id: 3,
-      img: 'https://fastly.picsum.photos/id/560/900/500.jpg?hmac=ISoM-WVP4VwwnXUiA29GsraWT9Lg05uYZKAseCSo5o4',
-      link: 'https://graduados.usta.edu.co/index.php/bolsa-de-empleo/que-es-la-bolsa-de-empleo',
-    },
+     {
+    id: 1,
+    img:
+      'https://www.santototunja.edu.co/images/01-USTATunja/10-USTA-Tunja-DepAdministrativos/AdmisionesYMercadeo/2022/Oferta_Posgrados_Santoto_Tunja_2022.png',
+    link: 'https://www.santototunja.edu.co/programas-academicos/programas/posgrados-presenciales',
+  },
+  {
+    id: 2,
+    img: 'https://graduados.usta.edu.co/images/Bolsadeempleo-100.jpg',
+    link: 'https://graduados.usta.edu.co/index.php/bolsa-de-empleo/que-es-la-bolsa-de-empleo',
+  },
+  {
+    id: 3,
+    img:
+      'https://www.santototunja.edu.co/images/01-USTATunja/01-USTA-Tunja-Imagenes/Departamentos_Unidades/2019/apoyo-a-egresados.png',
+    link: 'https://www.santototunja.edu.co/inicio-direccion-de-graduados',
+  },
   ];
 
   swiperElemnt = signal<SwiperContainer | null>(null);
@@ -52,12 +54,7 @@ export class SwiperSectionComponent implements OnInit {
       autoplay: {
         delay: 3000,
         disableOnInteraction: false,
-      },
-      navigation: {
-        enabled: true,
-        nextEl: '.custom-swiper-button-next',
-        prevEl: '.custom-swiper-button-prev',
-      },
+      }
     };
     Object.assign(swiperConstructor!, swiperOptions);
     this.swiperElemnt.set(swiperConstructor as SwiperContainer);

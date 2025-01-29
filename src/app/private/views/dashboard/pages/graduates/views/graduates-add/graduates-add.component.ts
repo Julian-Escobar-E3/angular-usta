@@ -1,130 +1,137 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
-  FormBuilder,
   FormGroup,
+  NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TitleComponent } from '@shared/title/title.component';
 import { ValidatorService } from '@shared/validators/services/validator.service';
-import { createFormData } from '@utilities/createFormData';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
 import { GraduatesService } from '../../services/graduates.service';
-import { IGraduate } from '../../interfaces';
+import {
+  GenderOptions,
+  GraduateDegreeTitle,
+  JobModalities,
+  JobRole,
+} from '../../enums';
 
 @Component({
-  selector: 'app-graduates-add',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, TitleComponent],
-
+  selector: 'add-graduate',
   templateUrl: './graduates-add.component.html',
   styles: ``,
 })
 export default class GraduatesAddComponent {
   private _router = inject(Router);
-  private _formBuilder = inject(FormBuilder);
-  private _graduatesService = inject(GraduatesService);
+  private _formBuilder = inject(NonNullableFormBuilder);
 
   private _validatorService = inject(ValidatorService);
+  private _graduatesService = inject(GraduatesService);
   private _toastrService = inject(ToastrService);
 
   options = ['aplica', 'no aplica'];
+  modalities = Object.values(JobModalities);
+  genders = Object.values(GenderOptions);
+  roles = Object.values(JobRole);
+  graduate_degree_title = Object.values(GraduateDegreeTitle);
 
   jobForm: FormGroup = this._formBuilder.group({
-    title: ['desarrollador'],
-    modality: ['presencial'],
-    country_company: ['Alemania'],
-    city_company: ['Munich'],
+    title: ['', Validators.required],
+    modality: ['', Validators.required],
+    country_company: ['', Validators.required],
+    city_company: ['', Validators.required],
   });
 
   postgraduateDegreeForm: FormGroup = this._formBuilder.group({
-    postgraduate_degree_type: ['doctorado'],
-    degree_obtained: ['Doctor en ingeniería'],
-    university: ['U de Alemania'],
-    year_obtained: ['2027'],
-    country: ['Alemania'],
+    postgraduate_degree_type: ['', Validators.required],
+    degree_obtained: ['', Validators.required],
+    university: ['', Validators.required],
+    year_obtained: ['', Validators.required],
+    country: ['', Validators.required],
   });
 
   graduateForm: FormGroup = this._formBuilder.group({
-    fullname: ['Julian Camilo Escobar Araque', Validators.required],
+    fullname: ['julian camilo escobar araque', Validators.required],
     identity_document: ['1000781728', Validators.required],
-    admission_period: ['2018-02-11'],
-    egress_period: ['2023-11-11'],
-    graduation_date: ['2025-03-11', Validators.required],
+    admission_period: ['2018-02-11', Validators.required],
+    egress_period: ['2023-11-11', Validators.required],
+    graduation_date: ['2025-02-11', Validators.required],
     phone_number: ['3203387452', Validators.required],
-    personal_email: ['julian.escobar.priv1@gmail.com', Validators.required],
-    residence: ['Duitama', Validators.required],
-    gender: ['masculino'],
-    url_linkedin: ['www.linkedin.com', Validators.required],
-    url_cvlac: ['www.cvlac.com', Validators.required],
-    job: [''],
-    postgraduate_degree: [''],
+    personal_email: [
+      'nose@google.com',
+      [
+        Validators.required,
+        Validators.pattern(this._validatorService.emailPattern),
+      ],
+    ],
+    residence: ['', Validators.required],
+    gender: ['', Validators.required],
+    url_linkedin: ['', Validators.required],
+    url_cvlac: [''],
+    job: ['', Validators.required],
+    postgraduate_degree: ['', Validators.required],
   });
 
-  constructor() {}
+  // Métodos de validación
+  isValidField(form: FormGroup, field: string) {
+    return this._validatorService.isValidField(form, field);
+  }
 
-  async onSubmit() {
-    if (this.graduateForm.invalid) {
-      this.graduateForm.markAllAsTouched();
-      return;
-    }
-    //TODO: HAY QUE VALIDAR SI VIENE O NO EL FORM DE TRABAJO
+  getFieldError(form: FormGroup, field: string): string | null {
+    return this._validatorService.getFieldError(form, field);
+  }
+
+  getValidationClasses(form: FormGroup, field: string) {
+    return this._validatorService.getValidationClasses(form, field);
+  }
+
+  // Método para construir el payload del formulario
+  private _buildFormPayload() {
     const graduateFormValue = this.graduateForm.value;
     const jobFormValue = this.jobForm.value;
     const postgraduateDegreeFormValue = this.postgraduateDegreeForm.value;
-
-    let form;
-
-    //FIXED: INICIO BLOQUE
-    // -- MEJORAR LA LOGICA Y APLICAR LOS PRINCIPIOS SOLID Y DRY
-
-    const isPostgraduate =
-      this.graduateForm.controls['postgraduate_degree'].value === 'true';
-    const isJob = this.graduateForm.controls['job'].value === 'true';
-
-    if (isPostgraduate && isJob) {
-      form = {
-        ...graduateFormValue,
-        job: { ...jobFormValue },
-        postgraduate_degree: { ...postgraduateDegreeFormValue },
-      };
-    } else if (isPostgraduate) {
-      form = {
-        ...graduateFormValue,
-        job: null,
-        postgraduate_degree: { ...postgraduateDegreeFormValue },
-      };
-    } else if (isJob) {
-      form = {
-        ...graduateFormValue,
-        job: { ...jobFormValue },
-        postgraduate_degree: null,
-      };
-    } else {
-      form = {
-        ...graduateFormValue,
-        job: null,
-        postgraduate_degree: null,
-      };
-    }
-    //FIXED: FIN BLOQUE
-
+    return {
+      ...graduateFormValue,
+      job:
+        this.graduateForm.get('job')?.value === 'aplica' ? jobFormValue : null,
+      postgraduate_degree:
+        this.graduateForm.get('postgraduate_degree')?.value === 'aplica'
+          ? postgraduateDegreeFormValue
+          : null,
+    };
+  }
+  async onSubmit() {
+    const form = this._buildFormPayload();
     try {
       await firstValueFrom(this._graduatesService.postGraduates(form));
-      const message1 = this._graduatesService.graduateMessage()?.msg;
-      this._toastrService.success(message1, 'Todo Correcto');
+      const message = this._graduatesService.graduateMessage()?.message.ES;
+      this._toastrService.success(message, 'Todo Correcto');
       this._router.navigate(['admin/graduates']);
     } catch (error) {
-      console.log(error);
-
-      const message2 = this._graduatesService.graduateMessage()?.msg;
-      this._toastrService.error(
-        `There was an error creating the news, ${message2}`,
-        'Error'
-      );
+      const message = this._graduatesService.graduateMessage()?.message.ES;
+      this._toastrService.error(message, '¡ Error !');
     }
+  }
+
+  // Método para validar todos los formularios relevantes
+  validateForms(
+    graduateFrom: FormGroup,
+    jobForm: FormGroup,
+    pdForm: FormGroup
+  ): boolean {
+    const hasJobSelected = graduateFrom.get('job')?.value === 'aplica';
+    const hasPostgraduateSelected =
+      graduateFrom.get('postgraduate_degree')?.value === 'aplica';
+
+    return (
+      graduateFrom.valid &&
+      (hasJobSelected ? jobForm.valid : true) &&
+      (hasPostgraduateSelected ? pdForm.valid : true)
+    );
   }
 }

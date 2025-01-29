@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { IMessageResponse } from '@shared/interfaces/message-response.interface';
 import { Observable, tap } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -9,35 +10,38 @@ import Swal from 'sweetalert2';
 export class DeleteDialogService {
   private _router = inject(Router);
 
-  confirmDelete(deleteObservable: Observable<any>, redirectUrl: string): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+  async confirmDelete(
+    deleteObservable: Observable<IMessageResponse>,
+    redirectUrl: string
+  ): Promise<void> {
+    await Swal.fire({
+      title: '¿Está seguro?',
+      text: '¡No podrá revertir esta acción!',
       icon: 'warning',
       showCancelButton: true,
+      cancelButtonText: 'Cancelar',
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Si, eliminar',
     }).then((result) => {
-      console.log('Esperando');
-
       if (result.isConfirmed) {
         deleteObservable
           .pipe(
             tap({
-              next: () => {
+              next: (response) => {
                 Swal.fire({
-                  title: 'Deleted!',
-                  text: 'Your file has been deleted.',
+                  title: '¡Eliminado!',
+                  text: response.message.ES,
                   icon: 'success',
                 }).then(() => {
+
                   this._router.navigate([redirectUrl]);
                 });
               },
-              error: () => {
+              error: (error) => {
                 Swal.fire({
-                  title: 'Error!',
-                  text: 'There was a problem deleting the file.',
+                  title: '¡Error!',
+                  text: error || 'Hubo un problema al eliminar.',
                   icon: 'error',
                 });
               },

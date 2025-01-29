@@ -1,0 +1,23 @@
+.option .info-box {
+  padding: 28px 30px;
+}
+
+.option .info-box i {
+  font-size: 38px;
+  line-height: 0;
+  color: #002a8c;
+}
+
+.option .info-box h3 {
+  font-size: 20px;
+  color: #002a8c;
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+}
+
+.option .info-box p {
+  padding: 0;
+  line-height: 24px;
+  font-size: 14px;
+  margin-bottom: 0;
+}

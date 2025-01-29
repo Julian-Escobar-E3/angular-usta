@@ -10,7 +10,7 @@ import { NewsTableColumns, NewsTableRows } from '../../enums';
   standalone: true,
   imports: [CommonModule, RouterLink, TitleComponent],
   templateUrl: './news-list.component.html',
-  styles: ``,
+  styleUrl: './news-list.componet.css',
 })
 export default class NewsListComponent implements OnInit {
   public newsService = inject(NewsService);
@@ -21,7 +21,6 @@ export default class NewsListComponent implements OnInit {
   public offset: number = 0;
   public limit: number = 3;
   public currentPage: number = 1; // Número de la página actual
-
 
   ngOnInit(): void {
     this.loadNews();

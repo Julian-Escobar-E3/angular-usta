@@ -31,12 +31,12 @@ export class AuthService {
     const url = `${this._baseUrl}/auth/login`;
     const body = { username, password };
 
-    return this._http.post<ILoginResponse>(url, body).pipe(
+    return this._http.post<any>(url, body).pipe(
       tap((info) => {
         console.log({ info });
       }),
       map(({ user, token }) => this.setAuthentication(user, token)),
-      catchError((err) => throwError(() => err.error.message))
+      catchError((err) => throwError(() => err.error))
     );
   }
 

@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { catchError, delay, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '@evn/environment';
-import { State } from '../../../../../interfaces/state.interface';
 import {
   IGraduate,
   IGraduateResponse,
   IGraduatesResponse,
 } from '../interfaces';
 import { IMessageResponse } from '@shared/interfaces/message-response.interface';
-import { catchError, delay, Observable, of, tap } from 'rxjs';
+import { State } from '@private/interfaces/state.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -49,17 +49,14 @@ export class GraduatesService {
   //* Add Graduate ---
   postGraduates(formGraduates: IGraduate): Observable<IMessageResponse> {
     const url = `${this._baseUrl}/graduates`;
-
     return this._http.post<IMessageResponse>(url, formGraduates).pipe(
       tap((res) => {
-        console.log({ respuestica: res });
         this.#graduateMessage.set({ loading: false, response: res });
       }),
       catchError((err) => {
-        console.log(err);
-        const msg = err.name;
+        const msg = err.error;
         this.#graduateMessage.set({ loading: false, response: msg });
-        return of(err);
+        return throwError(() => err.error);
       })
     );
   }
@@ -74,14 +71,12 @@ export class GraduatesService {
       .get<IGraduatesResponse>(url, { params })
       .pipe(
         catchError((err) => {
-          console.log({ Error: err });
-          return of(null);
+          const msg = err.error;
+          this.#graduateMessage.set({ loading: false, response: msg });
+          return throwError(() => err.error);
         })
       )
       .subscribe((res) => {
-console.log(">>>>>SERVICIO",res);
-
-
         this.#graduatesListState.set({
           loading: false,
           response: res,
@@ -92,7 +87,7 @@ console.log(">>>>>SERVICIO",res);
   //* List Graduate By ID ---
   getGraduateByID(id: string) {
     const url = `${this._baseUrl}/graduates/${id}`;
-
+    this.#oneGraduateState.update((state) => ({ ...state, loading: true }));
     return this._http
       .get<IGraduateResponse>(url)
       .pipe(delay(1500))
@@ -101,12 +96,22 @@ console.log(">>>>>SERVICIO",res);
       });
   }
   //* Update Graduate ---
-  updateGraduate(id: string, formNews: FormData): Observable<IMessageResponse> {
+  updateGraduate(
+    id: string,
+    formGraduate: FormData
+  ): Observable<IMessageResponse> {
     const url = `${this._baseUrl}/graduates/${id}`;
-
-    return this._http.patch<IMessageResponse>(url, formNews).pipe(
+    return this._http.patch<IMessageResponse>(url, formGraduate).pipe(
       tap((res) => {
+        console.log('Error 1',res);
+
         this.#graduateMessage.set({ loading: false, response: res });
+      }),
+      catchError((err) => {
+        console.log('Error');
+        const msg = err.error;
+        this.#graduateMessage.set({ loading: false, response: msg });
+        return throwError(() => err.error);
       })
     );
   }
@@ -114,13 +119,29 @@ console.log(">>>>>SERVICIO",res);
   deleteGraduate(id: string): Observable<IMessageResponse> {
     const url = `${this._baseUrl}/graduates/${id}`;
     return this._http.delete<IMessageResponse>(url).pipe(
-      delay(1000),
       tap((res) => {
-        console.log({ respuestica: res });
-        //TODO: SE PUEDE BIEN MANEJAR ALGUN ERROR O UN MENSAJE PARA VALIDAR LA ELIMINACION
+        this.#graduateMessage.set({ loading: false, response: res });
+      }),
+      catchError((err) => {
+        const msg = err.error;
+        this.#graduateMessage.set({ loading: false, response: msg });
+        return throwError(() => err.error);
       })
     );
   }
 
+  updatePassword(password: string, id: string): Observable<IMessageResponse> {
+    const url = `${this._baseUrl}/auth/update-password/${id}`;
+    return this._http.patch<IMessageResponse>(url, { password }).pipe(
+      tap((res) => {
+        this.#graduateMessage.set({ loading: false, response: res });
+      }),
+      catchError((err) => {
+        const msg = err.error;
+        this.#graduateMessage.set({ loading: false, response: msg });
+        return throwError(() => err.error);
+      })
+    );
+  }
   constructor() {}
 }

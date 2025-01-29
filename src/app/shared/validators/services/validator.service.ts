@@ -5,6 +5,9 @@ import { FormGroup } from '@angular/forms';
   providedIn: 'root',
 })
 export class ValidatorService {
+  emailPattern: string = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
+  passwordPattern: string ='(?=.*\\d)(?=.*\\W)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$';
+
   isValidField(form: FormGroup, field: string) {
     return form.controls[field].errors && form.controls[field].touched;
   }
@@ -21,14 +24,19 @@ export class ValidatorService {
     if (!form.controls[field]) return null;
 
     const errors = form.controls[field].errors || {};
-
     for (const key of Object.keys(errors)) {
       switch (key) {
         case 'required':
           return 'Este campo es requerido.';
-
         case 'minlength':
           return `Mínimo ${errors['minlength'].requiredLength} caracters.`;
+        case 'pattern':
+          if (field === 'email') {
+            return 'El correo no es válido.';
+          }
+          if (field === 'password') {
+            return 'La contraseña debe incluir mayúsculas, minúsculas, números y caracteres especiales.';
+          }
       }
     }
 

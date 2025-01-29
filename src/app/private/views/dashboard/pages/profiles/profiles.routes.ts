@@ -4,12 +4,12 @@ export const privateRoutes: Routes = [
   {
     path: 'add-profile',
     title: 'Agregar Perfil',
-    loadComponent: () => import('../profiles/views/profiles-add/profiles-add.component'),
+    loadComponent: () => import('./views/profiles-add/profiles-add.component'),
   },
   {
     path: 'manage-profiles',
     title: 'Adminsitrar Perfiles',
-    loadComponent: () => import('../profiles/views/profiles-list/profiles-list.component'),
+    loadComponent: () => import('./views/profiles-list/profiles-list.component'),
   },
   {
     path: 'details-profiles/:id',

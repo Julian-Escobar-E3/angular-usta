@@ -1,43 +1,46 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TitleComponent } from '@shared/title/title.component';
-
-export enum TableColumns {
-  name = 'nombre',
-  age = 'edad',
-  occupation = 'ocupacion',
-  country = 'pais',
-}
-
-export enum TableRows {
-  name = 'name',
-  age = 'age',
-  occupation = 'occupation',
-  country = 'country',
-}
-
-export interface ITableData {
-  name: string;
-  age: string;
-  occupation: string;
-  country: string;
-}
+import { EventsService } from '../../services/events.service';
+import { EventsTableColumns, EventsTableRows } from '../../enums';
 
 @Component({
   selector: 'app-events-list',
   standalone: true,
   imports: [CommonModule, TitleComponent],
   templateUrl: './events-list.component.html',
-  styles: ``,
+  styleUrl: './events-list.component.css',
 })
-export default class EventsListComponent {
-  columns = Object.values(TableColumns);
-  rows = Object.values(TableRows);
+export default class EventsListComponent implements OnInit {
 
-  // Datos de la tabla
-  tableData: ITableData[] = [
-    { name: 'john', age: '28', occupation: 'Engineer', country: 'USA' },
-    { name: 'anna', age: '22', occupation: 'Designer', country: 'Germany' },
-    { name: 'mike', age: '35', occupation: 'Developer', country: 'Canada' },
-  ];
+  public eventsService = inject(EventsService);
+  public columns = Object.values(EventsTableColumns);
+  public rows = Object.values(EventsTableRows);
+
+  public offset: number = 0;
+  public limit: number = 3;
+  public currentPage: number = 1;
+
+  ngOnInit(): void {
+    this.loadEvents();
+  }
+  loadEvents() {
+    this.eventsService.getEvents(this.offset, this.limit);
+  }
+
+  goToNextPage() {
+    if (this.eventsService.eventsListHasMore()) {
+      this.offset += this.limit;
+      this.currentPage += 1; // Incrementar la página actual
+      this.loadEvents();
+    }
+  }
+
+  goToPreviousPage() {
+    if (this.offset > 0) {
+      this.offset -= this.limit;
+      this.currentPage -= 1; // Decrementar la página actual
+      this.loadEvents();
+    }
+  }
 }

@@ -25,7 +25,7 @@ export const privateRoutes: Routes = [
   },
   {
     path: 'graphics',
-    loadComponent: () => import('./pages/graphics/graphics.component'),
+    loadChildren: () => import('./pages/graphics/graphics.routes'),
   },
   {
     path: 'manage-carousel',

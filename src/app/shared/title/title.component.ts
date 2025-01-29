@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { booleanAttribute, Component, Input } from '@angular/core';
+import { booleanAttribute, Component, input, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -7,21 +7,35 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: ` <div class="pagetitle">
-    <h1>{{ title | titlecase }}</h1>
+    <h1>{{ title() | titlecase }}</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a style="text-decoration: none" [routerLink]="['../..']">Inicio</a>
+          <a style="text-decoration: none" [routerLink]="['/admin']">Inicio</a>
         </li>
-        <li class="breadcrumb-item active">{{ section | titlecase }}</li>
+        @if(subSection()){
+        <li class="breadcrumb-item active">
+          <a style="text-decoration: none" [routerLink]="['../../']">{{
+            section() | titlecase
+          }}</a>
+        </li>
+        <li class="breadcrumb-item active">
+          {{ subSection() | titlecase }}
+        </li>
+        }@else {
+        <li class="breadcrumb-item active">
+          {{ section() | titlecase }}
+        </li>
+        }
       </ol>
     </nav>
   </div>`,
   styles: ``,
 })
 export class TitleComponent {
-  @Input({ required: true }) title!: string;
-  @Input({ transform: booleanAttribute }) withShadow: boolean = false;
+  title = input<string>();
 
-  @Input({ required: true }) section!: string;
+  section = input<string>();
+  // @Input({ required: false }) subSection!: string; //-- manera tradicional de usar los input
+  subSection = input<string>(); //? nueva forma de usar los input
 }

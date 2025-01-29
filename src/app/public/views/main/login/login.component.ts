@@ -23,24 +23,19 @@ export default class LoginComponent {
   private _router = inject(Router);
 
   public myForm: FormGroup = this._formBuilder.group({
-    username: ['admin', [Validators.required, Validators.email]],
-    password: ['Abc1234', [Validators.required, Validators.minLength(6)]],
+    username: ['hacker@hacker', [Validators.required, Validators.email]],
+    password: ['#HolaMundo1', [Validators.required, Validators.minLength(6)]],
   });
 
   login() {
     const { username, password } = this.myForm.value;
 
-    console.log(username, password);
-
     this._authService.login(username, password).subscribe({
       next: () => {
         this._router.navigate(['/admin']);
-        console.log('entró');
       },
       error: (message) => {
-        console.log({ message });
-
-        Swal.fire('Error', message, 'error');
+        Swal.fire('Error', message.ES, 'error');
       },
     });
   }

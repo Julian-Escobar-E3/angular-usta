@@ -2,16 +2,12 @@
   @if (loading) {
   <div>Cargando informacion</div>
   }@else {
-  <div class="pagetitle">
-    <h1>Detalles</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="index.html">Noticias</a></li>
-        <li class="breadcrumb-item active">Detalles</li>
-      </ol>
-    </nav>
-  </div>
+  <app-title
+    title="Noticias"
+    section="administrar noticias"
+    subSection="detalles notica"
+  ></app-title>
+
   <!-- End Page Title -->
 
   <section class="section dashboard">
@@ -23,7 +19,16 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Imagen</h5>
+                <div class="card-title">
+                  <h5 class="text-center">
+                    <a
+                      [routerLink]="['../../']"
+                      routerLinkActive="router-link-active"
+                      ><i class="bi bi-arrow-left"></i
+                    ></a>
+                    {{ "imagen" | titlecase }}
+                  </h5>
+                </div>
                 <!--//FIXED =========================================================================================================0 -->
 
                 <div class="card shadow-lg border border-5">
@@ -34,15 +39,6 @@
                     style="aspect-ratio: 16/9"
                     (click)="photoInput.click()"
                   />
-                </div>
-
-                <div class="border border-danger">
-                  <pre>Fromulario es valido?: {{ myForm.valid | json }} </pre>
-                  <pre>
-FileSource : {{ myForm.controls["fileSource"].value | json }} </pre
-                  >
-                  <pre>File : {{ myForm.controls["file"].value | json }} </pre>
-                  >
                 </div>
 
                 <!-- ----------------------------- -->

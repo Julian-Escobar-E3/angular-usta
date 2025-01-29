@@ -17,6 +17,7 @@ import { TitleComponent } from '@shared/title/title.component';
 @Component({
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, ImagePipe, TitleComponent],
+  selector: 'add-news',
   templateUrl: './news-add.component.html',
   styleUrl: './news.add.css',
 })
@@ -31,13 +32,13 @@ export default class NewsAddComponent {
   imagePreview: string | ArrayBuffer | undefined = '';
 
   myForm: FormGroup = this._formBuilder.group({
-    title: ['Nueva', Validators.required],
-    description_1: ['Información', Validators.required],
+    title: ['', Validators.required],
+    description_1: ['', Validators.required],
     description_2: [''],
     description_3: [''],
-    publicationDate: ['2001-03-11', Validators.required],
-    author: ['Julian Escobar', Validators.required],
-    tag: ['Noticias', Validators.required],
+    publicationDate: ['', Validators.required],
+    author: ['', Validators.required],
+    tag: ['', Validators.required],
     file: ['', Validators.required],
     fileSource: [Validators.required],
   });
@@ -62,11 +63,11 @@ export default class NewsAddComponent {
     const formData = createFormData(this.myForm);
 
     //! mostrar informacion del from
-    const formDataObj: any = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
-    console.log('>>LO QUE MANDAMOS AL SERVICIO', formDataObj);
+    // const formDataObj: any = {};
+    // formData.forEach((value, key) => {
+    //   formDataObj[key] = value;
+    // });
+    // console.log('>>LO QUE MANDAMOS AL SERVICIO', formDataObj);
     //! -----------------------------
 
     if (this.myForm.controls['file'].value !== null) {
@@ -75,13 +76,13 @@ export default class NewsAddComponent {
 
     try {
       await firstValueFrom(this._newsService.postNews(formData));
-      const message1 = this._newsService.newsMessage()?.msg;
-      this._toastrService.success(message1, 'Todo Correcto');
+      const message = this._newsService.newsMessage()?.message.ES;
+      this._toastrService.success(message, 'Todo Correcto');
       this._router.navigate(['admin/news']);
     } catch (error) {
       console.log(error);
 
-      const message2 = this._newsService.newsMessage()?.msg;
+      const message2 = this._newsService.newsMessage()?.message.ES;
       this._toastrService.error(
         `There was an error creating the news, ${message2}`,
         'Error'

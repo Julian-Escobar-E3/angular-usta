@@ -1,0 +1,42 @@
+```
+└── 📁src
+    └── 📁auth
+        └── 📁constants
+        └── 📁decorators
+        └── 📁dto
+        └── 📁entities
+        └── 📁enum
+        └── 📁guards
+        └── 📁interfaces
+        └── 📁strategies
+        └── 📁utilities
+    └── 📁common
+        └── 📁dtos
+        └── 📁interfaces
+        └── 📁services
+        └── 📁utilities
+    └── 📁usta-events
+        └── 📁dto
+        └── 📁entities
+    └── 📁usta-graduates
+        └── 📁graduates
+            └── 📁dto
+            └── 📁entities
+            └── 📁enums
+            └── 📁interfaces
+            └── 📁querys
+        └── 📁jobs
+            └── 📁dto
+            └── 📁entities
+        └── 📁postgraduate-degree
+            └── 📁dto
+            └── 📁entities
+    └── 📁usta-news
+        └── 📁dto
+        └── 📁entities
+    └── 📁usta-professors
+        └── 📁dto
+        └── 📁entities
+    └── app.module.ts
+    └── main.ts
+```

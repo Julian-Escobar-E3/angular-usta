@@ -1,0 +1,20 @@
+.my-pagination button {
+  border-radius: 0.5rem;
+  background-color: rgb(10, 35, 98);
+  border: 0cap;
+}
+
+.my-pagination .current-page {
+  background-color: rgb(10, 35, 98);
+  font-size: 20px;
+  color: white;
+  font-stretch: expanded;
+  border-radius: 15rem;
+  margin-left: 0.3rem;
+  margin-right: 0.3rem;
+}
+
+.my-pagination button span {
+  color: white;
+  font-size: 16px;
+}

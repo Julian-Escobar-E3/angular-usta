@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { TitleComponent } from '@shared/title/title.component';
+import { GRAPHICS_OPTIONS } from './utilities/graphics-options';
 
 @Component({
   selector: 'app-graphics',
@@ -11,43 +12,5 @@ import { TitleComponent } from '@shared/title/title.component';
   styleUrl: './graphics.conponents.css',
 })
 export default class GraphicsComponent {
-  //TODO: PASAR A OTRO ARCHIVO EL JSON DE LA VISTA DE LAS GRAFICAS
-
-  graphics = [
-    {
-      nombre: 'Empleabilidad',
-      icono: 'bi bi-images',
-      ruta: '',
-    },
-    {
-      nombre: 'Carousel',
-      icono: 'bi bi-images',
-      ruta: '',
-    },
-    {
-      nombre: 'Carousel',
-      icono: 'bi bi-images',
-      ruta: '',
-    },
-    {
-      nombre: 'Carousel',
-      icono: 'bi bi-images',
-      ruta: '',
-    },
-    {
-      nombre: 'Carousel',
-      icono: 'bi bi-images',
-      ruta: '',
-    },
-    {
-      nombre: 'Carousel',
-      icono: 'bi bi-images',
-      ruta: '',
-    },
-    {
-      nombre: 'Carousel',
-      icono: 'bi bi-images',
-      ruta: '',
-    },
-  ];
+  graphics = GRAPHICS_OPTIONS;
 }

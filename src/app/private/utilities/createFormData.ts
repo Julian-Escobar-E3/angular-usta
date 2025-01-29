@@ -14,11 +14,11 @@ export function createFormData(form: FormGroup): FormData {
     }
   });
   //! mostrar informacion del from
-  const formDataObj: any = {};
-  formData.forEach((value, key) => {
-    formDataObj[key] = value;
-  });
-  console.log('>>UTILIDAD', formDataObj);
-  //! ----------------------------
+  // const formDataObj: any = {};
+  // formData.forEach((value, key) => {
+  //   formDataObj[key] = value;
+  // });
+  // console.log('>>UTILIDAD', formDataObj);
+  // //! ----------------------------
   return formData;
 }

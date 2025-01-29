@@ -1,9 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [],
+  imports: [RouterLink, CommonModule],
   templateUrl: './not-found.component.html',
-  styles: ``,
+  styleUrl: './not-found.component.css',
 })
 export default class NotFoundComponent {}

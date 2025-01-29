@@ -1,3 +1,7 @@
 export interface IMessageResponse {
-  msg: string;
+  message: Languages;
+}
+interface Languages {
+  EN: string;
+  ES: string;
 }

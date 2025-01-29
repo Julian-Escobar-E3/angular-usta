@@ -1,0 +1,25 @@
+<div class="card">
+  <div class="card-body">
+    <div class="card-title mb-4">
+      <a [routerLink]="['../']">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <h3 class="text-center">
+        {{ title() | titlecase }}
+      </h3>
+      <hr />
+    </div>
+    <div class="d-flex flex-column align-items-center">
+      <div id="chart">
+        <apx-chart
+          [series]="chartOptions.series!"
+          [chart]="chartOptions.chart!"
+          [labels]="chartOptions.labels! | titleCaseArray"
+          [responsive]="chartOptions.responsive!"
+          [colors]="chartOptions.colors!"
+        >
+        </apx-chart>
+      </div>
+    </div>
+  </div>
+</div>

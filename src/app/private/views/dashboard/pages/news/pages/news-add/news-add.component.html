@@ -25,11 +25,6 @@
                   />
                 </div>
 
-                <h3>es valido {{ myForm.valid }}</h3>
-                <pre> form is valid {{ myForm.value | json }}   </pre>
-                <pre>
- title is valid {{ myForm.controls["title"].valid | json }}</pre
-                >
 
                 <!-- ----------------------------- -->
 
@@ -78,7 +73,7 @@
                       formControlName="publicationDate"
                       [class]="getValidationClasses('publicationDate')"
                     />
-                    @if (isValidField('title')) {
+                    @if (isValidField('publicationDate')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("publicationDate") }}
                     </span>
@@ -86,7 +81,7 @@
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label">Párrafo 1</label>
+                    <label class="form-label">Descropción 1</label>
                     <input
                       type="text"
                       class="form-control"
@@ -94,7 +89,7 @@
                       formControlName="description_1"
                       [class]="getValidationClasses('description_1')"
                     />
-                    @if (isValidField('title')) {
+                    @if (isValidField('description_1')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("description_1") }}
                     </span>
@@ -139,7 +134,7 @@
                       formControlName="author"
                       [class]="getValidationClasses('author')"
                     />
-                    @if (isValidField('title')) {
+                    @if (isValidField('author')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("author") }}
                     </span>
@@ -155,7 +150,7 @@
                       formControlName="tag"
                       [class]="getValidationClasses('tag')"
                     />
-                    @if (isValidField('title')) {
+                    @if (isValidField('tag')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("tag") }}
                     </span>
@@ -186,7 +181,7 @@
                   type="submit"
                   [disabled]="myForm.invalid"
                 >
-                  Continue to checkout
+                  Agregar
                 </button>
               </form>
             </div>

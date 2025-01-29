@@ -1,0 +1,16 @@
+<main id="main">
+  <app-title
+    title="reportes"
+    section="graficas"
+    [subSection]="'ditribución por genero'"
+  ></app-title>
+
+  <section class="section">
+    <pie-chart
+      [keysArray]="keysArray"
+      [valuesArray]="valuesArray"
+      [title]="'situación laboral de egresados'"
+      [colors]="colors"
+    />
+  </section>
+</main>

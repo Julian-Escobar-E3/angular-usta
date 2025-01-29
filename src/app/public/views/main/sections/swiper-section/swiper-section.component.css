@@ -1,13 +1,14 @@
-
 .img-slide {
   height: 500px;
   overflow: hidden; /* Asegura que cualquier exceso de imagen se oculte */
+  object-fit: contain;
 }
 
 .centered-image {
   width: 100%; /* Asegura que la imagen ocupe todo el ancho del contenedor */
   height: 100%; /* Ajusta la altura automáticamente para mantener la proporción */
   object-position: 50% 50%;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {

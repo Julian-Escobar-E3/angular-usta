@@ -15,6 +15,7 @@ export interface IGraduate {
   updatedAt: Date;
   job?: Job | null;
   postgraduate_degree?: PostgraduateDegrees | null;
+  user: IUser;
 }
 
 export interface Job {
@@ -32,4 +33,9 @@ export interface PostgraduateDegrees {
   university: string;
   year_obtained: string;
   country: string;
+}
+
+interface IUser {
+  id_user: string;
+  username: string;
 }

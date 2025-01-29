@@ -3,13 +3,59 @@
   <div>Cargando informacion</div>
   }@else {
   -->
-        <app-title title="administrar perfiles" section="administrar eventos"></app-title>
+  <app-title
+    title="administrar perfiles"
+    section="administrar eventos"
+  ></app-title>
 
   <section class="section dashboard">
     <div class="row">
       <div class="card">
         <div class="card-body">
           <!-- fixed -->
+
+          <div class="card-title d-flex justify-content-between mb-3 mt-2">
+            <h5>
+              Noticias
+              <i class="bi bi-newspaper"></i>
+            </h5>
+          </div>
+
+          <table class="table table-hover border border-3">
+            <thead class="table-primary">
+              <tr>
+                @for (column of columns ; track $index) {
+                <th style="width: auto">{{ column | titlecase }}</th>
+                }
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (slide of profileService ; track $index) {
+              <tr>
+                @for (row of rows; track $index) {
+                <td style="width: auto">{{ slide[row] }}</td>
+                }
+
+                <td>
+                  <div class="d-flex justify-content-center align-items-center">
+                    <button class="btn btn-sm btn-primary">
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              }@empty {
+              <div class="d-flex justify-content-center mt-2">
+                No hay información que mostrar
+              </div>
+              }
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

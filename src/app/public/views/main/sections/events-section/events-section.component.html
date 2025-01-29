@@ -1,7 +1,7 @@
 <section class="container">
   <div class="section-header d-flex justify-content-between align-items-center">
     <h2>Eventos</h2>
-    <div><a href="category.html" class="more">See All Culture</a></div>
+    <div><a href="category.html" class="more">Ver Eventos</a></div>
   </div>
 
   <div class="album py-5">
@@ -14,22 +14,19 @@
             <div class="row g-0">
               <div class="col-md-6">
                 <img
-                  src="https://fastly.picsum.photos/id/1032/800/500.jpg?hmac=G1HBzp83fJ5riY8F0dr9A9ifM-PWOlwLE8Yh73Zak3I"
+                  [src]="item.imagen"
                   class="img-fluid h-100"
                   alt="..."
+
                 />
               </div>
               <div class="col-md-6">
                 <div class="card-body">
                   <div class="card-title d-flex justify-content-between">
-                    <h5 class="">Card title</h5>
-                    <h6 class="fecha">2001-03-11</h6>
+                    <h5 class="">{{ item.title }}</h5>
+                    <h6 class="fecha">{{ item.date }}</h6>
                   </div>
-                  <p class="card-text">
-                    This is a wider card with supporting text below as a natural
-                    lead-in to additional content. This content is a little bit
-                    longer.
-                  </p>
+                  <p class="card-text">{{ item.descripcion }}</p>
                   <p class="card-text">
                     <small class="text-body-secondary"
                       ><a href=""> ver más</a>

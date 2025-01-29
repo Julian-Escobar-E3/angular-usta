@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, delay, Observable, of, tap } from 'rxjs';
+import { catchError, delay, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '@evn/environment';
 import { INewsOneResponse, INewsResponse } from '../interfaces';
-import { State } from '../../../../../interfaces/state.interface';
 import { IMessageResponse } from '@shared/interfaces/message-response.interface';
+import { State } from '@private/interfaces/state.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -48,29 +48,15 @@ export class NewsService {
 
     return this._http.post<IMessageResponse>(url, fromNews).pipe(
       tap((res) => {
-        console.log({ respuesticaa: res });
         this.#newsMessage.set({ loading: false, response: res });
       }),
       catchError((err) => {
-        console.log(err);
-        const msg = err.name;
+        const msg = err.error;
         this.#newsMessage.set({ loading: false, response: msg });
-        return of(err);
+        return throwError(() => err.error);
       })
     );
   }
-
-  //* List News ---
-
-  /**
-   * Lo que se hace acontinuación es hacer una peticion que responsa información segun la interfaz
-   * seguidamente de la peticion, me suscribo y actualizo el valor de la señal con la respuesta de la peticion
-   * para que se mantenga todo conectado con la señal
-   *
-   *  catchError((err) => {
-        return of();
-      })
-   */
 
   getNews(offset: number = 0, limit: number = 3) {
     const params = new HttpParams()
@@ -98,7 +84,7 @@ export class NewsService {
   //* List News By ID ---
   getNewsByID(id: string) {
     const url = `${this._baseUrl}/news/${id}`;
-
+    this.#oneNewsState.update((state) => ({ ...state, loading: true }));
     return this._http
       .get<INewsOneResponse>(url)
       .pipe(delay(1500))
@@ -109,10 +95,16 @@ export class NewsService {
 
   updateNews(id: string, formNews: FormData): Observable<IMessageResponse> {
     const url = `${this._baseUrl}/news/${id}`;
-
     return this._http.patch<IMessageResponse>(url, formNews).pipe(
       tap((res) => {
         this.#newsMessage.set({ loading: false, response: res });
+      }),
+      catchError((err) => {
+        console.log('error servicio notica actualizar', err);
+
+        const msg = err.error;
+        this.#newsMessage.set({ loading: false, response: msg });
+        return throwError(() => err.error);
       })
     );
   }
@@ -122,8 +114,7 @@ export class NewsService {
     return this._http.delete<IMessageResponse>(url).pipe(
       delay(1000),
       tap((res) => {
-        console.log({ respuestica: res });
-        //TODO: SE PUEDE BIEN MANEJAR ALGUN ERROR O UN MENSAJE PARA VALIDAR LA ELIMINACION
+        this.#newsMessage.set({ loading: false, response: res });
       })
     );
   }

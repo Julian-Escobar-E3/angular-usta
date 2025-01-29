@@ -1,55 +1,86 @@
 <main id="main" class="main">
   <!-- @if (newsService.newsListIsLoading()) {
-  <div>Cargando informacion</div>
-  }@else {
-  -->
-  <div class="pagetitle">
-        <app-title title="administrar eventos" section="administrar eventos"></app-title>
+    <div>Cargando informacion</div>
+    }@else {
+      -->
+  <app-title
+    title="administrar eventos"
+    section="administrar eventos"
+  ></app-title>
 
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a style="text-decoration: none">Inicio</a>
-        </li>
-        <li class="breadcrumb-item active">Listado de eventos</li>
-      </ol>
-    </nav>
-  </div>
   <section class="section dashboard">
-    <div class="row">
-      <div class="card">
-        <div class="card-body">
-          <!-- fixed -->
-          <table class="table table-hover border">
-            <thead class="table-primary">
-              <tr>
-                @for (column of columns ; track $index) {
-                <th style="width: auto">{{ column | titlecase }}</th>
-                }
-                <th>Otros</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (event of tableData ; track $index) {
-              <tr>
-                @for (row of rows; track $index) {
-                <td style="width: auto">{{ event[row] }}</td>
-                }
+    <div class="card">
+      <div class="card-body">
+        <!-- fixed -->
 
-                <td>Otro {{ $index }}</td>
-              </tr>
+        <div class="card-title d-flex justify-content-between mb-3 mt-2">
+          <h5>
+            Eventos
+            <i class="bi bi-newspaper"></i>
+          </h5>
 
-              }@empty {
-              <div class="d-flex justify-content-center mt-2">
-                No hay información que mostrar
-              </div>
-              }
-            </tbody>
-          </table>
+          <div class="d-flex align-items-center my-pagination">
+            <button
+              class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
+              (click)="goToPreviousPage()"
+              [disabled]="offset === 0"
+            >
+              <i class="bi bi-arrow-left"></i>
+              <span> anterior</span>
+            </button>
 
-          <!-- fixed -->
+            <span class="badge current-page">{{ currentPage }}</span>
+
+            <button
+              class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
+              (click)="goToNextPage()"
+              [disabled]="!eventsService.eventsListHasMore()"
+            >
+              <span>siguiente </span>
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
         </div>
+        @if(eventsService.eventsListIsLoading()){
+        <p>CARGANDO</p>
+        }@else {
+        <table class="table table-hover border border-3">
+          <thead class="table-primary">
+            <tr>
+              @for (column of columns ; track $index) {
+              <th style="width: auto">{{ column | titlecase }}</th>
+              }
+              <th>Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of eventsService.eventsList()?.data ; track $index) {
+            <tr>
+              @for (row of rows; track $index) {
+              <td style="width: auto">{{ event[row] }}</td>
+              }
+              <td>
+                <img [srcset]="[event.images?.sm]" [alt]="[event.title]" />
+              </td>
+
+              <td>
+                <a>
+                  <i class="bi bi-pencil"></i>
+                </a>
+              </td>
+            </tr>
+
+            }@empty {
+            <div class="d-flex justify-content-center mt-2">
+              No hay información que mostrar
+            </div>
+            }
+          </tbody>
+        </table>
+        }
       </div>
+
+      <!-- fixed -->
     </div>
   </section>
   <!-- } -->
