@@ -1,0 +1,8 @@
+- [x] Listar las noticias en la vista general con un limite de 6
+- [ ] Listar los eventos en la vista general con un limite de 6
+- [ ] Listar los eventos en la vista publica
+- [ ] Listar las noticias en la vista publica
+- [ ] Almacenar el token en local storage
+- [ ] Decodificar el token para extraer la información del usuario
+- [ ] Implementar la protección de vistas con guards e interceptors
+- [ ] Ajustar la infromación de las graficas con respuestas del backend

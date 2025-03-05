@@ -4,7 +4,7 @@ export const publicRoutes: Routes = [
   { path: '', loadComponent: () => import('./sections/sections.component') },
   {
     path: 'news-list',
-    loadComponent: () => import('./news-list/news-list.component'),
+    loadComponent: () => import('./news-list/news-public-list.component'),
   },
   {
     path: 'news-details/:id',

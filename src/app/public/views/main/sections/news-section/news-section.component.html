@@ -1,55 +1,39 @@
 <section class="container">
-  <div
-    class="section-header d-flex justify-content-between align-items-center mb-5"
-  >
+  <div class="section-header d-flex justify-content-between align-items-center">
     <h2>Noticias</h2>
-    <a href="category.html" class="more">See All Culture</a>
+    <a [routerLink]="['news-list']" class="more">Ver Noticias</a>
   </div>
 
   <div class="row">
     <div class="album py-5 bg-body-tertiary">
       <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-          @for (item of items ; track $index) {
-
+          @for (news of newsList() ; track $index) {
           <div class="col">
-            <div class="card shadow-sm">
-              <svg
+            <div class="card shadow-lg">
+              <img
+                [srcset]="[news.images?.l]"
                 class="bd-placeholder-img card-img-top"
-                width="100%"
-                height="225"
-                xmlns="http://www.w3.org/2000/svg"
-                role="img"
-                aria-label="Placeholder: Thumbnail"
-                preserveAspectRatio="xMidYMid slice"
-                focusable="false"
-              >
-                <title>Placeholder</title>
-                <rect width="100%" height="100%" fill="#55595c"></rect>
-                <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-              </svg>
+              />
               <div class="card-body">
-                <p class="card-text">
-                  This is a wider card with supporting text below as a natural
-                  lead-in to additional content. This content is a little bit
-                  longer.
+                <p class="card-text mt-3">
+                  {{ news.title }}
                 </p>
-                <div class="d-flex justify-content-between align-items-center">
+                <p class="card-text">
+                  {{ news.description_1 | truncate }}
+                </p>
+                <div
+                  class="d-flex justify-content-between align-items-center mt-3"
+                >
                   <div class="btn-group">
-                    <button
-                      type="button"
+                    <a
+                      [routerLink]="['news-details/' + news.id_news]"
                       class="btn btn-sm btn-outline-secondary"
                     >
-                      View
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-outline-secondary"
-                    >
-                      Edit
-                    </button>
+                      Ver
+                    </a>
                   </div>
-                  <small class="text-body-secondary">9 mins</small>
+                  <span class="badge bg-success">{{ news.tag }}</span>
                 </div>
               </div>
             </div>

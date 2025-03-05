@@ -1,14 +1,39 @@
 <section class="mysection-public">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-lg-12 text-center mb-3">
         <h1 class="page-title">Eventos</h1>
       </div>
     </div>
 
-    <div class="row mb-5">
+       <!-- Paging -->
+      <div class="d-flex justify-content-center mb-3">
+        <div class="d-flex align-items-center my-pagination">
+          <button
+            class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
+            (click)="goToPreviousPage()"
+            [disabled]="offset === 0"
+          >
+            <i class="bi bi-arrow-left"></i>
+            <span> anterior</span>
+          </button>
+
+          <span class="badge current-page">{{ currentPage }}</span>
+
+          <button
+            class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
+            (click)="goToNextPage()"
+            [disabled]="!eventsService.eventsListHasMore()"
+          >
+            <span>siguiente </span>
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+      <!-- End Paging -->
+    <div class="row d-flex justify-content-center">
       <!-- //FIXED: ===================================================================================== -->
-      <div class="border border-black">
+      <div class="border border-black w-75">
         <div class="d-md-flex post-entry-2 half">
           <a href="#" class="me-4 thumbnail">
             <img
@@ -41,7 +66,7 @@
       <!-- //FIXED: ===================================================================================== -->
       <!-- -- ===================================================================================== -->
 
-      <div class="border border-black">
+      <div class="border border-black w-75">
         <div class="d-md-flex post-entry-2 half mt-5">
           <a href="#" class="me-4 thumbnail order-2">
             <img

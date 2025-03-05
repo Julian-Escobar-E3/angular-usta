@@ -12,7 +12,6 @@ import { EventsTableColumns, EventsTableRows } from '../../enums';
   styleUrl: './events-list.component.css',
 })
 export default class EventsListComponent implements OnInit {
-
   public eventsService = inject(EventsService);
   public columns = Object.values(EventsTableColumns);
   public rows = Object.values(EventsTableRows);

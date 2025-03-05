@@ -1,5 +1,60 @@
 <section class="mysection-public">
+  @if(newsService.oneNewsLoading()){
+  <div>Cargando información</div>
+  }@else {
+
   <div class="container">
-    <p>news-details works!</p>
+    <article class="article">
+      <div class="d-flex justify-content-center align-items-center post-img">
+        <img
+          [srcset]="[newsService.oneNews()?.data?.images?.xl]"
+          [alt]="[newsService.oneNews()?.data?.title]"
+          class="img-fluid"
+        />
+      </div>
+
+      <h2 class="title text-center">
+        {{ newsService.oneNews()?.data?.title }}
+      </h2>
+
+      <div class="meta-top">
+        <ul>
+          <li class="d-flex align-items-center">
+            <i class="bi bi-person"></i>
+            <span> {{ newsService.oneNews()?.data?.author }}</span>
+          </li>
+          <li class="d-flex align-items-center">
+            <i class="bi bi-calendar"></i>
+            <span>
+              {{ newsService.oneNews()?.data?.publicationDate }}
+            </span>
+          </li>
+          <li class="d-flex align-items-center">
+            <i class="bi bi-tag"></i>
+            <span>
+              {{ newsService.oneNews()?.data?.tag }}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <!-- End meta top -->
+
+      <div class="content">
+        <p>
+          {{ newsService.oneNews()?.data?.description_1 }}
+        </p>
+
+        <p>
+          {{ newsService.oneNews()?.data?.description_2 }}
+        </p>
+
+        <p>
+          {{ newsService.oneNews()?.data?.description_3 }}
+        </p>
+      </div>
+      <!-- End post content -->
+    </article>
   </div>
+
+  }
 </section>

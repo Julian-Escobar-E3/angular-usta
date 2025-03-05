@@ -1,8 +1,8 @@
 <main id="main" class="main">
-  <!-- @if (newsService.newsListIsLoading()) {
-    <div>Cargando informacion</div>
-    }@else {
-      -->
+  @if (eventsService.eventsListIsLoading()) {
+  <div>Cargando informacion</div>
+  }@else {
+
   <app-title
     title="administrar eventos"
     section="administrar eventos"
@@ -15,7 +15,7 @@
 
         <div class="card-title d-flex justify-content-between mb-3 mt-2">
           <h5>
-            Eventos
+            Eventos s
             <i class="bi bi-newspaper"></i>
           </h5>
 
@@ -48,7 +48,7 @@
           <thead class="table-primary">
             <tr>
               @for (column of columns ; track $index) {
-              <th style="width: auto">{{ column | titlecase }}</th>
+              <th class="text-center" style="width: auto">{{ column | titlecase }}</th>
               }
               <th>Opciones</th>
             </tr>
@@ -57,10 +57,10 @@
             @for (event of eventsService.eventsList()?.data ; track $index) {
             <tr>
               @for (row of rows; track $index) {
-              <td style="width: auto">{{ event[row] }}</td>
+              <td  class="text-center mt-4" style="width: auto">{{ event[row] }}</td>
               }
-              <td>
-                <img [srcset]="[event.images?.sm]" [alt]="[event.title]" />
+              <td class="text-center">
+                <img [srcset]="[event.images?.sm]" [alt]="[event.title]" class="img-fluid" style="height: 100px;" />
               </td>
 
               <td>
@@ -83,5 +83,5 @@
       <!-- fixed -->
     </div>
   </section>
-  <!-- } -->
+  }
 </main>

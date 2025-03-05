@@ -1,39 +1,42 @@
 <section class="container">
   <div class="section-header d-flex justify-content-between align-items-center">
     <h2>Eventos</h2>
-    <div><a href="category.html" class="more">Ver Eventos</a></div>
+    <div><a [routerLink]="['/events-list']" class="more">Ver Eventos</a></div>
   </div>
 
   <div class="album py-5">
     <div class="container-fluid">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
-        @for (item of items; track $index) {
-
-        <div class="col">
-          <div class="card">
-            <div class="row g-0">
-              <div class="col-md-6">
-                <img
-                  [src]="item.imagen"
-                  class="img-fluid h-100"
-                  alt="..."
-
-                />
+        @for (event of eventsService.eventsList()?.data; track $index) {
+        <div class="col-md-6">
+          <div
+            class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
+          >
+            <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-primary-emphasis">{{
+                event.event_date
+              }}</strong>
+              <h3 class="mb-0">{{ event.title }}</h3>
+              <div
+                class="mb-1 mt-2 badge rounded-pill bg-success"
+                style="width: 70px"
+              >
+                {{ event.state }}
               </div>
-              <div class="col-md-6">
-                <div class="card-body">
-                  <div class="card-title d-flex justify-content-between">
-                    <h5 class="">{{ item.title }}</h5>
-                    <h6 class="fecha">{{ item.date }}</h6>
-                  </div>
-                  <p class="card-text">{{ item.descripcion }}</p>
-                  <p class="card-text">
-                    <small class="text-body-secondary"
-                      ><a href=""> ver más</a>
-                    </small>
-                  </p>
-                </div>
-              </div>
+              <p class="card-text mb-auto">
+                {{ event.description_1 | truncate }}
+              </p>
+              <a href="#" class="mt-2 text-start">
+                <strong>Ver </strong> <i class="bi-arrow-right"></i>
+              </a>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+              <img
+                [srcset]="[event.images?.l]"
+                [alt]="[event.title]"
+                class="img-fluid bd-placeholder-img"
+                style="width: 250px; height: 300px"
+              />
             </div>
           </div>
         </div>

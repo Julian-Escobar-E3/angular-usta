@@ -16,7 +16,6 @@ export class EventsService {
   #eventsListState = signal<State<IEventsResponse>>({
     loading: true,
     response: null,
-    hasMore: true,
   });
 
   eventsList = computed(() => this.#eventsListState().response);
@@ -56,14 +55,14 @@ export class EventsService {
     );
   }
 
-  getEvents(offset: number = 0, limit: number = 3) {
+  getEvents(offset: number = 1, limit: number = 3) {
     const params = new HttpParams()
-      .set('offset', offset.toString())
+      .set('page', offset.toString())
       .set('limit', limit.toString());
 
     const url = `${this._baseUrl}/events`;
     return this._http
-      .get<IEventsResponse>(url, { params })
+      .get<IEventsResponse>(url)
       .pipe(
         catchError((err) => {
           console.log({ Error: err });

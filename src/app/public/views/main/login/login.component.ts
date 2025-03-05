@@ -23,7 +23,7 @@ export default class LoginComponent {
   private _router = inject(Router);
 
   public myForm: FormGroup = this._formBuilder.group({
-    username: ['hacker@hacker', [Validators.required, Validators.email]],
+    username: ['admin@admin', [Validators.required, Validators.email]],
     password: ['#HolaMundo1', [Validators.required, Validators.minLength(6)]],
   });
 

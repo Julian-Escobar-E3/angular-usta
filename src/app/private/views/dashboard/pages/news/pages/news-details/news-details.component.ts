@@ -38,10 +38,7 @@ import { DeleteDialogService } from '@private/services/deleteDialog.service';
   templateUrl: './news-details.component.html',
   styles: ``,
 })
-export default class NewsDetailsComponent implements OnInit, OnChanges {
-  ngOnChanges(): void {
-    console.log('Method not implemented.');
-  }
+export default class NewsDetailsComponent implements OnInit {
   private _router = inject(Router);
   private _activatedRoute = inject(ActivatedRoute);
   private _id = this._activatedRoute.snapshot.paramMap.get('id');

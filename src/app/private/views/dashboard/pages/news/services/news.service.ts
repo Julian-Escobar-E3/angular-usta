@@ -10,19 +10,13 @@ import { State } from '@private/interfaces/state.interface';
   providedIn: 'root',
 })
 export class NewsService {
-  private _http = inject(HttpClient);
   private _baseUrl = environment.baseUrl;
+  private _http = inject(HttpClient);
 
-  //-- SEÑALES QUE MANEJAN LOS DATOS
-  #newsListState = signal<State<INewsResponse>>({
-    loading: true,
-    response: null,
-    hasMore: true,
-  });
-
-  newsList = computed(() => this.#newsListState().response);
-  newsListIsLoading = computed(() => this.#newsListState().loading);
-  newsListhasMore = computed(() => this.#newsListState().hasMore);
+  getData(page: number, limit: number, searchTerm: string): Observable<any> {
+    const url = `${this._baseUrl}/news?page=${page}&limit=${limit}&param=${searchTerm}`;
+    return this._http.get<any>(url);
+  }
 
   //? Esta señal individual posiblemente ya no vaya
   #oneNewsState = signal<State<INewsOneResponse>>({
@@ -56,29 +50,6 @@ export class NewsService {
         return throwError(() => err.error);
       })
     );
-  }
-
-  getNews(offset: number = 0, limit: number = 3) {
-    const params = new HttpParams()
-      .set('offset', offset.toString())
-      .set('limit', limit.toString());
-
-    const url = `${this._baseUrl}/news`;
-    return this._http
-      .get<INewsResponse>(url, { params })
-      .pipe(
-        catchError((err) => {
-          console.log({ Error: err });
-          return of(null);
-        })
-      )
-      .subscribe((res) => {
-        this.#newsListState.set({
-          loading: false,
-          response: res,
-          hasMore: res!.hasMore,
-        });
-      });
   }
 
   //* List News By ID ---
