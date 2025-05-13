@@ -1,7 +1,4 @@
 <main id="main" class="main">
-  @if (graduatesService.graduatesListIsLoading()) {
-  <div>Cargando informacion</div>
-  }@else {
   <app-title
     title="administrar graduados"
     section="administrar eventos"
@@ -10,38 +7,19 @@
   <section class="section dashboard">
     <div class="card">
       <div class="card-body">
-        <div class="card-title d-flex justify-content-between mb-3 mt-2">
-          <h5>
-            Egresados
-            <i class="bi bi-person-hearts"></i>
-          </h5>
-
-          <div class="d-flex align-items-center my-pagination">
-            <button
-              class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
-              (click)="goToPreviousPage()"
-              [disabled]="offset === 0"
-            >
-              <i class="bi bi-arrow-left"></i>
-              <span> anterior</span>
-            </button>
-            <span class="badge current-page">{{ currentPage }}</span>
-            <button
-              class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
-              (click)="goToNextPage()"
-              [disabled]="!graduatesService.graduatesListhasMore()"
-            >
-              <span>siguiente </span>
-              <i class="bi bi-arrow-right"></i>
-            </button>
-          </div>
+        <div class="card-title d-flex justify-content-center mb-3 mt-2">
+          <input
+            type="text"
+            [ngModel]="searchValue()"
+            (ngModelChange)="searchInput = $event"
+            placeholder="Buscar..."
+            class="form-control"
+          />
+          <button (click)="onSearch()" class="btn btn-primary">Buscar</button>
         </div>
         <!-- fixed -->
 
-        @if(graduatesService.graduatesListIsLoading()){
-        <p>CARGANDO</p>
-        }@else {
-        <table class="table table-hover border">
+        <table class="table table-hover border border-3">
           <thead class="table-primary">
             <tr>
               @for (column of columns; track $index) {
@@ -53,8 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (graduate of graduatesService.graduatesList()?.data ; track
-            $index) {
+            @for (graduate of graduatesList() ; track $index) {
             <tr>
               @for (rows of rows; track $index) {
 
@@ -104,11 +81,52 @@
             }
           </tbody>
         </table>
-        }
 
         <!-- fixed -->
+        <nav class="mt-4" aria-label="Paginación de noticias">
+          <ul class="pagination justify-content-center">
+            <!-- Botón Anterior -->
+            <li class="page-item" [class.disabled]="currentPage() === 1">
+              <button
+                class="page-link"
+                (click)="previousPage()"
+                [disabled]="currentPage() === 1"
+                aria-label="Página anterior"
+              >
+                Anterior
+              </button>
+            </li>
+
+            <!-- Páginas dinámicas -->
+            @for (page of visiblePages(); track page) {
+            <li class="page-item" [class.active]="page === currentPage()">
+              <button
+                class="page-link"
+                (click)="goToPage(page)"
+                aria-label="Página anterior"
+              >
+                {{ page }}
+              </button>
+            </li>
+            }
+
+            <!-- Botón Siguiente -->
+            <li
+              class="page-item"
+              [class.disabled]="currentPage() === totalPages()"
+            >
+              <button
+                class="page-link"
+                (click)="nextPage()"
+                [disabled]="currentPage() === totalPages()"
+                aria-label="Página siguiente"
+              >
+                Siguiente
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </section>
-  }
 </main>

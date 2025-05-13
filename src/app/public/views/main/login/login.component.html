@@ -45,10 +45,22 @@
                     ><i class="bi bi-key"></i
                   ></span>
                   <input
-                    type="password"
+                    [type]="passwordVisible() ? 'text' : 'password'"
                     class="form-control"
                     formControlName="password"
                   />
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    (click)="tooglePasswordVisibility()"
+                  >
+                    <i
+                      [className]="
+                        passwordVisible() ? 'bi bi-eye-slash' : 'bi bi-eye'
+                      "
+                    >
+                    </i>
+                  </button>
                 </div>
               </div>
               <div class="col-12">

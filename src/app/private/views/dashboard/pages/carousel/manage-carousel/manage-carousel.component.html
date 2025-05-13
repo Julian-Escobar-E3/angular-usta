@@ -16,49 +16,52 @@
               <i class="bi bi-distribute-horizontal"></i>
             </h5>
           </div>
+          <div class="table-responsive">
+            <table class="table table-hover border border-3">
+              <thead class="table-primary">
+                <tr>
+                  <th style="width: auto">{{ "imagen" | titlecase }}</th>
+                  @for (column of columns ; track $index) {
+                  <th style="width: 70px">{{ column | titlecase }}</th>
+                  }
+                  <th>Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (slide of carouselService ; track $index) {
+                <tr>
+                  <td>
+                    <img
+                      [srcset]="[slide.url_img]"
+                      style="height: 100px; width: auto; aspect-ratio: 16/9"
+                    />
+                  </td>
+                  @for (row of rows; track $index) {
+                  <td style="width: 70px">{{ slide[row] }}</td>
+                  }
 
-          <table class="table table-hover border border-3">
-            <thead class="table-primary">
-              <tr>
-                <th style="width: auto">{{ "imagen" | titlecase }}</th>
-                @for (column of columns ; track $index) {
-                <th style="width: auto">{{ column | titlecase }}</th>
+                  <td>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <button class="btn btn-sm btn-primary">
+                        <i class="bi bi-pencil-fill"></i>
+                      </button>
+                      <button class="btn btn-sm btn-danger">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                }@empty {
+                <div class="d-flex justify-content-center mt-2">
+                  No hay información que mostrar
+                </div>
                 }
-                <th>Opciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (slide of carouselService ; track $index) {
-              <tr>
-                <td>
-                  <img
-                    [srcset]="[slide.url_img]"
-                    style="height: 100px; width: auto; aspect-ratio: 16/9"
-                  />
-                </td>
-                @for (row of rows; track $index) {
-                <td style="width: auto">{{ slide[row] }}</td>
-                }
-
-                <td>
-                  <div class="d-flex justify-content-center align-items-center">
-                    <button class="btn btn-sm btn-primary">
-                      <i class="bi bi-pencil-fill"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger">
-                      <i class="bi bi-trash-fill"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              }@empty {
-              <div class="d-flex justify-content-center mt-2">
-                No hay información que mostrar
-              </div>
-              }
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -26,7 +26,11 @@ export default class LoginComponent {
     username: ['admin@admin', [Validators.required, Validators.email]],
     password: ['#HolaMundo1', [Validators.required, Validators.minLength(6)]],
   });
+  passwordVisible = signal<boolean>(false);
 
+  tooglePasswordVisibility() {
+    this.passwordVisible.update((prev) => !prev);
+  }
   login() {
     const { username, password } = this.myForm.value;
 

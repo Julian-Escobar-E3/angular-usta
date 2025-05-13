@@ -1,50 +1,126 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { TitleComponent } from '@shared/title/title.component';
 import { GraduatesService } from '../../services/graduates.service';
 import { CommonModule } from '@angular/common';
 import { GraduatesTableColumns, GraduatesTableRows } from '../../enums';
 import { RouterLink } from '@angular/router';
 import { DeleteDialogService } from '@private/services/deleteDialog.service';
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-graduates-list',
   standalone: true,
-  imports: [CommonModule, TitleComponent, RouterLink],
+  imports: [CommonModule, TitleComponent, RouterLink, FormsModule],
   templateUrl: './graduates-list.component.html',
   styleUrl: './graduates-list.component.css',
 })
-export default class GraduatesListComponent implements OnInit {
-  public graduatesService = inject(GraduatesService);
-
+export default class GraduatesListComponent {
   public columns = Object.values(GraduatesTableColumns);
   public rows = Object.values(GraduatesTableRows);
 
-  public offset: number = 0;
-  public limit: number = 6;
-  public currentPage: number = 1; // Número de la página actual
-
   private _deleteDialogService = inject(DeleteDialogService);
 
-  ngOnInit(): void {
-    this.loadGraduates();
+  currentPage = signal(1);
+  limit = signal(4);
+  totalPages = signal(0);
+  graduatesList = signal<any[]>([]);
+  visiblePages = signal<number[]>([]);
+  searchTerm = signal('');
+
+  public graduatesService = inject(GraduatesService);
+  private searchSubject = new Subject<string>();
+
+  searchValue = computed(() => this.searchTerm()); // ✅ Uso correcto de computed
+
+  set searchInput(value: string) {
+    this.searchTerm.set(value);
   }
 
-  loadGraduates() {
-    this.graduatesService.getGraduates(this.offset, this.limit);
+  constructor() {
+    effect(() => {
+      const page = this.currentPage();
+      const limit = this.limit();
+      const search = this.searchTerm();
+
+      this.graduatesService
+        .getData(page, limit, search)
+        .subscribe((response) => {
+          console.log('REspuesta>>>', { response });
+          this.graduatesList.set(response.data);
+          console.log('>>', this.graduatesList);
+          this.totalPages.set(response.totalPages);
+          this.updateVisiblePages();
+        });
+    });
+
+    // ✅ Optimización de la búsqueda en tiempo real
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((searchTerm) =>
+          this.graduatesService.getData(
+            this.currentPage(),
+            this.limit(),
+            searchTerm
+          )
+        )
+      )
+      .subscribe((response) => {
+        this.graduatesList.set(response.data);
+        this.totalPages.set(response.totalPages());
+      });
   }
-  goToNextPage() {
-    if (this.graduatesService.graduatesListhasMore()) {
-      this.offset += this.limit;
-      this.currentPage += 1; // Incrementar la página actual
-      this.loadGraduates();
+
+  // ✅ Optimizado para que el Subject maneje la búsqueda
+  onSearch() {
+    this.searchSubject.next(this.searchTerm());
+  }
+
+  updateVisiblePages() {
+    const currentPage = this.currentPage();
+    const totalPages = this.totalPages();
+    const range = 2;
+
+    let start = Math.max(1, currentPage - range);
+    let end = Math.min(totalPages, currentPage + range);
+
+    if (end - start < 4) {
+      if (currentPage < totalPages / 2) {
+        end = Math.min(totalPages, start + 4);
+      } else {
+        start = Math.max(1, end - 4);
+      }
+    }
+
+    this.visiblePages.set(
+      Array.from({ length: end - start + 1 }, (_, i) => start + i)
+    );
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
     }
   }
 
-  goToPreviousPage() {
-    if (this.offset > 0) {
-      this.offset -= this.limit;
-      this.currentPage -= 1; // Decrementar la página actual
-      this.loadGraduates();
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.set(this.currentPage() + 1);
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
     }
   }
 

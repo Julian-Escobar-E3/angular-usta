@@ -17,6 +17,11 @@ export class GraduatesService {
   private _http = inject(HttpClient);
   private _baseUrl = environment.baseUrl;
 
+  getData(page: number, limit: number, searchTerm: string): Observable<any> {
+    const url = `${this._baseUrl}/graduates?page=${page}&limit=${limit}&param=${searchTerm}`;
+    return this._http.get<any>(url);
+  }
+
   //-- SEÑALES QUE MANEJAN LOS DATOS
   #graduatesListState = signal<State<IGraduatesResponse>>({
     loading: true,
@@ -103,7 +108,7 @@ export class GraduatesService {
     const url = `${this._baseUrl}/graduates/${id}`;
     return this._http.patch<IMessageResponse>(url, formGraduate).pipe(
       tap((res) => {
-        console.log('Error 1',res);
+        console.log('Error 1', res);
 
         this.#graduateMessage.set({ loading: false, response: res });
       }),
