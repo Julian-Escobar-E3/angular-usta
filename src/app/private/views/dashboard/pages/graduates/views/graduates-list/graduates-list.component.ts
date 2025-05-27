@@ -38,7 +38,7 @@ export default class GraduatesListComponent {
   public graduatesService = inject(GraduatesService);
   private searchSubject = new Subject<string>();
 
-  searchValue = computed(() => this.searchTerm()); // ✅ Uso correcto de computed
+  searchValue = computed(() => this.searchTerm());
 
   set searchInput(value: string) {
     this.searchTerm.set(value);
@@ -53,9 +53,7 @@ export default class GraduatesListComponent {
       this.graduatesService
         .getData(page, limit, search)
         .subscribe((response) => {
-          console.log('REspuesta>>>', { response });
           this.graduatesList.set(response.data);
-          console.log('>>', this.graduatesList);
           this.totalPages.set(response.totalPages);
           this.updateVisiblePages();
         });

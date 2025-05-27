@@ -15,7 +15,7 @@
 
         <div class="card-title d-flex justify-content-between mb-3 mt-2">
           <h5>
-            Eventos s
+            {{ "eventos" | titlecase }}
             <i class="bi bi-newspaper"></i>
           </h5>
 
@@ -48,7 +48,9 @@
           <thead class="table-primary">
             <tr>
               @for (column of columns ; track $index) {
-              <th class="text-center" style="width: auto">{{ column | titlecase }}</th>
+              <th class="text-center" style="width: auto">
+                {{ column | titlecase }}
+              </th>
               }
               <th>Opciones</th>
             </tr>
@@ -57,10 +59,17 @@
             @for (event of eventsService.eventsList()?.data ; track $index) {
             <tr>
               @for (row of rows; track $index) {
-              <td  class="text-center mt-4" style="width: auto">{{ event[row] }}</td>
+              <td class="text-center mt-4" style="width: auto">
+                {{ event[row] }}
+              </td>
               }
               <td class="text-center">
-                <img [srcset]="[event.images?.sm]" [alt]="[event.title]" class="img-fluid" style="height: 100px;" />
+                <img
+                  [srcset]="[event.images?.sm]"
+                  [alt]="[event.title]"
+                  class="img-fluid"
+                  style="height: 100px"
+                />
               </td>
 
               <td>

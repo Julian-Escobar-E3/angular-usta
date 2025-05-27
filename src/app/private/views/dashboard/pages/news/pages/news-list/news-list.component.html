@@ -6,56 +6,80 @@
       <div class="card">
         <div class="card-body">
           <div class="card-title d-flex justify-content-center mb-3 mt-2">
-            <input
-              type="text"
-              [ngModel]="searchValue()"
-              (ngModelChange)="searchInput = $event"
-              placeholder="Buscar por título..."
-              class="form-control"
-            />
-            <button (click)="onSearch()" class="btn btn-primary">Buscar</button>
+            <div class="input-group w-100 w-md-50">
+              <input
+                type="text"
+                [ngModel]="searchValue()"
+                (ngModelChange)="searchInput = $event"
+                placeholder="Buscar por título..."
+                class="form-control border border-3"
+              />
+              <button (click)="onSearch()" class="btn btn-primary">
+                Buscar
+              </button>
+            </div>
           </div>
 
           <!-- fixed -->
+          <div class="table-responsive">
+            <table class="table table-hover border border-3">
+              <thead class="table-primary">
+                <tr>
+                  <th class="text-center">N°</th>
+                  @for (column of columns; track $index) {
+                  <th class="text-center" style="width: auto">
+                    {{ column | titlecase }}
+                  </th>
 
-          <table class="table table-hover border border-3">
-            <thead class="table-primary">
-              <tr>
-                @for (column of columns; track $index) {
-                <th class="text-center" style="width: auto">
-                  {{ column | titlecase }}
-                </th>
+                  }
+                  <th class="text-center">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (news of newsList(); track $index) {
+                <tr>
+                  <td class="text-center fw-bold">{{ $index + 1 }}</td>
+                  @for (row of rows; track $index) {
+                  <td
+                    class="text-center text-truncate"
+                    style="max-width: 200px"
+                  >
+                    {{ news[row] }}
+                  </td>
 
+                  }
+
+                  <td class="text-center">
+                    <img
+                      [srcset]="[news.images?.sm]"
+                      [alt]="[news.title]"
+                      class="img-fluid"
+                    />
+                  </td>
+                  <td class="d-flex justify-content-center align-items-center">
+                    <a
+                      [routerLink]="['../details-news/', news.id_news]"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    &nbsp;
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="onDelete(news.id_news)"
+                    >
+                      <i class="bi bi-trash3-fill"></i>
+                    </button>
+                  </td>
+                </tr>
+                } @empty {
+                <div class="d-flex justify-content-center mt-2">
+                  No hay información que mostrar
+                </div>
                 }
-                <th>Opciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (news of newsList(); track $index) {
-              <tr>
-                @for (row of rows; track $index) {
-                <td class="text-center mt-4" style="width: auto">
-                  {{ news[row] }}
-                </td>
-
-                }
-
-                <td>
-                  <img [srcset]="[news.images?.sm]" [alt]="[news.title]" />
-                </td>
-                <td>
-                  <a [routerLink]="['../details-news/', news.id_news]">
-                    <i class="bi bi-pencil"></i>
-                  </a>
-                </td>
-              </tr>
-              } @empty {
-              <div class="d-flex justify-content-center mt-2">
-                No hay información que mostrar
-              </div>
-              }
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
 
           <!-- fixed -->
         </div>
@@ -107,3 +131,4 @@
     </div>
   </section>
 </main>
+c

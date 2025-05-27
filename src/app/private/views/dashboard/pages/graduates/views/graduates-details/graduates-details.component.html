@@ -26,51 +26,51 @@
               </h5>
             </div>
             <hr />
-            <!-- fixed -->
+            <!-- fuxed -->
 
             <form [formGroup]="graduateForm">
               <div class="row g-3">
-                <div class="col-12">
-                  <label class="form-label">{{
-                    "nombre completo" | titlecase
+                <div class="col-sm-6">
+                  <label class="form-label fw-bold">{{
+                    "nombre" | titlecase
                   }}</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="fullname"
-                    formControlName="fullname"
-                    [class]="getValidationClasses(graduateForm, 'fullname')"
+                    id="first_name"
+                    formControlName="first_name"
+                    [class]="getValidationClasses(graduateForm, 'first_name')"
                   />
 
-                  @if (isValidField(graduateForm, 'fullname')) {
+                  @if (isValidField(graduateForm, 'first_name')) {
                   <span class="form-text text-danger">
-                    {{ getFieldError(graduateForm, "fullname") }}
+                    {{ getFieldError(graduateForm, "first_name") }}
                   </span>
                   }
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">{{ "cédula" | titlecase }}</label>
+                  <label class="form-label fw-bold">
+                    {{ "apellido" | titlecase }}
+                  </label>
                   <input
                     type="text"
                     class="form-control"
-                    id="identity_document"
-                    formControlName="identity_document"
-                    [class]="
-                      getValidationClasses(graduateForm, 'identity_document')
-                    "
+                    id="last_name"
+                    formControlName="last_name"
+                    [class]="getValidationClasses(graduateForm, 'last_name')"
                   />
 
-                  @if (isValidField(graduateForm, 'identity_document')) {
+                  @if (isValidField(graduateForm, 'last_name')) {
                   <span class="form-text text-danger">
-                    {{ getFieldError(graduateForm, "identity_document") }}
+                    {{ getFieldError(graduateForm, "last_name") }}
                   </span>
                   }
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">
-                    {{ "periodo de admision" }}
+                  <label class="form-label fw-bold">
+                    {{ "periodo de admisión" | titlecase }}
                   </label>
                   <input
                     type="date"
@@ -90,7 +90,7 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">{{
+                  <label class="form-label fw-bold">{{
                     "periodo de egreso" | titlecase
                   }}</label>
                   <input
@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">Fecha de grado</label>
+                  <label class="form-label fw-bold">Fecha de grado</label>
                   <input
                     type="date"
                     class="form-control"
@@ -130,7 +130,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">Número de celular</label>
+                  <label class="form-label fw-bold">Número de celular</label>
                   <input
                     type="text"
                     class="form-control"
@@ -147,7 +147,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">Correo personal</label>
+                  <label class="form-label fw-bold">Correo personal</label>
                   <input
                     type="text"
                     class="form-control"
@@ -166,7 +166,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">Residencial</label>
+                  <label class="form-label fw-bold">Residencial</label>
                   <input
                     type="text"
                     class="form-control"
@@ -183,7 +183,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">Genero</label>
+                  <label class="form-label fw-bold">Genero</label>
                   <select
                     class="form-control"
                     id="gender"
@@ -208,7 +208,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">URL Linkedin</label>
+                  <label class="form-label fw-bold">URL Linkedin</label>
                   <input
                     type="text"
                     class="form-control"
@@ -225,7 +225,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label">URL Cvlac</label>
+                  <label class="form-label fw-bold">URL Cvlac</label>
                   <input
                     type="text"
                     class="form-control"
@@ -240,9 +240,9 @@
                   </span>
                   }
                 </div>
-
+                <br />
                 <div class="col-md-6">
-                  <label class="form-label">Trabajo</label>
+                  <label class="form-label fw-bold">Trabajo</label>
 
                   <select
                     class="form-control"
@@ -266,7 +266,7 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">Posgrado</label>
+                  <label class="form-label fw-bold">Posgrado</label>
                   <select
                     class="form-control"
                     formControlName="postgraduate_degree"
@@ -312,7 +312,7 @@
             <form class="mt-3" [formGroup]="userFrom">
               <div class="row g-3">
                 <div class="col-12">
-                  <label class="form-label">Usuario</label>
+                  <label class="form-label fw-bold">Usuario</label>
                   <input
                     type="text"
                     readonly="true"
@@ -330,7 +330,7 @@
                 </div>
 
                 <div class="col-12">
-                  <label class="form-label">Contraseña</label>
+                  <label class="form-label fw-bold">Contraseña</label>
                   <input
                     type="password"
                     class="form-control"
@@ -365,7 +365,7 @@
             <form class="mt-3" [formGroup]="jobForm">
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">Cargo</label>
+                  <label class="form-label fw-bold">Cargo</label>
                   <select
                     class="form-control"
                     id="title"
@@ -390,7 +390,7 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">Modalidad</label>
+                  <label class="form-label fw-bold">Modalidad</label>
                   <select
                     class="form-control"
                     id="modality"
@@ -415,7 +415,7 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">Pais de la empresa</label>
+                  <label class="form-label fw-bold">Pais de la empresa</label>
                   <input
                     type="text"
                     class="form-control"
@@ -432,7 +432,7 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">Ciudad de la empresa</label>
+                  <label class="form-label fw-bold">Ciudad de la empresa</label>
                   <input
                     type="text"
                     class="form-control"
@@ -466,7 +466,7 @@
             <form class="mt-3" [formGroup]="postgraduateDegreeForm">
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">Tipo de posgrado</label>
+                  <label class="form-label fw-bold">Tipo de posgrado</label>
                   <select
                     class="form-control"
                     id="postgraduate_degree_type"
@@ -502,7 +502,7 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">Año de obtención</label>
+                  <label class="form-label fw-bold">Año de obtención</label>
                   <input
                     type="text"
                     class="form-control"
@@ -524,7 +524,7 @@
                 </div>
 
                 <div class="col-md-12">
-                  <label class="form-label">Titulo Obtenido</label>
+                  <label class="form-label fw-bold">Titulo Obtenido</label>
                   <input
                     type="text"
                     class="form-control"
@@ -549,7 +549,7 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">País</label>
+                  <label class="form-label fw-bold">País</label>
                   <input
                     type="text"
                     class="form-control"
@@ -567,7 +567,7 @@
                   }
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">Universidad</label>
+                  <label class="form-label fw-bold">Universidad</label>
                   <input
                     type="text"
                     class="form-control"

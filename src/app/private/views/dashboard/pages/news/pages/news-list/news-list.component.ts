@@ -6,6 +6,7 @@ import { NewsTableColumns, NewsTableRows } from '../../enums';
 import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { DeleteDialogService } from '@private/services/deleteDialog.service';
 
 @Component({
   selector: 'app-news-list',
@@ -19,7 +20,7 @@ export default class NewsListComponent {
   public rows = Object.values(NewsTableRows);
 
   currentPage = signal(1);
-  limit = signal(4);
+  limit = signal(1);
   totalPages = signal(0);
   newsList = signal<any[]>([]);
   visiblePages = signal<number[]>([]);
@@ -27,6 +28,8 @@ export default class NewsListComponent {
 
   private newsService = inject(NewsService);
   private searchSubject = new Subject<string>();
+
+  private _deleteDialogService = inject(DeleteDialogService);
 
   searchValue = computed(() => this.searchTerm()); // ✅ Uso correcto de computed
 
@@ -41,7 +44,6 @@ export default class NewsListComponent {
       const search = this.searchTerm();
 
       this.newsService.getData(page, limit, search).subscribe((response) => {
-        console.log("REspuesta>>>",{response})
         this.newsList.set(response.data);
         this.totalPages.set(response.totalPages);
         this.updateVisiblePages();
@@ -86,6 +88,13 @@ export default class NewsListComponent {
 
     this.visiblePages.set(
       Array.from({ length: end - start + 1 }, (_, i) => start + i)
+    );
+  }
+
+  onDelete(id: string): void {
+    this._deleteDialogService.confirmDelete(
+      this.newsService.deleteNews(id),
+      '/admin/news'
     );
   }
 

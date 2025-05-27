@@ -77,7 +77,8 @@ export default class GraduatesDetailsComponent implements OnInit {
   });
 
   graduateForm: FormGroup = this._formBuilder.group({
-    fullname: ['', Validators.required],
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
     identity_document: ['', Validators.required],
     admission_period: ['', Validators.required],
     egress_period: ['', Validators.required],
@@ -114,8 +115,6 @@ export default class GraduatesDetailsComponent implements OnInit {
   // Método para construir el payload del formulario
   private _buildFormPayload() {
     const graduateFormValue = this.graduateForm.value;
-    console.log('>>>>', graduateFormValue);
-
     const jobFormValue = this.jobForm.value;
     const postgraduateDegreeFormValue = this.postgraduateDegreeForm.value;
     return {
@@ -137,7 +136,6 @@ export default class GraduatesDetailsComponent implements OnInit {
     }
     const form = this._buildFormPayload();
 
-    console.log('>>>from onsubmit', form);
     try {
       await firstValueFrom(
         this._graduatesService.updateGraduate(this._id!, form)
