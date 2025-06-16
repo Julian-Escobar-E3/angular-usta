@@ -56,8 +56,10 @@ export default class GraduatesAddComponent {
   });
 
   graduateForm: FormGroup = this._formBuilder.group({
-    fullname: ['julian camilo escobar araque', Validators.required],
     identity_document: ['1000781728', Validators.required],
+    first_name: ['julian camilo', Validators.required],
+    last_name: ['escobar araque', Validators.required],
+    gender: ['', Validators.required],
     admission_period: ['2018-02-11', Validators.required],
     egress_period: ['2023-11-11', Validators.required],
     graduation_date: ['2025-02-11', Validators.required],
@@ -69,10 +71,9 @@ export default class GraduatesAddComponent {
         Validators.pattern(this._validatorService.emailPattern),
       ],
     ],
-    residence: ['', Validators.required],
-    gender: ['', Validators.required],
-    url_linkedin: ['', Validators.required],
-    url_cvlac: [''],
+    residence: ['Duitama', Validators.required],
+    url_linkedin: ['www.linkedin.com'],
+    url_cvlac: ['www.cvlac.com'],
     job: ['', Validators.required],
     postgraduate_degree: ['', Validators.required],
   });

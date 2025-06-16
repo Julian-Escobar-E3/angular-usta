@@ -10,7 +10,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 @Component({
   selector: 'app-aside',
   standalone: true,
-  imports: [CommonModule, RouterLink, ImagePipe, RouterLinkActive],
+  imports: [CommonModule, RouterLink],
   templateUrl: './aside.component.html',
   styleUrl: './aside.component.css',
 })

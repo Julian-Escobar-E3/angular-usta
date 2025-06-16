@@ -20,7 +20,6 @@ export class EventsService {
 
   eventsList = computed(() => this.#eventsListState().response);
   eventsListIsLoading = computed(() => this.#eventsListState().loading);
-  eventsListHasMore = computed(() => this.#eventsListState().hasMore);
 
   //? Esta señal individual posiblemente ya no vaya
   #oneEventState = signal<State<IEventsSingleResponse>>({
@@ -73,7 +72,6 @@ export class EventsService {
         this.#eventsListState.set({
           loading: false,
           response: res,
-          hasMore: res!.hasMore,
         });
       });
   }

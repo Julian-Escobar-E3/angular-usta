@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NewsService } from '@private/views/dashboard/pages/news/services/news.service';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { ImagePipe } from '@shared/pipes/image.pipe';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterLink, ImagePipe],
+  imports: [CommonModule, RouterLink, ImagePipe, SpinnerComponent],
   templateUrl: './news-details.component.html',
   styleUrl: './news-details.component.css',
 })

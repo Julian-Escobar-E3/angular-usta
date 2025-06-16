@@ -1,11 +1,12 @@
 <main id="main" class="main">
-  <!-- @if (newsService.newsListIsLoading()) {
-  <div>Cargando informacion</div>
+  @if (carouselService.loading()) {
+  <app-spinner></app-spinner>
   }@else {
-  -->
+
   <div class="pagetitle">
     <app-title title="carousel" section="administrar carousel"></app-title>
   </div>
+
   <section class="section dashboard">
     <div class="row">
       <div class="card">
@@ -13,51 +14,108 @@
           <div class="card-title d-flex justify-content-between mb-3 mt-2">
             <h5>
               {{ "opciones del carousel" | titlecase }}
-              <i class="bi bi-distribute-horizontal"></i>
+              <i class="bi bi-sliders2 fs-4"></i>
             </h5>
+            <button class="btn btn-warning" (click)="restoreData()">
+              <i class="bi bi-arrow-counterclockwise"></i> Restaurar
+            </button>
           </div>
           <div class="table-responsive">
             <table class="table table-hover border border-3">
               <thead class="table-primary">
                 <tr>
-                  <th style="width: auto">{{ "imagen" | titlecase }}</th>
+                  <th style="width: 20px" class="text-center">
+                    {{ "imagen" | titlecase }}
+                  </th>
                   @for (column of columns ; track $index) {
                   <th style="width: 70px">{{ column | titlecase }}</th>
                   }
-                  <th>Opciones</th>
+                  <th style="width: 10px" class="text-center">Opciones</th>
                 </tr>
               </thead>
               <tbody>
-                @for (slide of carouselService ; track $index) {
+                @for (slide of carouselService.data(); track $index) {
                 <tr>
-                  <td>
+                  <td class="text-center">
                     <img
-                      [srcset]="[slide.url_img]"
-                      style="height: 100px; width: auto; aspect-ratio: 16/9"
+                      [src]="
+                        editingSlide()?.id === slide.id
+                          ? tempUrl()
+                          : slide.url_img
+                      "
+                      class="img-slide border rounded"
+                      style="
+                        max-height: 100px;
+                        width: auto;
+                        aspect-ratio: 16/9;
+                        object-fit: fill;
+                      "
                     />
                   </td>
                   @for (row of rows; track $index) {
-                  <td style="width: 70px">{{ slide[row] }}</td>
+                  <td style="width: 70px">
+                    @if (editingSlide()?.id === slide.id) {
+                    <div class="mt-4">
+                      <input
+                        class="form-control"
+                        type="text"
+                        [value]="row === 'link' ? tempLink() : tempUrl()"
+                        (input)="
+                          row === 'link'
+                            ? tempLink.set($any($event.target).value)
+                            : tempUrl.set($any($event.target).value)
+                        "
+                      />
+                    </div>
+                    } @else {
+                    <div class="mt-4">
+                      <input
+                        class="border border-0"
+                        size="40%"
+                        type="text"
+                        [value]="slide[row]"
+                        disabled
+                      />
+                    </div>
+                    }
+                  </td>
                   }
 
-                  <td>
+                  <td class="text-center">
                     <div
-                      class="d-flex justify-content-center align-items-center"
+                      class="d-flex justify-content-center align-items-center gap-2 mt-4"
                     >
-                      <button class="btn btn-sm btn-primary">
+                      @if (editingSlide()?.id === slide.id) {
+                      <button
+                        class="btn btn-sm btn-success"
+                        (click)="saveChanges()"
+                      >
+                        <i class="bi bi-check-lg"></i>
+                      </button>
+                      <button
+                        class="btn btn-sm btn-danger"
+                        (click)="cancelEdit()"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                      } @else {
+                      <button
+                        class="btn btn-sm btn-primary"
+                        (click)="startEdit(slide)"
+                      >
                         <i class="bi bi-pencil-fill"></i>
                       </button>
-                      <button class="btn btn-sm btn-danger">
-                        <i class="bi bi-trash-fill"></i>
-                      </button>
+                      }
                     </div>
                   </td>
                 </tr>
 
                 }@empty {
-                <div class="d-flex justify-content-center mt-2">
-                  No hay información que mostrar
-                </div>
+                <tr>
+                  <td colspan="100%" class="text-center">
+                    No hay información que mostrar
+                  </td>
+                </tr>
                 }
               </tbody>
             </table>
@@ -66,5 +124,5 @@
       </div>
     </div>
   </section>
-  <!-- } -->
+  }
 </main>

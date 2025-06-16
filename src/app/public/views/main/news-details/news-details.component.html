@@ -1,13 +1,13 @@
 <section class="mysection-public">
   @if(newsService.oneNewsLoading()){
-  <div>Cargando información</div>
+  <app-spinner />
   }@else {
 
   <div class="container">
     <article class="article">
       <div class="d-flex justify-content-center align-items-center post-img">
         <img
-          [srcset]="[newsService.oneNews()?.data?.images?.xl]"
+          [srcset]="[newsService.oneNews()?.data?.images?.xl | image]"
           [alt]="[newsService.oneNews()?.data?.title]"
           class="img-fluid"
         />

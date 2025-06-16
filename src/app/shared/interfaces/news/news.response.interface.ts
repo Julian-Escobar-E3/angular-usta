@@ -2,5 +2,8 @@ import { INews } from './news.interface';
 
 export interface INewsResponse {
   data: INews[];
-  hasMore: boolean;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }

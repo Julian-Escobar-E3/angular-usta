@@ -1,6 +1,6 @@
 <main id="main" class="main">
   @if (loading) {
-  <div>Cargando informacion</div>
+  <app-spinner />
   }@else {
   <app-title
     title="Noticias"
@@ -99,13 +99,13 @@
 
                   <div class="col-12">
                     <label class="form-label fw-bold">Párrafo 1</label>
-                    <input
-                      type="text"
+                    <textarea
                       class="form-control"
-                      id="paragraph"
                       formControlName="description_1"
                       [class]="getValidationClasses('description_1')"
-                    />
+                      rows="4"
+                    >
+                    </textarea>
                     @if (isValidField('title')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("description_1") }}
@@ -114,23 +114,24 @@
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label fw-bold">Descripción 2</label>
+                    <label class="form-label fw-bold">Párrafo 2</label>
 
                     <textarea
                       class="form-control"
                       formControlName="description_2"
+                      rows="4"
                     >
                     </textarea>
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label fw-bold">Descripción 3</label>
-                    <input
-                      type="text"
+                    <label class="form-label fw-bold">Párrafo 3</label>
+                    <textarea
                       class="form-control"
-                      id="description3"
                       formControlName="description_3"
-                    />
+                      rows="4"
+                    >
+                    </textarea>
                   </div>
                 </div>
 
@@ -144,7 +145,7 @@
                       formControlName="author"
                       [class]="getValidationClasses('author')"
                     />
-                    @if (isValidField('title')) {
+                    @if (isValidField('author')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("author") }}
                     </span>
@@ -153,14 +154,23 @@
 
                   <div class="col-md-6">
                     <label class="form-label fw-bold">Tag</label>
-                    <input
-                      type="text"
+
+                    <select
                       class="form-control"
                       id="tag"
                       formControlName="tag"
                       [class]="getValidationClasses('tag')"
-                    />
-                    @if (isValidField('title')) {
+                    >
+                      <option selected disabled value="">
+                        --Seleccione una opción--
+                      </option>
+                      @for (tag of tags; track $index) {
+                      <option [value]="tag">
+                        {{ tag | titlecase }}
+                      </option>
+                      }
+                    </select>
+                    @if (isValidField('tag')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("tag") }}
                     </span>

@@ -22,13 +22,7 @@ export default class EventsListComponent implements OnInit {
     this.eventsService.getEvents(this.offset, this.limit);
   }
 
-  goToNextPage() {
-    if (this.eventsService.eventsListHasMore()) {
-      this.offset += this.limit;
-      this.currentPage += 1; // Incrementar la página actual
-      this.loadEvents();
-    }
-  }
+  goToNextPage() {}
 
   goToPreviousPage() {
     if (this.offset > 0) {

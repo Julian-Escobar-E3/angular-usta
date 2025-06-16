@@ -25,7 +25,6 @@
                   />
                 </div>
 
-
                 <!-- ----------------------------- -->
 
                 <!--//FIXED =========================================================================================================0 -->
@@ -81,14 +80,14 @@
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label">Descropción 1</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="paragraph"
-                      formControlName="description_1"
-                      [class]="getValidationClasses('description_1')"
-                    />
+                    <label class="form-label">Párrafo 1</label>
+                    <textarea
+                    class="form-control"
+                    formControlName="description_1"
+                    [class]="getValidationClasses('description_1')"
+                    rows="4"
+                  >
+                  </textarea>
                     @if (isValidField('description_1')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("description_1") }}
@@ -97,30 +96,25 @@
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label">Descripción 2</label>
-                    <!-- <input
-                      type="text"
-                      class="form-control"
-                      id="description2"
-                      formControlName="description2"
-                      style="height: 5rem"
-                    /> -->
-
+                    <label class="form-label">Párrafo 2</label>
                     <textarea
-                      class="form-control"
-                      formControlName="description_2"
-                    >
-                    </textarea>
+                    class="form-control"
+                    formControlName="description_2"
+                    [class]="getValidationClasses('description_2')"
+                    rows="4"
+                  >
+                  </textarea>
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label">Descripción 3</label>
-                    <input
-                      type="text"
+                    <label class="form-label">Párrafo 3</label>
+                    <textarea
                       class="form-control"
-                      id="description3"
                       formControlName="description_3"
-                    />
+                      [class]="getValidationClasses('description_3')"
+                      rows="4"
+                    >
+                    </textarea>
                   </div>
                 </div>
 
@@ -143,13 +137,21 @@
 
                   <div class="col-md-6">
                     <label class="form-label">Tag</label>
-                    <input
-                      type="text"
+                    <select
                       class="form-control"
                       id="tag"
                       formControlName="tag"
                       [class]="getValidationClasses('tag')"
-                    />
+                    >
+                      <option selected disabled value="">
+                        --Seleccione una opción--
+                      </option>
+                      @for (tag of tags; track $index) {
+                      <option [value]="tag">
+                        {{ tag }}
+                      </option>
+                      }
+                    </select>
                     @if (isValidField('tag')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("tag") }}

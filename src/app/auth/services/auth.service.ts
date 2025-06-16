@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '@evn/environment';
 import { ICheckTokenResponse, ILoginResponse, IUser } from '../interfaces';
@@ -14,7 +14,7 @@ export class AuthService {
   #currentUser = signal<IUser | null>(null);
   #authStatus = signal<AuthStatus>(AuthStatus.checking);
 
-  //private _authStatus = signal<AuthStatus>();
+  // private _authStatus = signal<AuthStatus>();
 
   public currentUser = computed(() => this.#currentUser());
   public authStatus = computed(() => this.#authStatus());
@@ -22,7 +22,7 @@ export class AuthService {
   private setAuthentication(user: IUser, token: string): boolean {
     this.#currentUser.set(user);
     this.#authStatus.set(AuthStatus.authenticated);
-    localStorage.setItem('token', token);
+    localStorage.setItem('jwt_token', token);
 
     return true;
   }
@@ -30,11 +30,7 @@ export class AuthService {
   login(username: string, password: string): Observable<boolean> {
     const url = `${this._baseUrl}/auth/login`;
     const body = { username, password };
-
-    return this._http.post<any>(url, body).pipe(
-      tap((info) => {
-        console.log({ info });
-      }),
+    return this._http.post<ILoginResponse>(url, body).pipe(
       map(({ user, token }) => this.setAuthentication(user, token)),
       catchError((err) => throwError(() => err.error))
     );
@@ -46,28 +42,28 @@ export class AuthService {
     this.#authStatus.set(AuthStatus.notAuthenticated);
   }
 
-  checkAuthStatus(): Observable<boolean> {
-    const url = `${this._baseUrl}/auth/check-status`;
-    const token = localStorage.getItem('token');
+  // checkAuthStatus(): Observable<boolean> {
+  //   const url = `${this._baseUrl}/auth/check-status`;
+  //   const token = localStorage.getItem('token');
 
-    if (!token) {
-      this.logout();
-      return of(false);
-    }
+  //   if (!token) {
+  //     this.logout();
+  //     return of(false);
+  //   }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    return this._http.get<ICheckTokenResponse>(url, { headers }).pipe(
-      map(({ user, token }) => this.setAuthentication(user, token)),
-      catchError(() => {
-        this.#authStatus.set(AuthStatus.notAuthenticated);
-        return of(false);
-      })
-    );
-  }
+  //   return this._http.get<ICheckTokenResponse>(url, { headers }).pipe(
+  //     map(({ user, token }) => this.setAuthentication(user, token)),
+  //     catchError(() => {
+  //       this.#authStatus.set(AuthStatus.notAuthenticated);
+  //       return of(false);
+  //     })
+  //   );
+  // }
 
   constructor() {
     //-- SE LANZÁ CUANDO SE USA CUALQUIER SERVICIO DE ESTE ARCHIVO
-    this.checkAuthStatus().subscribe();
+    // this.checkAuthStatus().subscribe();
   }
 }

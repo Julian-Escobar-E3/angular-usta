@@ -7,34 +7,34 @@ export const MAIN_OPTIONS = [
   {
     name: 'noticias',
     icon: 'bi bi-newspaper',
-    path: 'employment-status',
+    path: '/admin/news/manage-news',
   },
 
   {
     name: 'eventos',
     icon: 'bi bi-calendar4-week',
-    path: 'employment-modality',
+    path: '/admin/events/manage-events',
   },
 
   {
     name: 'carousel',
     icon: 'bi bi-images',
-    path: 'postgraduate-details',
+    path: '/admin/manage-carousel',
   },
   {
     name: 'egresados',
     icon: 'bi bi-mortarboard-fill',
-    path: 'gender-distribution',
+    path: '/admin/graduates/manage-graduates',
   },
   {
     name: 'reportes',
     icon: 'bi bi-clipboard-data',
-    path: 'education-level',
+    path: '/admin/graphics',
   },
   {
     name: 'docentes',
     icon: 'bi bi-person-fill',
-    path: 'job-rol-details',
+    path: '/admin/profiles/manage-profiles',
   },
 ];
 

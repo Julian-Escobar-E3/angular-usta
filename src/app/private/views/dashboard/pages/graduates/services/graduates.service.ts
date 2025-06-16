@@ -26,12 +26,10 @@ export class GraduatesService {
   #graduatesListState = signal<State<IGraduatesResponse>>({
     loading: true,
     response: null,
-    hasMore: true,
   });
 
   graduatesList = computed(() => this.#graduatesListState().response);
   graduatesListIsLoading = computed(() => this.#graduatesListState().loading);
-  graduatesListhasMore = computed(() => this.#graduatesListState().hasMore);
 
   //? Esta señal individual posiblemente ya no vaya
   #oneGraduateState = signal<State<IGraduateResponse>>({
@@ -85,7 +83,6 @@ export class GraduatesService {
         this.#graduatesListState.set({
           loading: false,
           response: res,
-          hasMore: res!.hasMore,
         });
       });
   }
@@ -113,7 +110,7 @@ export class GraduatesService {
         this.#graduateMessage.set({ loading: false, response: res });
       }),
       catchError((err) => {
-        console.log('Error');
+        console.log('Error actualziando', err);
         const msg = err.error;
         this.#graduateMessage.set({ loading: false, response: msg });
         return throwError(() => err.error);

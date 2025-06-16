@@ -1,10 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, delay, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '@evn/environment';
-import { INewsOneResponse, INewsResponse } from '../interfaces';
-import { IMessageResponse } from '@shared/interfaces/message-response.interface';
 import { State } from '@private/interfaces/state.interface';
+import { INewsOneResponse, INewsResponse } from '@shared/interfaces/news';
+import { IMessageResponse } from '@shared/interfaces/message-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -15,10 +15,9 @@ export class NewsService {
 
   getData(page: number, limit: number, searchTerm: string): Observable<any> {
     const url = `${this._baseUrl}/news?page=${page}&limit=${limit}&param=${searchTerm}`;
-    return this._http.get<any>(url);
+    return this._http.get<INewsResponse>(url);
   }
 
-  //? Esta señal individual posiblemente ya no vaya
   #oneNewsState = signal<State<INewsOneResponse>>({
     loading: true,
     response: null,
@@ -71,8 +70,6 @@ export class NewsService {
         this.#newsMessage.set({ loading: false, response: res });
       }),
       catchError((err) => {
-        console.log('error servicio notica actualizar', err);
-
         const msg = err.error;
         this.#newsMessage.set({ loading: false, response: msg });
         return throwError(() => err.error);

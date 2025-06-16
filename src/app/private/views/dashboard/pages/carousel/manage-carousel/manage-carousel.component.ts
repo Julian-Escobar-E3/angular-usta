@@ -1,38 +1,95 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TitleComponent } from '@shared/title/title.component';
 import { CarouselTableColumns, CarouselTableRows } from '../enums';
-import { ISwiperData } from '../interfaces/swiper-data.interface';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
+import { CarouselService } from '../services/carousel.service';
+import { CarouselData } from '../interfaces/swiper-data.interface';
+import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
-const data: ISwiperData[] = [
-  {
-    id: 1,
-    url_img:
-      'https://www.santototunja.edu.co/images/01-USTATunja/10-USTA-Tunja-DepAdministrativos/AdmisionesYMercadeo/2022/Oferta_Posgrados_Santoto_Tunja_2022.png',
-    link: 'https://www.santototunja.edu.co/programas-academicos/programas/posgrados-presenciales',
-  },
-  {
-    id: 2,
-    url_img: 'https://graduados.usta.edu.co/images/Bolsadeempleo-100.jpg',
-    link: 'https://graduados.usta.edu.co/index.php/bolsa-de-empleo/que-es-la-bolsa-de-empleo',
-  },
-  {
-    id: 3,
-    url_img:
-      'https://www.santototunja.edu.co/images/01-USTATunja/01-USTA-Tunja-Imagenes/Departamentos_Unidades/2019/apoyo-a-egresados.png',
-    link: 'https://www.santototunja.edu.co/inicio-direccion-de-graduados',
-  },
-];
 @Component({
   selector: 'app-manage-carousel',
   standalone: true,
-  imports: [CommonModule, TitleComponent],
+  imports: [CommonModule, TitleComponent, SpinnerComponent, FormsModule],
   templateUrl: './manage-carousel.component.html',
   styles: ``,
 })
-export default class ManageCarouselComponent {
-  public carouselService = data;
-  public columns = Object.values(CarouselTableColumns);
-  public rows = Object.values(CarouselTableRows);
+export default class ManageCarouselComponent implements OnInit {
+  public carouselService = inject(CarouselService);
+  private _toastrService = inject(ToastrService);
+
+  public columns: string[] = Object.values(CarouselTableColumns);
+  public rows: (keyof CarouselData)[] = Object.values(
+    CarouselTableRows
+  ) as (keyof CarouselData)[];
+
+  public editingSlide = signal<CarouselData | null>(null);
+
+  public tempUrl = signal('');
+  public tempLink = signal('');
+
+  public startEdit(slide: CarouselData) {
+    this.editingSlide.set(slide);
+    this.tempUrl.set(slide.url_img);
+    this.tempLink.set(slide.link);
+  }
+
+  public cancelEdit() {
+    this.editingSlide.set(null);
+  }
+
+  public saveChanges() {
+    const current = this.editingSlide();
+    if (!current) return;
+
+    const updated = {
+      ...current,
+      url_img: this.tempUrl(),
+      link: this.tempLink(),
+    };
+
+    this.carouselService.updateSlide(updated).subscribe({
+      next: () => {
+        this._toastrService.success('Cambios guardados');
+        this.editingSlide.set(null);
+        this.carouselService.loadData(); // recargar datos
+      },
+      error: () => {
+        this._toastrService.error('Error al guardar');
+      },
+    });
+  }
+
+  restoreData(): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esto restaurará el estado original del carrusel.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, restaurar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.carouselService.restoreData().subscribe({
+          next: () => {
+            Swal.fire(
+              '¡Restaurado!',
+              'El carrusel fue restaurado correctamente.',
+              'success'
+            );
+            this.carouselService.loadData(); // recarga los datos
+          },
+          error: () => {
+            Swal.fire('Error', 'No se pudo restaurar el carrusel.', 'error');
+          },
+        });
+      }
+    });
+  }
+  constructor() {}
+  ngOnInit(): void {
+    this.carouselService.loadData();
+  }
 }

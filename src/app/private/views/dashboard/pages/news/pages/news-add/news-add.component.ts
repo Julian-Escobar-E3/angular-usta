@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { TitleComponent } from '@shared/title/title.component';
+import { Tags } from '../../enums/tags';
 @Component({
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, ImagePipe, TitleComponent],
@@ -28,6 +29,8 @@ export default class NewsAddComponent {
   private _validatorService = inject(ValidatorService);
   private _newsService = inject(NewsService);
   private _toastrService = inject(ToastrService);
+
+  tags = Object.values(Tags);
 
   imagePreview: string | ArrayBuffer | undefined = '';
 

@@ -20,7 +20,7 @@ export default class NewsListComponent {
   public rows = Object.values(NewsTableRows);
 
   currentPage = signal(1);
-  limit = signal(1);
+  limit = signal(6);
   totalPages = signal(0);
   newsList = signal<any[]>([]);
   visiblePages = signal<number[]>([]);
@@ -31,7 +31,7 @@ export default class NewsListComponent {
 
   private _deleteDialogService = inject(DeleteDialogService);
 
-  searchValue = computed(() => this.searchTerm()); // ✅ Uso correcto de computed
+  searchValue = computed(() => this.searchTerm());
 
   set searchInput(value: string) {
     this.searchTerm.set(value);

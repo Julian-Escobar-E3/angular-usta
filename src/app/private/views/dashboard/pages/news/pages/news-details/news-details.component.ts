@@ -17,6 +17,8 @@ import { ImagePipe } from '@shared/pipes/image.pipe';
 import { ValidatorService } from '@shared/validators/services/validator.service';
 import { TitleComponent } from '@shared/title/title.component';
 import { DeleteDialogService } from '@private/services/deleteDialog.service';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
+import { Tags } from '../../enums/tags';
 
 @Component({
   selector: 'app-news-details',
@@ -27,6 +29,7 @@ import { DeleteDialogService } from '@private/services/deleteDialog.service';
     ReactiveFormsModule,
     ImagePipe,
     TitleComponent,
+    SpinnerComponent,
   ],
   templateUrl: './news-details.component.html',
   styles: ``,
@@ -44,6 +47,8 @@ export default class NewsDetailsComponent implements OnInit {
 
   public imagePreview: string | ArrayBuffer | undefined;
   public loading: boolean = true;
+
+  tags = Object.values(Tags);
 
   myForm: FormGroup = this._formBuilder.group({
     title: ['', Validators.required],
