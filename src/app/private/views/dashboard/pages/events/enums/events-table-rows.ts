@@ -1,6 +1,6 @@
 export enum EventsTableRows {
   title = 'title',
-  event_date = 'event_date',
+  event_date = 'eventDate',
   location = 'location',
   state = 'state',
 }

@@ -19,7 +19,7 @@ export default class EventsListComponent implements OnInit {
     this.loadEvents();
   }
   loadEvents() {
-    this.eventsService.getEvents(this.offset, this.limit);
+    this.eventsService.getData(this.offset, this.limit, '');
   }
 
   goToNextPage() {}

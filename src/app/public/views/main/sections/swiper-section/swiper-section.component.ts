@@ -1,11 +1,15 @@
 import {
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
+  inject,
   OnInit,
   signal,
 } from '@angular/core';
 import { register, SwiperContainer } from 'swiper/element/bundle';
 import { SwiperOptions } from 'swiper/types';
+import { SlideInfo } from './interfaces/slide-response.interface';
+import { SlidesService } from './services/slides.service';
 interface ISwiperData {
   id: number;
   img: string;
@@ -22,39 +26,22 @@ register();
   styleUrl: './swiper-section.component.css',
 })
 export class SwiperSectionComponent implements OnInit {
-  data: ISwiperData[] = [
-     {
-    id: 1,
-    img:
-      'https://www.santototunja.edu.co/images/01-USTATunja/10-USTA-Tunja-DepAdministrativos/AdmisionesYMercadeo/2022/Oferta_Posgrados_Santoto_Tunja_2022.png',
-    link: 'https://www.santototunja.edu.co/programas-academicos/programas/posgrados-presenciales',
-  },
-  {
-    id: 2,
-    img: 'https://graduados.usta.edu.co/images/Bolsadeempleo-100.jpg',
-    link: 'https://graduados.usta.edu.co/index.php/bolsa-de-empleo/que-es-la-bolsa-de-empleo',
-  },
-  {
-    id: 3,
-    img:
-      'https://www.santototunja.edu.co/images/01-USTATunja/01-USTA-Tunja-Imagenes/Departamentos_Unidades/2019/apoyo-a-egresados.png',
-    link: 'https://www.santototunja.edu.co/inicio-direccion-de-graduados',
-  },
-  ];
-
+  slidesService = inject(SlidesService);
   swiperElemnt = signal<SwiperContainer | null>(null);
+  data = computed(() => this.slidesService.slidesData()?.data ?? []);
+
   ngOnInit(): void {
+    this.slidesService.getJobStatusCount();
     const swiperConstructor = document.querySelector('swiper-container');
     const swiperOptions: SwiperOptions = {
       spaceBetween: 0,
       speed: 500,
       centeredSlides: true,
-      loop: true,
       slideToClickedSlide: true,
       autoplay: {
         delay: 3000,
         disableOnInteraction: false,
-      }
+      },
     };
     Object.assign(swiperConstructor!, swiperOptions);
     this.swiperElemnt.set(swiperConstructor as SwiperContainer);

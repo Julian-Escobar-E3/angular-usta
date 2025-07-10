@@ -1,31 +1,31 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { BarChartComponent } from '@shared/components/bar-chart-card/bar-chart-card.component';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { TitleComponent } from '@shared/title/title.component';
+import { GraphicsService } from '../../services/graphics.service';
 
 @Component({
   standalone: true,
-  imports: [TitleComponent, BarChartComponent, CommonModule],
+  imports: [TitleComponent, BarChartComponent, CommonModule, SpinnerComponent],
   templateUrl: './postgraduate-detail.component.html',
   styles: ``,
+  selector: 'degree-type',
 })
 export default class PostgraduateDetailComponent {
-  //START-FIXED:-------------------------------------
-  JobModalityStatistics = {
-    data: {
-      Presencial: 10,
-      Remoto: 5,
-      Hibirido: 20,
-    },
-  };
-  //END-FIXED:-----------------------------------------------------------
-
-  keysArray: string[] = [];
-  valuesArray: number[] = [];
+  graphicsService = inject(GraphicsService);
 
   constructor() {
-    const data = this.JobModalityStatistics.data;
-    this.keysArray = Object.keys(data); //labels
-    this.valuesArray = Object.values(data).map(Number); //series
+    this.graphicsService.getDegreeType();
   }
+
+  readonly keysArray = computed(() => {
+    const data = this.graphicsService.graphicsData();
+    return data ? Object.keys(data.result) : [];
+  });
+
+  readonly valuesArray = computed(() => {
+    const data = this.graphicsService.graphicsData();
+    return data ? Object.values(data.result) : [];
+  });
 }

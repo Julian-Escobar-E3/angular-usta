@@ -65,43 +65,39 @@ export default class NewsAddComponent {
     }
     const formData = createFormData(this.myForm);
 
-    //! mostrar informacion del from
-    // const formDataObj: any = {};
-    // formData.forEach((value, key) => {
-    //   formDataObj[key] = value;
-    // });
-    // console.log('>>LO QUE MANDAMOS AL SERVICIO', formDataObj);
-    //! -----------------------------
-
     if (this.myForm.controls['file'].value !== null) {
-      formData.append('file', this.myForm.get('fileSource')?.value);
+      formData.append('filew', this.myForm.get('fileSource')?.value);
     }
 
-    try {
-      await firstValueFrom(this._newsService.postNews(formData));
-      const message = this._newsService.newsMessage()?.message.ES;
-      this._toastrService.success(message, 'Todo Correcto');
-      this._router.navigate(['admin/news']);
-    } catch (error) {
-      console.log(error);
-
-      const message2 = this._newsService.newsMessage()?.message.ES;
-      this._toastrService.error(
-        `There was an error creating the news, ${message2}`,
-        'Error'
-      );
-    }
+    await firstValueFrom(this._newsService.postNews(formData));
+    const message = this._newsService.newsMessage()?.message.ES;
+    this._toastrService.success(message, 'Todo Correcto');
+    this._router.navigate(['admin/news']);
   }
-  onFileSelected(event: any) {
-    let selectedFile = event.target.files[0];
-    if (!selectedFile || selectedFile.length == 0) {
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+
+    if (!file) return;
+
+    const isPng =
+      file.type === 'image/png' && file.name.toLowerCase().endsWith('.png');
+
+    if (!isPng) {
+      this._toastrService.error('Solo se permiten imágenes en formato .png');
+      this.myForm.get('file')?.reset();
+      this.myForm.get('fileSource')?.reset();
+      input.value = ''; // Limpia el campo
+      this.imagePreview = '';
       return;
     }
-    this.myForm.patchValue({ fileSource: selectedFile });
+
+    this.myForm.patchValue({ fileSource: file });
+
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
     };
-    reader.readAsDataURL(selectedFile);
+    reader.readAsDataURL(file);
   }
 }

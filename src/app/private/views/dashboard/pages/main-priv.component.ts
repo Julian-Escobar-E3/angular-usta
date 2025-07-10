@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import IMenuOptions from '@private/views/aside/interfaces/sidebar.interface';
+import { SidebarOptionsService } from '@private/views/aside/services/sidebarOptions.service';
 import { TitleComponent } from '@shared/title/title.component';
 
 export const MAIN_OPTIONS = [
@@ -34,7 +36,7 @@ export const MAIN_OPTIONS = [
   {
     name: 'docentes',
     icon: 'bi bi-person-fill',
-    path: '/admin/profiles/manage-profiles',
+    path: '/admin/engineers/manage-engineers',
   },
 ];
 
@@ -46,5 +48,11 @@ export const MAIN_OPTIONS = [
   styleUrl: './main-priv.component.css',
 })
 export default class MainPrivComponent {
-  options = MAIN_OPTIONS;
+  options: IMenuOptions[] = [];
+  readonly #sidebarService = inject(SidebarOptionsService);
+  constructor() {
+    this.#sidebarService.getSidebarOptions().subscribe((options) => {
+      this.options = options;
+    });
+  }
 }

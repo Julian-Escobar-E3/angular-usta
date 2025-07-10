@@ -24,7 +24,7 @@ export default class LoginComponent {
 
   public myForm: FormGroup = this._formBuilder.group({
     username: ['admin@admin', [Validators.required, Validators.email]],
-    password: ['#HolaMundo1', [Validators.required, Validators.minLength(6)]],
+    password: ['$HolaMundo1', [Validators.required, Validators.minLength(6)]],
   });
   passwordVisible = signal<boolean>(false);
 

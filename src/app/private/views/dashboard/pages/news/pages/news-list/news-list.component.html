@@ -1,7 +1,13 @@
 <main id="main" class="main">
-  <app-title title="noticias" section="administrar noticias"></app-title>
-
+  <app-title
+    title="noticias"
+    section="administrar noticias"
+    icon="bi bi-newspaper"
+  ></app-title>
   <section class="section dashboard">
+    @if (newsService.newsListLoading()) {
+    <app-spinner />
+    }@else {
     <div class="row">
       <div class="card">
         <div class="card-body">
@@ -9,14 +15,20 @@
             <div class="input-group w-100 w-md-50">
               <input
                 type="text"
-                [ngModel]="searchValue()"
-                (ngModelChange)="searchInput = $event"
+                [(ngModel)]="searchTerm"
                 placeholder="Buscar por título..."
                 class="form-control border border-3"
+                [disabled]="isSearchActive()"
               />
+              @if (!isSearchActive()) {
               <button (click)="onSearch()" class="btn btn-primary">
                 Buscar
               </button>
+              } @else {
+              <button (click)="onResetSearch()" class="btn btn-secondary">
+                Reestablecer
+              </button>
+              }
             </div>
           </div>
 
@@ -56,7 +68,7 @@
                       class="img-fluid"
                     />
                   </td>
-                  <td class="d-flex justify-content-center align-items-center">
+                  <td class="text-center">
                     <a
                       [routerLink]="['../details-news/', news.id_news]"
                       class="btn btn-sm btn-outline-primary"
@@ -129,6 +141,6 @@
         </nav>
       </div>
     </div>
+    }
   </section>
 </main>
-c

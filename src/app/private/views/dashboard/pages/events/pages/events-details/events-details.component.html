@@ -1,28 +1,205 @@
 <main id="main" class="main">
-  <!-- @if (newsService.newsListIsLoading()) {
-  <div>Cargando informacion</div>
-  }@else {
-  -->
-  <div class="pagetitle">
-            <app-title title="administrar eventos" section="administrar eventos"></app-title>
-
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a style="text-decoration: none">Inicio</a>
-        </li>
-        <li class="breadcrumb-item active">Detalles de evento</li>
-      </ol>
-    </nav>
-  </div>
+  <app-title
+    title="administrar eventos"
+    section="administrar eventos"
+    icon="bi bi-calendar4-week"
+  ></app-title>
   <section class="section dashboard">
+    @if (loading) {
+    <app-spinner />
+    }@else {
     <div class="row">
-      <div class="card">
-        <div class="card-body">
-          <!-- fixed -->
+      <!-- Left side columns -->
+      <div class="col-lg-5">
+        <div class="row">
+          <!-- Reports -->
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Imagen</h5>
+                <!--//FIXED =========================================================================================================0 -->
+
+                <div class="card shadow-lg border border-5">
+                  <img
+                    [src]="imagePreview | image"
+                    class="img-fluid"
+                    alt="No image"
+                    style="aspect-ratio: 16/9"
+                    (click)="photoInput.click()"
+                  />
+                </div>
+                <!--//FIXED =========================================================================================================0 -->
+              </div>
+            </div>
+          </div>
+          <!-- End Reports -->
         </div>
       </div>
+      <!-- End Left side columns -->
+
+      <!-- Right side columns -->
+      <div class="col-lg-7">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Formulario</h5>
+            <!-- fixed -->
+
+            <div class="">
+              <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+                <div class="row g-3">
+                  <div class="col-sm-6">
+                    <label class="form-label fw-bold">Titulo</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="title"
+                      formControlName="title"
+                      [class]="getValidationClasses('title')"
+                    />
+
+                    @if (isValidField('title')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("title") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-sm-6">
+                    <label class="form-label fw-bold">Fecha del evento</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="eventDate"
+                      formControlName="eventDate"
+                      [class]="getValidationClasses('eventDate')"
+                    />
+                    @if (isValidField('eventDate')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("eventDate") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label fw-bold">Párrafo 1</label>
+                    <textarea
+                      class="form-control"
+                      formControlName="description_1"
+                      [class]="getValidationClasses('description_1')"
+                      rows="4"
+                    ></textarea>
+                    @if (isValidField('description_1')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("description_1") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label fw-bold">Párrafo 2</label>
+                    <textarea
+                      class="form-control"
+                      formControlName="description_2"
+                      [class]="getValidationClasses('description_2')"
+                      rows="4"
+                    >
+                    </textarea>
+                  </div>
+
+                  <div class="col-12 mb-3">
+                    <label class="form-label fw-bold">Párrafo 3</label>
+                    <textarea
+                      class="form-control"
+                      formControlName="description_3"
+                      [class]="getValidationClasses('description_3')"
+                      rows="4"
+                    >
+                    </textarea>
+                  </div>
+                </div>
+
+                <div class="row gy-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Ubicación</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="location"
+                      formControlName="location"
+                      [class]="getValidationClasses('location')"
+                    />
+                    @if (isValidField('location')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("location") }}
+                    </span>
+                    }
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Estado</label>
+                    <select
+                      class="form-control"
+                      id="state"
+                      formControlName="state"
+                      [class]="getValidationClasses('state')"
+                    >
+                      <option selected disabled value="">
+                        --Seleccione una opción--
+                      </option>
+                      @for (stat of status; track $index) {
+                      <option [value]="stat">
+                        {{ stat | titlecase }}
+                      </option>
+                      }
+                    </select>
+                    @if (isValidField('state')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("state") }}
+                    </span>
+                    }
+                  </div>
+                  <div class="col-md-12">
+                    <label class="form-label fw-bold">Imagen</label>
+                    <input
+                      class="form-control"
+                      type="file"
+                      id="file"
+                      (change)="onFileSelected($event)"
+                      formControlName="file"
+                      [class]="getValidationClasses('file')"
+                      #photoInput
+                    />
+                    @if (isValidField('file')) {
+                    <span class="form-text text-danger">
+                      {{ getFieldError("file") }}
+                    </span>
+                    }
+                  </div>
+                </div>
+
+                <hr />
+                <div class="d-flex justify-content-between">
+                  <button
+                    class="btn btn-primary btn-lg"
+                    type="submit"
+                    [disabled]="myForm.invalid"
+                    (click)="onSubmit()"
+                  >
+                    Actualizar
+                  </button>
+                  <button class="btn btn-danger btn-lg" (click)="onDelete()">
+                    Eliminar
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- fixed -->
+          </div>
+        </div>
+      </div>
+      <!-- End Right side columns -->
     </div>
+    }
   </section>
-  <!-- } -->
 </main>

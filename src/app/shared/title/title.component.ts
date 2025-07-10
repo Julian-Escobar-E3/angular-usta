@@ -7,7 +7,10 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: ` <div class="pagetitle">
-    <h1>{{ title() | titlecase }}</h1>
+    <h1>
+      {{ title() | titlecase }}
+      <i [ngClass]="icon() || 'bi bi-cup-hot-fill'" class="fs-4"></i>
+    </h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -30,7 +33,8 @@ import { RouterLink } from '@angular/router';
       </ol>
     </nav>
   </div>`,
-  styles: ``,
+  styles: `
+`,
 })
 export class TitleComponent {
   title = input<string>();
@@ -38,4 +42,5 @@ export class TitleComponent {
   section = input<string>();
   // @Input({ required: false }) subSection!: string; //-- manera tradicional de usar los input
   subSection = input<string>(); //? nueva forma de usar los input
+  icon = input<string>();
 }

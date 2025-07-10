@@ -1,13 +1,9 @@
 <main id="main" class="main">
-  @if (carouselService.loading()) {
-  <app-spinner></app-spinner>
-  }@else {
-
-  <div class="pagetitle">
-    <app-title title="carousel" section="administrar carousel"></app-title>
-  </div>
-
+    <app-title title="carousel" section="administrar carousel" icon="bi bi-images"></app-title>
   <section class="section dashboard">
+    @if (carouselService.loading()) {
+    <app-spinner></app-spinner>
+    }@else {
     <div class="row">
       <div class="card">
         <div class="card-body">
@@ -43,10 +39,10 @@
                           ? tempUrl()
                           : slide.url_img
                       "
-                      class="img-slide border rounded"
+                      class="img-slide"
                       style="
                         max-height: 100px;
-                        width: auto;
+                        width: 200px;
                         aspect-ratio: 16/9;
                         object-fit: fill;
                       "
@@ -123,6 +119,6 @@
         </div>
       </div>
     </div>
+    }
   </section>
-  }
 </main>

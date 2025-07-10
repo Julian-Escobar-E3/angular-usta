@@ -1,13 +1,10 @@
 import IMenuOptions from '../../interfaces/sidebar.interface';
-
-//TODO: RENAME PROPERTIES
-
 export const optionsSuperAdmin: IMenuOptions[] = [
   {
     id: 'carousel',
     name: 'Carousel',
     icon: 'bi bi-images',
-    path: '',
+    path: '/admin/manage-carousel',
     childrens: [
       {
         id: 'administrar-carousel',
@@ -21,7 +18,7 @@ export const optionsSuperAdmin: IMenuOptions[] = [
     id: 'eventos',
     name: 'Eventos',
     icon: 'bi bi-calendar4-week',
-    path: '',
+    path: '/admin/events/manage-events',
     childrens: [
       {
         id: 'administrar-eventos',
@@ -42,7 +39,7 @@ export const optionsSuperAdmin: IMenuOptions[] = [
     id: 'noticias',
     name: 'Noticias',
     icon: 'bi bi-newspaper',
-    path: '',
+    path: '/admin/news/manage-news',
     childrens: [
       {
         id: 'administrar-noticias',
@@ -63,7 +60,7 @@ export const optionsSuperAdmin: IMenuOptions[] = [
     id: 'graduados',
     name: 'Graduados',
     icon: 'bi bi-mortarboard-fill',
-    path: '',
+    path: '/admin/graduates/manage-graduates',
     childrens: [
       {
         id: 'administrar-graduados',
@@ -83,20 +80,20 @@ export const optionsSuperAdmin: IMenuOptions[] = [
   {
     id: 'docentes',
     name: 'Docentes',
-    icon: 'bi bi-person-fill',
-    path: '',
+    icon: 'bi bi-people-fill',
+    path: '/admin/engineers/manage-engineers',
     childrens: [
       {
         id: 'administrar-docente',
         name: 'Administrar',
         icon: 'bi bi-circle',
-        path: 'profiles/manage-profiles',
+        path: 'engineers/manage-engineers',
       },
       {
         id: 'crear-docente',
         name: 'Crear',
         icon: 'bi bi-circle',
-        path: 'profiles/add-profile',
+        path: 'engineers/add-engineer',
       },
     ],
   },
@@ -104,7 +101,7 @@ export const optionsSuperAdmin: IMenuOptions[] = [
     id: 'reportes-graduados',
     name: 'Reportes',
     icon: 'bi bi-clipboard2-data',
-    path: '',
+    path: '/admin/graphics',
     childrens: [
       {
         id: 'administrar-reportes',

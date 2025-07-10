@@ -9,10 +9,14 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       switch (error.status) {
         case 400:
+          console.log('Erorr como tal', error.message);
           toast.error('Bad Request algo malo pasa');
           break;
         case 404:
           toast.error('Información no encontrada');
+          break;
+        case 422:
+          toast.error('Mompa son imagenes .png');
           break;
         default:
           break;

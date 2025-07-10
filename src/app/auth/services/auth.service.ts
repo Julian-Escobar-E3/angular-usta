@@ -16,14 +16,13 @@ export class AuthService {
 
   // private _authStatus = signal<AuthStatus>();
 
-  public currentUser = computed(() => this.#currentUser());
+  public theUser = computed(() => this.#currentUser());
   public authStatus = computed(() => this.#authStatus());
 
   private setAuthentication(user: IUser, token: string): boolean {
     this.#currentUser.set(user);
     this.#authStatus.set(AuthStatus.authenticated);
     localStorage.setItem('jwt_token', token);
-
     return true;
   }
 
@@ -40,6 +39,20 @@ export class AuthService {
     localStorage.removeItem('token');
     this.#currentUser.set(null);
     this.#authStatus.set(AuthStatus.notAuthenticated);
+  }
+
+  private decodeToken(): any | null {
+    const token = localStorage.getItem('jwt_token');
+    if (!token) return null;
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+      const json = atob(base64);
+      return JSON.parse(json);
+    } catch (e) {
+      console.error('Error decoding JWT:', e);
+      return null;
+    }
   }
 
   // checkAuthStatus(): Observable<boolean> {

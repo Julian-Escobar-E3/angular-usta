@@ -3,14 +3,133 @@
   <div>Cargando informacion</div>
   }@else {
   -->
-        <app-title title="agregar eventos" section="administrar eventos"></app-title>
+  <app-title
+    title="agregar ingeniero"
+    section="crear ingeniero"
+    icon="bi bi-people-fill"
+  />
 
   <section class="section dashboard">
     <div class="row">
       <div class="card">
         <div class="card-body">
           <!-- fixed -->
+
+          <h5 class="card-title text-center">
+            {{ "información egresado" | titlecase }}
+          </h5>
+          <hr />
+
+          <form [formGroup]="engineerForm">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label fw-bold">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="first_name"
+                  formControlName="first_name"
+                  [class]="getValidationClasses(engineerForm, 'first_name')"
+                />
+
+                @if (isValidField(engineerForm, 'first_name')) {
+                <span class="form-text text-danger">
+                  {{ getFieldError(engineerForm, "first_name") }}
+                </span>
+                }
+              </div>
+
+              <div class="col-sm-6">
+                <label class="form-label fw-bold">Apellido</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="last_name"
+                  formControlName="last_name"
+                  [class]="getValidationClasses(engineerForm, 'last_name')"
+                />
+
+                @if (isValidField(engineerForm, 'last_name')) {
+                <span class="form-text text-danger">
+                  {{ getFieldError(engineerForm, "last_name") }}
+                </span>
+                }
+              </div>
+
+              <div class="col-sm-6">
+                <label class="form-label fw-bold">{{
+                  "cédula" | titlecase
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="identity_document"
+                  formControlName="identity_document"
+                  [class]="
+                    getValidationClasses(engineerForm, 'identity_document')
+                  "
+                />
+
+                @if (isValidField(engineerForm, 'identity_document')) {
+                <span class="form-text text-danger">
+                  {{ getFieldError(engineerForm, "identity_document") }}
+                </span>
+                }
+              </div>
+
+              <div class="col-sm-6">
+                <label class="form-label fw-bold">Correo</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  formControlName="email"
+                  [class]="getValidationClasses(engineerForm, 'email')"
+                />
+
+                @if (isValidField(engineerForm, 'email')) {
+                <span class="form-text text-danger">
+                  {{ getFieldError(engineerForm, "email") }}
+                </span>
+                }
+              </div>
+
+              <div class="col-sm-6">
+                <label class="form-label fw-bold">Cargo</label>
+                <select
+                  class="form-control"
+                  id="job_title"
+                  formControlName="job_title"
+                  [class]="getValidationClasses(engineerForm, 'job_title')"
+                >
+                  <option value="" selected disabled>
+                    --Seleccione una opción--
+                  </option>
+                  @for (jobTitle of jobTitleOptions; track $index) {
+                  <option [value]="jobTitle">
+                    {{ jobTitle | titlecase }}
+                  </option>
+                  }
+                </select>
+
+                @if (isValidField(engineerForm, 'job_title')) {
+                <span class="form-text text-danger">
+                  {{ getFieldError(engineerForm, "job_title") }}
+                </span>
+                }
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
+      <div class="text-center">
+        <button
+          class="btn btn-primary btn-lg w-50"
+          (click)="onSubmit()"
+          [disabled]="engineerForm.invalid"
+        >
+          Crear
+        </button>
       </div>
     </div>
   </section>

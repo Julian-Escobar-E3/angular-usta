@@ -43,6 +43,7 @@ export default class GraduatesAddComponent {
   jobForm: FormGroup = this._formBuilder.group({
     title: ['', Validators.required],
     modality: ['', Validators.required],
+    name_company: ['', Validators.required],
     country_company: ['', Validators.required],
     city_company: ['', Validators.required],
   });

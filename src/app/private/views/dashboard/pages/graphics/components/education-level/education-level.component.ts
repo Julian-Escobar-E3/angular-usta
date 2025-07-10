@@ -1,30 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { PieChartComponent } from '@shared/components/pie-chart-card/pie-chart-card.component';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { TitleComponent } from '@shared/title/title.component';
+import { GraphicsService } from '../../services/graphics.service';
 
 @Component({
   standalone: true,
-  imports: [TitleComponent, PieChartComponent],
+  imports: [TitleComponent, PieChartComponent, SpinnerComponent],
   templateUrl: './education-level.component.html',
   styles: ``,
+  selector: 'education-level',
 })
 export default class EducationLevelComponent {
-  //START-FIXED:---------------------------------------------------------
-  Education = {
-    data: {
-      'si tiene postgrado': 80,
-      'no tiene postgrado': 20,
-    },
-  };
-  //END-FIXED:-----------------------------------------------------------
-
-  keysArray: string[] = [];
-  valuesArray: number[] = [];
-  colors: string[] = ['#518bec', '#faaf36'];
+  graphicsService = inject(GraphicsService);
 
   constructor() {
-    const data = this.Education.data;
-    this.keysArray = Object.keys(data); //labels
-    this.valuesArray = Object.values(data).map(Number); //series
+    this.graphicsService.getPostgraduateDegree();
   }
+
+  readonly keysArray = computed(() => {
+    const data = this.graphicsService.graphicsData();
+    return data ? Object.keys(data.result) : [];
+  });
+
+  readonly valuesArray = computed(() => {
+    const data = this.graphicsService.graphicsData();
+    return data ? Object.values(data.result) : [];
+  });
+  colors: string[] = ['#518bec', '#faaf36'];
 }

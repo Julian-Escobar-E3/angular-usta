@@ -1,95 +1,141 @@
 <main id="main" class="main">
-  @if (eventsService.eventsListIsLoading()) {
-  <div>Cargando informacion</div>
-  }@else {
-
   <app-title
-    title="administrar eventos"
+    title="eventos"
     section="administrar eventos"
+    icon="bi bi-calendar4-week"
   ></app-title>
-
   <section class="section dashboard">
+    @if (eventsService.eventsListLoading()) {
+    <app-spinner />
+    }@else {
+
     <div class="card">
       <div class="card-body">
         <!-- fixed -->
 
         <div class="card-title d-flex justify-content-between mb-3 mt-2">
-          <h5>
-            {{ "eventos" | titlecase }}
-            <i class="bi bi-newspaper"></i>
-          </h5>
-
-          <div class="d-flex align-items-center my-pagination">
-            <button
-              class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
-              (click)="goToPreviousPage()"
-              [disabled]="offset === 0"
-            >
-              <i class="bi bi-arrow-left"></i>
-              <span> anterior</span>
+          <div class="input-group w-100 w-md-50">
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              placeholder="Buscar por título..."
+              class="form-control border border-3"
+              [disabled]="isSearchActive()"
+            />
+            @if (!isSearchActive()) {
+            <button (click)="onSearch()" class="btn btn-primary">Buscar</button>
+            } @else {
+            <button (click)="onResetSearch()" class="btn btn-secondary">
+              Reestablecer
             </button>
-
-            <span class="badge current-page">{{ currentPage }}</span>
-
-            <button
-              class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
-              (click)="goToNextPage()"
-            >
-              <span>siguiente </span>
-              <i class="bi bi-arrow-right"></i>
-            </button>
+            }
           </div>
         </div>
-        @if(eventsService.eventsListIsLoading()){
-        <p>CARGANDO</p>
-        }@else {
-        <table class="table table-hover border border-3">
-          <thead class="table-primary">
-            <tr>
-              @for (column of columns ; track $index) {
-              <th class="text-center" style="width: auto">
-                {{ column | titlecase }}
-              </th>
-              }
-              <th>Opciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (event of eventsService.eventsList()?.data ; track $index) {
-            <tr>
-              @for (row of rows; track $index) {
-              <td class="text-center mt-4" style="width: auto">
-                {{ event[row] }}
-              </td>
-              }
-              <td class="text-center">
-                <img
-                  [srcset]="[event.images?.sm]"
-                  [alt]="[event.title]"
-                  class="img-fluid"
-                  style="height: 100px"
-                />
-              </td>
+        <div class="table-responsive">
+          <table class="table table-hover border border-3">
+            <thead class="table-primary">
+              <tr>
+                <th class="text-center">N°</th>
+                @for (column of columns; track $index) {
+                <th class="text-center" style="width: auto">
+                  {{ column | titlecase }}
+                </th>
 
-              <td>
-                <a>
-                  <i class="bi bi-pencil"></i>
-                </a>
-              </td>
-            </tr>
+                }
+                <th class="text-center">Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (event of eventsList() ; track $index) {
+              <tr>
+                <td class="text-center fw-bold">{{ $index + 1 }}</td>
+                @for (row of rows; track $index) {
+                <td class="text-center text-truncate" style="max-width: 200px">
+                  {{ event[row] }}
+                </td>
+                }
+                <td class="text-center">
+                  <img
+                    [srcset]="[event.images?.sm]"
+                    [alt]="[event.title]"
+                    class="img-fluid"
+                  />
+                </td>
 
-            }@empty {
-            <div class="d-flex justify-content-center mt-2">
-              No hay información que mostrar
-            </div>
+                <td class="text-center">
+                  <a
+                    [routerLink]="['../details-events/', event.id_event]"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    <i class="bi bi-pencil-fill"></i>
+                  </a>
+                  &nbsp;
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="onDelete(event.id_event)"
+                  >
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </td>
+              </tr>
+
+              }@empty {
+              <div class="d-flex justify-content-center mt-2">
+                No hay información que mostrar
+              </div>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Paginación -->
+        <nav class="mt-4" aria-label="Paginación de noticias">
+          <ul class="pagination justify-content-center">
+            <!-- Botón Anterior -->
+            <li class="page-item" [class.disabled]="currentPage() === 1">
+              <button
+                class="page-link"
+                (click)="previousPage()"
+                [disabled]="currentPage() === 1"
+                aria-label="Página anterior"
+              >
+                Anterior
+              </button>
+            </li>
+
+            <!-- Páginas dinámicas -->
+            @for (page of visiblePages(); track page) {
+            <li class="page-item" [class.active]="page === currentPage()">
+              <button
+                class="page-link"
+                (click)="goToPage(page)"
+                aria-label="Página anterior"
+              >
+                {{ page }}
+              </button>
+            </li>
             }
-          </tbody>
-        </table>
-        }
+
+            <!-- Botón Siguiente -->
+            <li
+              class="page-item"
+              [class.disabled]="currentPage() === totalPages()"
+            >
+              <button
+                class="page-link"
+                (click)="nextPage()"
+                [disabled]="currentPage() === totalPages()"
+                aria-label="Página siguiente"
+              >
+                Siguiente
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
 
       <!-- fixed -->
     </div>
+    }
   </section>
-  }
 </main>

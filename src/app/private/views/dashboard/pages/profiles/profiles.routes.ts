@@ -2,22 +2,23 @@ import { Routes } from '@angular/router';
 
 export const privateRoutes: Routes = [
   {
-    path: 'add-profile',
-    title: 'Agregar Perfil',
+    path: 'add-engineer',
+    title: 'Agregar',
     loadComponent: () => import('./views/profiles-add/profiles-add.component'),
   },
   {
-    path: 'manage-profiles',
-    title: 'Adminsitrar Perfiles',
-    loadComponent: () => import('./views/profiles-list/profiles-list.component'),
+    path: 'manage-engineers',
+    title: 'Administrar Ingenieros',
+    loadComponent: () =>
+      import('./views/profiles-list/profiles-list.component'),
   },
   {
-    path: 'details-profiles/:id',
-    title: 'Detalles Perfiles',
+    path: 'details-engineer/:id',
+    title: 'Detalles',
     loadComponent: () =>
-      import('../news/pages/news-details/news-details.component'),
+      import('./views/profiles-details/profiles-details.component'),
   },
-  { path: '', redirectTo: 'manage-news', pathMatch: 'full' },
+  { path: '', redirectTo: 'manage-engineers', pathMatch: 'full' },
 ];
 
 export default privateRoutes;

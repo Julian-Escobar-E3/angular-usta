@@ -6,10 +6,12 @@
   ></app-title>
 
   <section class="section">
+    @if (graphicsService.graphicsLoading()) { <app-spinner /> }@else {
     <bar-chart
-      [keysArray]="keysArray"
-      [valuesArray]="valuesArray"
+      [keysArray]="keysArray()"
+      [valuesArray]="valuesArray()"
       [title]="'detalles de empleo de egresados'"
     />
+    }
   </section>
 </main>

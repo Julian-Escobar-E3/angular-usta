@@ -1,30 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { PieChartComponent } from '@shared/components/pie-chart-card/pie-chart-card.component';
 import { TitleComponent } from '@shared/title/title.component';
+import { GraphicsService } from '../../services/graphics.service';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 
 @Component({
   standalone: true,
-  imports: [TitleComponent, PieChartComponent],
+  imports: [TitleComponent, PieChartComponent, SpinnerComponent],
   templateUrl: './gender-distribution.component.html',
   styles: ``,
+  selector: 'gender-distribution',
 })
 export default class GenderDistributionComponent {
-  //START-FIXED:---------------------------------------------------------
-  Gender = {
-    data: {
-      hombres: 80,
-      mujeres: 20,
-    },
-  };
-  //END-FIXED:-----------------------------------------------------------
-
-  keysArray: string[] = [];
-  valuesArray: number[] = [];
-  colors: string[] = ['#5175ec', '#ec51de'];
+  graphicsService = inject(GraphicsService);
 
   constructor() {
-    const data = this.Gender.data;
-    this.keysArray = Object.keys(data); //labels
-    this.valuesArray = Object.values(data).map(Number); //series
+    this.graphicsService.getGenderDistribution();
   }
+
+  readonly keysArray = computed(() => {
+    const data = this.graphicsService.graphicsData();
+    return data ? Object.keys(data.result) : [];
+  });
+
+  readonly valuesArray = computed(() => {
+    const data = this.graphicsService.graphicsData();
+    return data ? Object.values(data.result) : [];
+  });
+  colors: string[] = ['#5175ec', '#ec51de'];
 }

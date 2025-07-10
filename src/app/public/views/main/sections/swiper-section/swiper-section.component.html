@@ -1,15 +1,19 @@
 <section class="mysection-public">
   <div class="container-md">
-    <swiper-container
-      class="shadow-lg border border-2"
-      init="false"
-    >
-      @for (item of data; track $index) {
+    <swiper-container class="shadow-lg border border-2" init="false">
+      @for (item of data(); track $index) {
 
       <swiper-slide>
         <div class="img-slide">
           <a [href]="item.link" target="_blank" class="">
-            <img [srcset]="item.img" class="centered-image" />
+            <img
+              [src]="item.url_img"
+              class="centered-image"
+              width="1000"
+              height="500"
+              loading="lazy"
+              alt="Imagen del slide"
+            />
           </a>
         </div>
       </swiper-slide>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TitleComponent } from '@shared/title/title.component';
 import { GRAPHICS_OPTIONS } from './utilities/graphics-options';
 

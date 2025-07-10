@@ -34,8 +34,9 @@ export class DeleteDialogService {
                   text: response.message.ES,
                   icon: 'success',
                 }).then(() => {
-
-                  this._router.navigate([redirectUrl]);
+                  if (redirectUrl) {
+                    this._router.navigate([redirectUrl]);
+                  }
                 });
               },
               error: (error) => {

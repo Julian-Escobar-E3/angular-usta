@@ -2,15 +2,17 @@
   <app-title
     title="reportes"
     section="graficas"
-    [subSection]="'ditribución por genero'"
+    [subSection]="'nivel de estudios'"
   ></app-title>
 
   <section class="section">
+    @if (graphicsService.graphicsLoading()) { <app-spinner /> }@else {
+
     <pie-chart
-      [keysArray]="keysArray"
-      [valuesArray]="valuesArray"
+      [keysArray]="keysArray()"
+      [valuesArray]="valuesArray()"
       [title]="'nivel educativo de egresados'"
       [colors]="colors"
-    />
+    />}
   </section>
 </main>

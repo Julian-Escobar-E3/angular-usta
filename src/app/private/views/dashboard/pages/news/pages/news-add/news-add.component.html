@@ -1,20 +1,13 @@
 <main id="main" class="main">
-  <app-title title="noticias" section="crear noticia"></app-title>
-
-  <!-- End Page Title -->
-
+  <app-title title="noticias" section="crear noticia" icon="bi bi-newspaper" />
   <section class="section dashboard">
     <div class="row">
-      <!-- Left side columns -->
       <div class="col-lg-5">
         <div class="row">
-          <!-- Reports -->
           <div class="col-12">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">Imagen</h5>
-                <!--//FIXED =========================================================================================================0 -->
-
                 <div class="card shadow-lg border border-5">
                   <img
                     [src]="imagePreview | image"
@@ -24,30 +17,20 @@
                     (click)="photoInput.click()"
                   />
                 </div>
-
-                <!-- ----------------------------- -->
-
-                <!--//FIXED =========================================================================================================0 -->
               </div>
             </div>
           </div>
-          <!-- End Reports -->
         </div>
       </div>
-      <!-- End Left side columns -->
-
-      <!-- Right side columns -->
       <div class="col-lg-7">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Formulario</h5>
-            <!-- fixed -->
-
             <div class="">
               <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
                 <div class="row g-3">
                   <div class="col-sm-6">
-                    <label class="form-label">Titulo</label>
+                    <label class="form-label fw-bold">Titulo</label>
                     <input
                       type="text"
                       class="form-control"
@@ -64,7 +47,9 @@
                   </div>
 
                   <div class="col-sm-6">
-                    <label class="form-label">Fecha de publicación</label>
+                    <label class="form-label fw-bold"
+                      >Fecha de publicación</label
+                    >
                     <input
                       type="date"
                       class="form-control"
@@ -78,36 +63,33 @@
                     </span>
                     }
                   </div>
-
                   <div class="col-12">
-                    <label class="form-label">Párrafo 1</label>
+                    <label class="form-label fw-bold">Párrafo 1</label>
                     <textarea
-                    class="form-control"
-                    formControlName="description_1"
-                    [class]="getValidationClasses('description_1')"
-                    rows="4"
-                  >
-                  </textarea>
+                      class="form-control"
+                      formControlName="description_1"
+                      [class]="getValidationClasses('description_1')"
+                      rows="4"
+                    >
+                    </textarea>
                     @if (isValidField('description_1')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("description_1") }}
                     </span>
                     }
                   </div>
-
                   <div class="col-12">
-                    <label class="form-label">Párrafo 2</label>
+                    <label class="form-label fw-bold">Párrafo 2</label>
                     <textarea
-                    class="form-control"
-                    formControlName="description_2"
-                    [class]="getValidationClasses('description_2')"
-                    rows="4"
-                  >
-                  </textarea>
+                      class="form-control"
+                      formControlName="description_2"
+                      [class]="getValidationClasses('description_2')"
+                      rows="4"
+                    >
+                    </textarea>
                   </div>
-
-                  <div class="col-12">
-                    <label class="form-label">Párrafo 3</label>
+                  <div class="col-12 mb-3">
+                    <label class="form-label fw-bold">Párrafo 3</label>
                     <textarea
                       class="form-control"
                       formControlName="description_3"
@@ -117,10 +99,9 @@
                     </textarea>
                   </div>
                 </div>
-
                 <div class="row gy-3">
                   <div class="col-md-6">
-                    <label class="form-label">Autor</label>
+                    <label class="form-label fw-bold">Autor</label>
                     <input
                       type="text"
                       class="form-control"
@@ -134,9 +115,8 @@
                     </span>
                     }
                   </div>
-
                   <div class="col-md-6">
-                    <label class="form-label">Tag</label>
+                    <label class="form-label fw-bold">Tag</label>
                     <select
                       class="form-control"
                       id="tag"
@@ -159,15 +139,16 @@
                     }
                   </div>
                   <div class="col-md-12">
-                    <label class="form-label">Imagen</label>
+                    <label class="form-label fw-bold">Imagen</label>
                     <input
-                      class="form-control"
                       type="file"
-                      id="file"
+                      accept="image/png"
+                      class="form-control"
                       (change)="onFileSelected($event)"
+                      #photoInput
+                      id="file"
                       formControlName="file"
                       [class]="getValidationClasses('file')"
-                      #photoInput
                     />
                     @if (isValidField('file')) {
                     <span class="form-text text-danger">
@@ -176,7 +157,6 @@
                     }
                   </div>
                 </div>
-
                 <hr />
                 <button
                   class="w-100 btn btn-primary btn-lg mt-3"
@@ -187,13 +167,9 @@
                 </button>
               </form>
             </div>
-
-            <!-- fixed -->
           </div>
         </div>
       </div>
-      <!-- End Right side columns -->
     </div>
   </section>
 </main>
-<!-- End #main -->

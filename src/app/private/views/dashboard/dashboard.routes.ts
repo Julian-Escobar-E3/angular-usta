@@ -20,7 +20,7 @@ export const privateRoutes: Routes = [
     loadChildren: () => import('./pages/graduates/graduates.routes'),
   },
   {
-    path: 'profiles',
+    path: 'engineers',
     loadChildren: () => import('./pages/profiles/profiles.routes'),
   },
   {
@@ -38,6 +38,14 @@ export const privateRoutes: Routes = [
     redirectTo: 'main',
     pathMatch: 'full',
   },
+
+  {
+    path: 'not-found',
+    loadComponent: () =>
+      import('../../../shared/views/not-found/not-found.component'),
+  },
+
+  { path: '**', redirectTo: 'not-found', pathMatch: 'full' },
 ];
 
 export default privateRoutes;

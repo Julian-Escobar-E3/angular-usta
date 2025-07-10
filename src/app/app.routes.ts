@@ -10,14 +10,20 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () => import('./public/views/main/login/login.component'),
   },
+  // {
+  //   path: 'graduate',
+  //   loadComponent: () => import('./private/views/graduate/graduate.component'),
+  // },
   {
     path: 'admin',
-    loadComponent:()=>import('./private/views/dashboard/dashboard.component'),
+    loadComponent: () =>
+      import('./private/views/dashboard/dashboard.component'),
     loadChildren: () => import('./private/views/dashboard/dashboard.routes'),
   },
   {
     path: 'not-found',
-    loadComponent: () => import('./shared/views/not-found/not-found.component'),
+    loadComponent: () =>
+      import('./shared/views/not-found-2/not-found-2.component'),
   },
 
   { path: '**', redirectTo: 'not-found', pathMatch: 'full' },

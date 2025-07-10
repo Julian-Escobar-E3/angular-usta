@@ -88,7 +88,6 @@ export default class ManageCarouselComponent implements OnInit {
       }
     });
   }
-  constructor() {}
   ngOnInit(): void {
     this.carouselService.loadData();
   }

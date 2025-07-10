@@ -49,7 +49,9 @@
                 </div>
 
                 <div class="col-sm-6">
-                  <label class="form-label fw-bold">{{ "cédula" | titlecase }}</label>
+                  <label class="form-label fw-bold">{{
+                    "cédula" | titlecase
+                  }}</label>
                   <input
                     type="text"
                     class="form-control"
@@ -312,7 +314,7 @@
 
             <form class="mt-3" [formGroup]="jobForm">
               <div class="row g-3">
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <label class="form-label fw-bold">Cargo</label>
                   <select
                     class="form-control"
@@ -361,7 +363,22 @@
                   </span>
                   }
                 </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Nombre de la empresa</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name_company"
+                    formControlName="name_company"
+                    [class]="getValidationClasses(jobForm, 'name_company')"
+                  />
 
+                  @if (isValidField(jobForm, 'name_company')) {
+                  <span class="form-text text-danger">
+                    {{ getFieldError(jobForm, "name_company") }}
+                  </span>
+                  }
+                </div>
                 <div class="col-md-6">
                   <label class="form-label fw-bold">País de la empresa</label>
                   <input

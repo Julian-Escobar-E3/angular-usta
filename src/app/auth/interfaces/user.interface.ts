@@ -3,5 +3,5 @@ export interface IUser {
   username: string;
   name: string;
   isActive: boolean;
-  roles: string[];
+  roles: string;
 }

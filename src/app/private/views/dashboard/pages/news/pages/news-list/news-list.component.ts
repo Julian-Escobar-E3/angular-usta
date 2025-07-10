@@ -1,17 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { NewsService } from '../../services/news.service';
 import { TitleComponent } from '@shared/title/title.component';
 import { NewsTableColumns, NewsTableRows } from '../../enums';
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import { tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { DeleteDialogService } from '@private/services/deleteDialog.service';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
+import { INews } from '@shared/interfaces/news';
 
 @Component({
   selector: 'app-news-list',
   standalone: true,
-  imports: [CommonModule, TitleComponent, FormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    TitleComponent,
+    FormsModule,
+    RouterLink,
+    SpinnerComponent,
+  ],
   templateUrl: './news-list.component.html',
   styleUrl: './news-list.componet.css',
 })
@@ -22,52 +30,59 @@ export default class NewsListComponent {
   currentPage = signal(1);
   limit = signal(6);
   totalPages = signal(0);
-  newsList = signal<any[]>([]);
+  newsList = signal<INews[]>([]);
   visiblePages = signal<number[]>([]);
-  searchTerm = signal('');
+  isSearchActive = signal(false);
 
-  private newsService = inject(NewsService);
-  private searchSubject = new Subject<string>();
+  public newsService = inject(NewsService);
 
   private _deleteDialogService = inject(DeleteDialogService);
 
-  searchValue = computed(() => this.searchTerm());
+  searchTerm: string = '';
+  constructor() {
+    effect(
+      () => {
+        const page = this.currentPage();
+        const limit = this.limit();
 
-  set searchInput(value: string) {
-    this.searchTerm.set(value);
+        // Solo cargar cuando no hay búsqueda activa
+        if (!this.isSearchActive()) {
+          this.newsService.getData(page, limit, '').subscribe((response) => {
+            this.newsList.set(response.data);
+            this.totalPages.set(response.totalPages);
+            this.updateVisiblePages();
+          });
+        }
+      },
+      { allowSignalWrites: true }
+    );
   }
 
-  constructor() {
-    effect(() => {
-      const page = this.currentPage();
-      const limit = this.limit();
-      const search = this.searchTerm();
+  onSearch() {
+    if (!this.searchTerm.trim()) return;
 
-      this.newsService.getData(page, limit, search).subscribe((response) => {
+    this.isSearchActive.set(true);
+    this.currentPage.set(1);
+    this.newsService
+      .getData(this.currentPage(), this.limit(), this.searchTerm)
+      .subscribe((response) => {
         this.newsList.set(response.data);
         this.totalPages.set(response.totalPages);
         this.updateVisiblePages();
       });
-    });
-
-    // ✅ Optimización de la búsqueda en tiempo real
-    this.searchSubject
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((searchTerm) =>
-          this.newsService.getData(this.currentPage(), this.limit(), searchTerm)
-        )
-      )
-      .subscribe((response) => {
-        this.newsList.set(response.data);
-        this.totalPages.set(response.totalPages());
-      });
   }
 
-  // ✅ Optimizado para que el Subject maneje la búsqueda
-  onSearch() {
-    this.searchSubject.next(this.searchTerm());
+  onResetSearch() {
+    this.searchTerm = '';
+    this.isSearchActive.set(false);
+    this.currentPage.set(1);
+    this.newsService
+      .getData(this.currentPage(), this.limit(), '')
+      .subscribe((response) => {
+        this.newsList.set(response.data);
+        this.totalPages.set(response.totalPages);
+        this.updateVisiblePages();
+      });
   }
 
   updateVisiblePages() {
@@ -93,8 +108,12 @@ export default class NewsListComponent {
 
   onDelete(id: string): void {
     this._deleteDialogService.confirmDelete(
-      this.newsService.deleteNews(id),
-      '/admin/news'
+      this.newsService.deleteNews(id).pipe(
+        tap(() => {
+          this.loadInitialNews();
+        })
+      ),
+      ''
     );
   }
 
@@ -114,5 +133,15 @@ export default class NewsListComponent {
     if (this.currentPage() > 1) {
       this.currentPage.set(this.currentPage() - 1);
     }
+  }
+
+  loadInitialNews() {
+    this.newsService
+      .getData(this.currentPage(), this.limit(), '')
+      .subscribe((response) => {
+        this.newsList.set(response.data);
+        this.totalPages.set(response.totalPages);
+        this.updateVisiblePages();
+      });
   }
 }

@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { createFormData } from '@utilities/createFormData';
 import { EventsService } from '../../services/events.service';
 import { firstValueFrom } from 'rxjs';
+import { Status } from '../../enums/status';
 
 @Component({
   selector: 'app-events-add',
@@ -29,6 +30,8 @@ export default class EventsAddComponent {
   private _validatorService = inject(ValidatorService);
   private _eventsService = inject(EventsService);
   private _toastrService = inject(ToastrService);
+
+  status = Object.values(Status);
 
   imagePreview: string | ArrayBuffer | undefined = '';
 
@@ -73,31 +76,35 @@ export default class EventsAddComponent {
       formData.append('file', this.myForm.get('fileSource')?.value);
     }
 
-    try {
-      await firstValueFrom(this._eventsService.postEvents(formData));
-      const message = this._eventsService.eventMessage()?.message.ES;
-      this._toastrService.success(message, 'Todo Correcto');
-      this._router.navigate(['admin/news']);
-    } catch (error) {
-      console.log(error);
-
-      const message2 = this._eventsService.eventMessage()?.message.ES;
-      this._toastrService.error(
-        `There was an error creating the news, ${message2}`,
-        'Error'
-      );
-    }
+    await firstValueFrom(this._eventsService.postEvents(formData));
+    const message = this._eventsService.eventMessage()?.message.ES;
+    this._toastrService.success(message, 'Todo Correcto');
+    this._router.navigate(['admin/events']);
   }
-  onFileSelected(event: any) {
-    let selectedFile = event.target.files[0];
-    if (!selectedFile || selectedFile.length == 0) {
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+
+    if (!file) return;
+
+    const isPng =
+      file.type === 'image/png' && file.name.toLowerCase().endsWith('.png');
+
+    if (!isPng) {
+      this._toastrService.error('Solo se permiten imágenes en formato .png');
+      this.myForm.get('file')?.reset();
+      this.myForm.get('fileSource')?.reset();
+      input.value = ''; // Limpia el campo
+      this.imagePreview = '';
       return;
     }
-    this.myForm.patchValue({ fileSource: selectedFile });
+
+    this.myForm.patchValue({ fileSource: file });
+
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
     };
-    reader.readAsDataURL(selectedFile);
+    reader.readAsDataURL(file);
   }
 }

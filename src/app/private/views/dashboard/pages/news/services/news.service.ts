@@ -13,9 +13,32 @@ export class NewsService {
   private _baseUrl = environment.baseUrl;
   private _http = inject(HttpClient);
 
-  getData(page: number, limit: number, searchTerm: string): Observable<any> {
-    const url = `${this._baseUrl}/news?page=${page}&limit=${limit}&param=${searchTerm}`;
-    return this._http.get<INewsResponse>(url);
+  #newsListState = signal<State<INewsResponse>>({
+    loading: true,
+    response: null,
+  });
+
+  newsList = computed(() => this.#newsListState().response);
+  newsListLoading = computed(() => this.#newsListState().loading);
+
+  getData(
+    page: number,
+    limit: number,
+    param: string
+  ): Observable<INewsResponse> {
+    const params = { page, limit, param };
+    const url = `${this._baseUrl}/news`;
+    this.#newsListState.update((state) => ({ ...state, loading: true }));
+    return this._http.get<INewsResponse>(url, { params }).pipe(
+      delay(500),
+      tap((res) => {
+        this.#newsListState.set({ loading: false, response: res });
+      }),
+      catchError((err) => {
+        this.#newsListState.set({ loading: false, response: null });
+        return throwError(() => err);
+      })
+    );
   }
 
   #oneNewsState = signal<State<INewsOneResponse>>({
@@ -25,8 +48,18 @@ export class NewsService {
 
   oneNews = computed(() => this.#oneNewsState().response);
   oneNewsLoading = computed(() => this.#oneNewsState().loading);
+  //* List News By ID ---
+  getNewsByID(id: string) {
+    const url = `${this._baseUrl}/news/${id}`;
+    this.#oneNewsState.update((state) => ({ ...state, loading: true }));
+    return this._http
+      .get<INewsOneResponse>(url)
+      .pipe(delay(500))
+      .subscribe((data) => {
+        this.#oneNewsState.set({ loading: false, response: data });
+      });
+  }
 
-  //-- Esta señal maneja los mensajes del servidor para Crear, Actualziar, Eliminar
   #newsMessage = signal<State<IMessageResponse>>({
     loading: true,
     response: null,
@@ -51,18 +84,6 @@ export class NewsService {
     );
   }
 
-  //* List News By ID ---
-  getNewsByID(id: string) {
-    const url = `${this._baseUrl}/news/${id}`;
-    this.#oneNewsState.update((state) => ({ ...state, loading: true }));
-    return this._http
-      .get<INewsOneResponse>(url)
-      .pipe(delay(1500))
-      .subscribe((data) => {
-        this.#oneNewsState.set({ loading: false, response: data });
-      });
-  }
-
   updateNews(id: string, formNews: FormData): Observable<IMessageResponse> {
     const url = `${this._baseUrl}/news/${id}`;
     return this._http.patch<IMessageResponse>(url, formNews).pipe(
@@ -80,7 +101,7 @@ export class NewsService {
   deleteNews(id: string): Observable<IMessageResponse> {
     const url = `${this._baseUrl}/news/${id}`;
     return this._http.delete<IMessageResponse>(url).pipe(
-      delay(1000),
+      delay(500),
       tap((res) => {
         this.#newsMessage.set({ loading: false, response: res });
       })

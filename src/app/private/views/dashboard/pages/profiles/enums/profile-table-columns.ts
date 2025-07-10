@@ -1,4 +1,6 @@
 export enum ProfileTableColumns {
-  fullanme = 'nombre completo',
+  first_name = 'nombre',
+  last_name = 'apellido',
   email = 'correo',
+  job_tile = 'cargo',
 }

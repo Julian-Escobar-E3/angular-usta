@@ -1,11 +1,9 @@
 <main id="main" class="main">
-  <!-- @if (newsService.newsListIsLoading()) {
-  <div>Cargando informacion</div>
-  }@else {
-  -->
-  <div class="pagetitle">
-    <app-title title="eventos" section="crear evento"></app-title>
-  </div>
+  <app-title
+    title="eventos"
+    section="crear evento"
+    icon="bi bi-calendar4-week"
+  />
   <section class="section dashboard">
     <div class="row">
       <!-- Left side columns -->
@@ -27,7 +25,6 @@
                     (click)="photoInput.click()"
                   />
                 </div>
-
                 <!--//FIXED =========================================================================================================0 -->
               </div>
             </div>
@@ -48,7 +45,7 @@
               <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
                 <div class="row g-3">
                   <div class="col-sm-6">
-                    <label class="form-label">Titulo</label>
+                    <label class="form-label fw-bold">Titulo</label>
                     <input
                       type="text"
                       class="form-control"
@@ -65,7 +62,7 @@
                   </div>
 
                   <div class="col-sm-6">
-                    <label class="form-label">Fecha del evento</label>
+                    <label class="form-label fw-bold">Fecha del evento</label>
                     <input
                       type="date"
                       class="form-control"
@@ -81,14 +78,13 @@
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label">Descripción 1</label>
-                    <input
-                      type="text"
+                    <label class="form-label fw-bold">Párrafo 1</label>
+                    <textarea
                       class="form-control"
-                      id="paragraph"
                       formControlName="description_1"
                       [class]="getValidationClasses('description_1')"
-                    />
+                      rows="4"
+                    ></textarea>
                     @if (isValidField('description_1')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("description_1") }}
@@ -97,36 +93,31 @@
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label">Descripción 2</label>
-                    <!-- <input
-                      type="text"
-                      class="form-control"
-                      id="description2"
-                      formControlName="description2"
-                      style="height: 5rem"
-                    /> -->
-
+                    <label class="form-label fw-bold">Párrafo 2</label>
                     <textarea
                       class="form-control"
                       formControlName="description_2"
+                      [class]="getValidationClasses('description_2')"
+                      rows="4"
                     >
                     </textarea>
                   </div>
 
-                  <div class="col-12">
-                    <label class="form-label">Descripción 3</label>
-                    <input
-                      type="text"
+                  <div class="col-12 mb-3">
+                    <label class="form-label fw-bold">Párrafo 3</label>
+                    <textarea
                       class="form-control"
-                      id="description3"
                       formControlName="description_3"
-                    />
+                      [class]="getValidationClasses('description_3')"
+                      rows="4"
+                    >
+                    </textarea>
                   </div>
                 </div>
 
                 <div class="row gy-3">
                   <div class="col-md-6">
-                    <label class="form-label">Ubicación</label>
+                    <label class="form-label fw-bold">Ubicación</label>
                     <input
                       type="text"
                       class="form-control"
@@ -142,14 +133,22 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label class="form-label">Estado</label>
-                    <input
-                      type="text"
+                    <label class="form-label fw-bold">Estado</label>
+                    <select
                       class="form-control"
                       id="state"
                       formControlName="state"
                       [class]="getValidationClasses('state')"
-                    />
+                    >
+                      <option selected disabled value="">
+                        --Seleccione una opción--
+                      </option>
+                      @for (stat of status; track $index) {
+                      <option [value]="stat">
+                        {{ stat | titlecase }}
+                      </option>
+                      }
+                    </select>
                     @if (isValidField('state')) {
                     <span class="form-text text-danger">
                       {{ getFieldError("state") }}
@@ -157,15 +156,16 @@
                     }
                   </div>
                   <div class="col-md-12">
-                    <label class="form-label">Imagen</label>
+                    <label class="form-label fw-bold">Imagen</label>
                     <input
-                      class="form-control"
                       type="file"
-                      id="file"
+                      accept="image/png"
+                      class="form-control"
                       (change)="onFileSelected($event)"
+                      #photoInput
+                      id="file"
                       formControlName="file"
                       [class]="getValidationClasses('file')"
-                      #photoInput
                     />
                     @if (isValidField('file')) {
                     <span class="form-text text-danger">
@@ -193,5 +193,4 @@
       <!-- End Right side columns -->
     </div>
   </section>
-  <!-- } -->
 </main>

@@ -1,30 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TitleComponent } from '@shared/title/title.component';
 import { BarChartComponent } from '@shared/components/bar-chart-card/bar-chart-card.component';
+import { GraphicsService } from '../../services/graphics.service';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 
 @Component({
   standalone: true,
-  imports: [TitleComponent, BarChartComponent],
+  imports: [TitleComponent, BarChartComponent, SpinnerComponent],
   templateUrl: './employment-mode.component.html',
   styles: ``,
+  selector: 'job-modality',
 })
 export default class EmploymentModeComponent {
-  //START-FIXED:-------------------------------------
-  JobModalityStatistics = {
-    data: {
-      Presencial: 10,
-      Remoto: 5,
-      Hibirido: 20,
-    },
-  };
-  //END-FIXED:-----------------------------------------------------------
-
-  keysArray: string[] = [];
-  valuesArray: number[] = [];
+  graphicsService = inject(GraphicsService);
 
   constructor() {
-    const data = this.JobModalityStatistics.data;
-    this.keysArray = Object.keys(data); //labels
-    this.valuesArray = Object.values(data).map(Number); //series
+    this.graphicsService.getJobModality();
   }
+
+  readonly keysArray = computed(() => {
+    const data = this.graphicsService.graphicsData();
+    return data ? Object.keys(data.result) : [];
+  });
+
+  readonly valuesArray = computed(() => {
+    const data = this.graphicsService.graphicsData();
+    return data ? Object.values(data.result) : [];
+  });
 }

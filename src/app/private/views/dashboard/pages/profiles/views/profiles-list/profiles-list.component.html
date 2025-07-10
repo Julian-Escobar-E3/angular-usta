@@ -1,51 +1,72 @@
 <main id="main" class="main">
-  <!-- @if (newsService.newsListIsLoading()) {
-  <div>Cargando informacion</div>
-  }@else {
-  -->
   <app-title
-    title="administrar perfiles"
-    section="administrar eventos"
+    title="ingenieros"
+    section="administrar ingenieros"
+    icon="bi bi-people-fill"
   ></app-title>
 
   <section class="section dashboard">
-    <div class="row">
-      <div class="card">
-        <div class="card-body">
-          <!-- fixed -->
+    @if (engineersService.egineerListLoading()) {
+    <app-spinner />
+    }@else {
+    <div class="card">
+      <div class="card-body">
+        <!-- fixed -->
 
-          <div class="card-title d-flex justify-content-between mb-3 mt-2">
-            <h5>
-              Noticias
-              <i class="bi bi-newspaper"></i>
-            </h5>
+        <div class="card-title d-flex justify-content-between mb-3 mt-2">
+          <div class="input-group w-100 w-md-50">
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              placeholder="Buscar por título..."
+              class="form-control border border-3"
+              [disabled]="isSearchActive()"
+            />
+            @if (!isSearchActive()) {
+            <button (click)="onSearch()" class="btn btn-primary">Buscar</button>
+            } @else {
+            <button (click)="onResetSearch()" class="btn btn-secondary">
+              Reestablecer
+            </button>
+            }
           </div>
-
+        </div>
+        <div class="table-responsive">
           <table class="table table-hover border border-3">
             <thead class="table-primary">
               <tr>
-                @for (column of columns ; track $index) {
-                <th style="width: auto">{{ column | titlecase }}</th>
+                <th class="text-center">N°</th>
+                @for (column of columns; track $index) {
+                <th class="text-center">
+                  {{ column | titlecase }}
+                </th>
                 }
-                <th>Opciones</th>
+                <th class="text-center">Opciones</th>
               </tr>
             </thead>
             <tbody>
-              @for (slide of profileService ; track $index) {
+              @for (event of engineerList() ; track $index) {
               <tr>
+                <td class="text-center fw-bold">{{ $index + 1 }}</td>
                 @for (row of rows; track $index) {
-                <td style="width: auto">{{ slide[row] }}</td>
+                <td class="text-center text-truncate">
+                  {{ event[row] }}
+                </td>
                 }
-
-                <td>
-                  <div class="d-flex justify-content-center align-items-center">
-                    <button class="btn btn-sm btn-primary">
-                      <i class="bi bi-pencil-fill"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger">
-                      <i class="bi bi-trash-fill"></i>
-                    </button>
-                  </div>
+                <td class="text-center">
+                  <a
+                    [routerLink]="['../details-engineer/', event.id]"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    <i class="bi bi-pencil-fill"></i>
+                  </a>
+                  &nbsp;
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="onDelete(event.id)"
+                  >
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
                 </td>
               </tr>
 
@@ -57,8 +78,55 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Paginación -->
+        <nav class="mt-4" aria-label="Paginación de noticias">
+          <ul class="pagination justify-content-center">
+            <!-- Botón Anterior -->
+            <li class="page-item" [class.disabled]="currentPage() === 1">
+              <button
+                class="page-link"
+                (click)="previousPage()"
+                [disabled]="currentPage() === 1"
+                aria-label="Página anterior"
+              >
+                Anterior
+              </button>
+            </li>
+
+            <!-- Páginas dinámicas -->
+            @for (page of visiblePages(); track page) {
+            <li class="page-item" [class.active]="page === currentPage()">
+              <button
+                class="page-link"
+                (click)="goToPage(page)"
+                aria-label="Página anterior"
+              >
+                {{ page }}
+              </button>
+            </li>
+            }
+
+            <!-- Botón Siguiente -->
+            <li
+              class="page-item"
+              [class.disabled]="currentPage() === totalPages()"
+            >
+              <button
+                class="page-link"
+                (click)="nextPage()"
+                [disabled]="currentPage() === totalPages()"
+                aria-label="Página siguiente"
+              >
+                Siguiente
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
+
+      <!-- fixed -->
     </div>
+    }
   </section>
-  <!-- } -->
 </main>

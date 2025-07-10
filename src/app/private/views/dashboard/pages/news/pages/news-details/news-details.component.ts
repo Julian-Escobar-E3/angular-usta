@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, input, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -37,7 +37,8 @@ import { Tags } from '../../enums/tags';
 export default class NewsDetailsComponent implements OnInit {
   private _router = inject(Router);
   private _activatedRoute = inject(ActivatedRoute);
-  private _id = this._activatedRoute.snapshot.paramMap.get('id');
+  // private _id = this._activatedRoute.snapshot.paramMap.get('id');
+  id = input.required<string>();
   private _formBuilder = inject(FormBuilder);
 
   private _validatorService = inject(ValidatorService);
@@ -83,40 +84,44 @@ export default class NewsDetailsComponent implements OnInit {
       formData.append('file', this.myForm.get('fileSource')?.value);
     }
 
-    try {
-      await firstValueFrom(this._newsService.updateNews(this._id!, formData));
-      const message = this._newsService.newsMessage()?.message.ES;
-      this._toastrService.success(message, 'Todo Correcto');
-      this._newsService.getNewsByID(this._id!);
-      this._router.navigate(['admin/news']);
-    } catch (error) {
-      this._toastrService.error(
-        `There was an error updating the news.`,
-        'Error'
-      );
-    }
+    await firstValueFrom(this._newsService.updateNews(this.id(), formData));
+    const message = this._newsService.newsMessage()?.message.ES;
+    this._toastrService.success(message, 'Todo Correcto');
+    this._newsService.getNewsByID(this.id()!);
+    this._router.navigate(['admin/news']);
   }
 
   onDelete(): void {
     this._deleteDialogService.confirmDelete(
-      this._newsService.deleteNews(this._id!),
+      this._newsService.deleteNews(this.id()),
       '/admin/news'
     );
   }
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
 
-  onFileSelected(event: any) {
-    const selectedFile = event.target.files[0];
-    if (!selectedFile || selectedFile.length == 0) {
+    if (!file) return;
+
+    const isPng =
+      file.type === 'image/png' && file.name.toLowerCase().endsWith('.png');
+
+    if (!isPng) {
+      this._toastrService.error('Solo se permiten imágenes en formato .png');
+      this.myForm.get('file')?.reset();
+      this.myForm.get('fileSource')?.reset();
+      input.value = ''; // Limpia el campo
+      this.imagePreview = '';
       return;
     }
 
-    this.myForm.patchValue({ fileSource: selectedFile });
-    const reader = new FileReader();
+    this.myForm.patchValue({ fileSource: file });
 
+    const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
     };
-    reader.readAsDataURL(selectedFile);
+    reader.readAsDataURL(file);
   }
 
   private _formGroupInfo = effect(() => {
@@ -147,8 +152,8 @@ export default class NewsDetailsComponent implements OnInit {
     fileSourceControl?.updateValueAndValidity();
   }
   ngOnInit(): void {
-    if (this._id) {
-      this._newsService.getNewsByID(this._id);
+    if (this.id()) {
+      this._newsService.getNewsByID(this.id());
     }
     this._formGroupInfo;
   }
