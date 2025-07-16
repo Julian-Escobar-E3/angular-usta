@@ -1,60 +1,57 @@
-<section class="mysection-public">
-  @if(newsService.oneNewsLoading()){
+<section class="mysection-public2 mt-5">
+  @if (newsService.oneNewsLoading()) {
   <app-spinner />
-  }@else {
-
+  } @else {
   <div class="container">
-    <article class="article">
-      <div class="d-flex justify-content-center align-items-center post-img">
+    <a [routerLink]="['/']" class="btn btn-outline-danger mb-4">
+      <i class="bi bi-arrow-left"></i>
+      Volver al inicio
+    </a>
+    <div class="news-detail shadow rounded-4 bg-white overflow-hidden">
+      <!-- Imagen principal -->
+      <div class="news-image-container">
         <img
-          [srcset]="[newsService.oneNews()?.data?.images?.xl | image]"
-          [alt]="[newsService.oneNews()?.data?.title]"
-          class="img-fluid"
+          [src]="newsService.oneNews()?.data?.images?.xl | image"
+          [alt]="newsService.oneNews()?.data?.title"
+          class="img-fluid w-100 h-100 news-img"
         />
       </div>
 
-      <h2 class="title text-center">
-        {{ newsService.oneNews()?.data?.title }}
-      </h2>
+      <!-- Contenido -->
+      <div class="p-4">
+        <h1 class="display-5 fw-bold mb-3">
+          {{ newsService.oneNews()?.data?.title }}
+        </h1>
 
-      <div class="meta-top">
-        <ul>
-          <li class="d-flex align-items-center">
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+          <span class="badge bg-primary">
             <i class="bi bi-person"></i>
-            <span> {{ newsService.oneNews()?.data?.author }}</span>
-          </li>
-          <li class="d-flex align-items-center">
+            {{ newsService.oneNews()?.data?.author }}
+          </span>
+          <span class="badge bg-success">
             <i class="bi bi-calendar"></i>
-            <span>
-              {{ newsService.oneNews()?.data?.publicationDate }}
-            </span>
-          </li>
-          <li class="d-flex align-items-center">
-            <i class="bi bi-tag"></i>
-            <span>
-              {{ newsService.oneNews()?.data?.tag }}
-            </span>
-          </li>
-        </ul>
+            {{
+              newsService.oneNews()?.data?.publicationDate | date : "mediumDate"
+            }}
+          </span>
+          <span class="badge bg-secondary">
+            <i class="bi bi-tag"></i> {{ newsService.oneNews()?.data?.tag }}
+          </span>
+        </div>
+
+        <div class="news-content">
+          <p *ngIf="newsService.oneNews()?.data?.description_1">
+            {{ newsService.oneNews()?.data?.description_1 }}
+          </p>
+          <p *ngIf="newsService.oneNews()?.data?.description_2">
+            {{ newsService.oneNews()?.data?.description_2 }}
+          </p>
+          <p *ngIf="newsService.oneNews()?.data?.description_3">
+            {{ newsService.oneNews()?.data?.description_3 }}
+          </p>
+        </div>
       </div>
-      <!-- End meta top -->
-
-      <div class="content">
-        <p>
-          {{ newsService.oneNews()?.data?.description_1 }}
-        </p>
-
-        <p>
-          {{ newsService.oneNews()?.data?.description_2 }}
-        </p>
-
-        <p>
-          {{ newsService.oneNews()?.data?.description_3 }}
-        </p>
-      </div>
-      <!-- End post content -->
-    </article>
+    </div>
   </div>
-
   }
 </section>

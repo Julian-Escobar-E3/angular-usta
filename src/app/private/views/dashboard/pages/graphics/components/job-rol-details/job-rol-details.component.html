@@ -2,14 +2,15 @@
   <app-title
     title="reportes"
     section="graficas"
+    icon="bi bi-door-open-fill"
     [subSection]="'detalles de empleo'"
   ></app-title>
 
   <section class="section">
     @if (graphicsService.graphicsLoading()) { <app-spinner /> }@else {
     <bar-chart
-      [keysArray]="keysArray()"
-      [valuesArray]="valuesArray()"
+      [keysArray]="keysArray()!"
+      [valuesArray]="valuesArray()!"
       [title]="'detalles de empleo de egresados'"
     />
     }

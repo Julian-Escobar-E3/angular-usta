@@ -1,7 +1,6 @@
 export interface IUser {
-  id_user: string;
+  id: string;
   username: string;
-  name: string;
-  isActive: boolean;
-  roles: string;
+  active: boolean;
+  rol: 'ADMIN' | 'USER' | 'SUPER_USER';
 }

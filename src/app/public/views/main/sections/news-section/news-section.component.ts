@@ -1,8 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PublicNewsService } from '../../../../services/publicNews.service';
 import { TruncatePipe } from '@shared/pipes/truncate.pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PublicNews } from '../../../../interfaces/news';
 @Component({
   selector: 'app-news-section',
   standalone: true,
@@ -11,19 +12,22 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './news-section.component.css',
 })
 export class NewsSectionComponent {
-  newsList = signal<any[]>([]);
-
   newsService = inject(PublicNewsService);
+  limit = signal(6);
+  totalPages = signal(0);
+  newsList = signal<PublicNews[]>([]);
+  visiblePages = signal<number[]>([]);
 
   constructor() {
-    this.loadNews();
-  }
-  loadNews() {
-    this.newsService
-      .getSectionNews()
-      .pipe(takeUntilDestroyed())
-      .subscribe((response) => {
-        this.newsList.set(response.data);
-      });
+    effect(
+      () => {
+        const limit = this.limit();
+        this.newsService.getSectionNews(limit).subscribe((response) => {
+          this.newsList.set(response.data);
+          this.totalPages.set(response.totalPages);
+        });
+      },
+      { allowSignalWrites: true }
+    );
   }
 }

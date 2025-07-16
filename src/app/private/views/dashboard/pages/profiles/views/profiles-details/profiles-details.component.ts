@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, OnInit } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -32,6 +39,7 @@ import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 })
 export default class ProfilesDetailsComponent {
   id = input.required<string>();
+  private _userId: string = '';
 
   #router = inject(Router);
   #formBuilder = inject(FormBuilder);
@@ -79,6 +87,12 @@ export default class ProfilesDetailsComponent {
     return this.#engineerService.oneEngineerLoading();
   }
 
+  passwordVisible = signal<boolean>(false);
+
+  tooglePasswordVisibility() {
+    this.passwordVisible.update((prev) => !prev);
+  }
+
   // Métodos de validación
   isValidField(form: FormGroup, field: string) {
     return this.#validatorService.isValidField(form, field);
@@ -98,12 +112,17 @@ export default class ProfilesDetailsComponent {
       return;
     }
 
+    const password = this.userForm.controls['password'].value;
+    if (password && this.userForm.valid) {
+      await firstValueFrom(
+        this.#engineerService.updatePassword(password, this._userId!)
+      );
+    }
+
     const formDataEngineer = {
       ...this.engineerForm.value,
     };
 
-    //FIXED: manejar el campo de ususario para la edición de la contraseña
-    console.log('FORM ENGIEER UPDATE', formDataEngineer);
     await firstValueFrom(
       this.#engineerService.updateEngineer(this.id(), formDataEngineer)
     );
@@ -127,6 +146,7 @@ export default class ProfilesDetailsComponent {
       if (currentEngineers) {
         this.engineerForm.patchValue(currentEngineers);
         if (currentEngineers.user) {
+          this._userId = currentEngineers.user.id;
           this.userForm.patchValue({
             username: currentEngineers.user.username,
           });

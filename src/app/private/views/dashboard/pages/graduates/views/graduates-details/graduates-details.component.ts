@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import {
   Form,
   FormGroup,
@@ -22,11 +22,18 @@ import {
   JobRole,
   Options,
 } from '../../enums';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-graduates-details',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TitleComponent, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TitleComponent,
+    RouterLink,
+    SpinnerComponent,
+  ],
   templateUrl: './graduates-details.component.html',
   styles: '',
 })
@@ -38,7 +45,7 @@ export default class GraduatesDetailsComponent implements OnInit {
   private _formBuilder = inject(NonNullableFormBuilder);
 
   private _validatorService = inject(ValidatorService);
-  private _graduatesService = inject(GraduatesService);
+  readonly #graduatesService = inject(GraduatesService);
   private _toastrService = inject(ToastrService);
   private _deleteDialogService = inject(DeleteDialogService);
 
@@ -100,6 +107,20 @@ export default class GraduatesDetailsComponent implements OnInit {
     postgraduate_degree: ['', Validators.required],
   });
 
+  passwordVisible = signal<boolean>(false);
+
+  tooglePasswordVisibility() {
+    this.passwordVisible.update((prev) => !prev);
+  }
+
+  get oneGraduate() {
+    return this.#graduatesService.oneGraduate();
+  }
+
+  get isLoading() {
+    return this.#graduatesService.oneGraduateLoading();
+  }
+
   // Métodos de validación
   isValidField(form: FormGroup, field: string) {
     return this._validatorService.isValidField(form, field);
@@ -120,8 +141,13 @@ export default class GraduatesDetailsComponent implements OnInit {
     const postgraduateDegreeFormValue = this.postgraduateDegreeForm.value;
     return {
       ...graduateFormValue,
+      hasJob: this.graduateForm.get('job')?.value === 'aplica' ? true : false,
       job:
         this.graduateForm.get('job')?.value === 'aplica' ? jobFormValue : null,
+      hasPD:
+        this.graduateForm.get('postgraduate_degree')?.value === 'aplica'
+          ? true
+          : false,
       postgraduate_degree:
         this.graduateForm.get('postgraduate_degree')?.value === 'aplica'
           ? postgraduateDegreeFormValue
@@ -132,23 +158,21 @@ export default class GraduatesDetailsComponent implements OnInit {
     const password = this.userFrom.controls['password'].value;
     if (password) {
       await firstValueFrom(
-        this._graduatesService.updatePassword(password, this._userId!)
+        this.#graduatesService.updatePassword(password, this._userId!)
       );
     }
     const form = this._buildFormPayload();
 
     try {
       await firstValueFrom(
-        this._graduatesService.updateGraduate(this._id!, form)
+        this.#graduatesService.updateGraduate(this._id!, form)
       );
-      const message = this._graduatesService.graduateMessage()?.message.ES;
+      const message = this.#graduatesService.graduateMessage()?.message.ES;
       this._toastrService.success(message, 'Todo Correcto');
-      this._graduatesService.getGraduateByID(this._id!);
+      this.#graduatesService.getGraduateByID(this._id!);
       this._router.navigate(['admin/graduates']);
     } catch (error) {
-      console.log(error);
-
-      const message = this._graduatesService.graduateMessage()?.message.ES;
+      const message = this.#graduatesService.graduateMessage()?.message.ES;
       this._toastrService.error(message, 'Error');
     }
   }
@@ -156,7 +180,7 @@ export default class GraduatesDetailsComponent implements OnInit {
   // Método para eliminar un graduado
   onDelete() {
     this._deleteDialogService.confirmDelete(
-      this._graduatesService.deleteGraduate(this._id!),
+      this.#graduatesService.deleteGraduate(this._id!),
       'admin/graduates'
     );
   }
@@ -203,18 +227,17 @@ export default class GraduatesDetailsComponent implements OnInit {
         this.options[1]
       );
     }
-
     if (currentGraduate.user) {
       const user = currentGraduate.user;
-      this._userId = currentGraduate.user.id_user;
+      this._userId = currentGraduate.user.id;
       this.userFrom.controls['username'].patchValue(user.username);
     }
   }
 
   // Efecto para observar el graduado actual
   private _formGroupInfo = effect(() => {
-    const currentGraduate = this._graduatesService.oneGraduate()?.data;
-    const isLoading = this._graduatesService.oneGraduateLoading();
+    const currentGraduate = this.#graduatesService.oneGraduate()?.data;
+    const isLoading = this.#graduatesService.oneGraduateLoading();
     if (!isLoading) {
       if (currentGraduate) {
         this._populateForms(currentGraduate);
@@ -228,7 +251,7 @@ export default class GraduatesDetailsComponent implements OnInit {
   // Método de inicialización del componente
   ngOnInit(): void {
     if (this._id) {
-      this._graduatesService.getGraduateByID(this._id);
+      this.#graduatesService.getGraduateByID(this._id);
     }
     this._formGroupInfo;
   }

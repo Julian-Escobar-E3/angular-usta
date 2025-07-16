@@ -19,10 +19,20 @@ export class AuthService {
   public theUser = computed(() => this.#currentUser());
   public authStatus = computed(() => this.#authStatus());
 
-  private setAuthentication(user: IUser, token: string): boolean {
+  private setAuthentication(token: string): boolean {
+    localStorage.setItem('jwt_token', token);
+    const decoded = this.decodeToken();
+    if (!decoded) return false;
+
+    const user: IUser = {
+      id: decoded.id_user,
+      rol: decoded.rol,
+      active: decoded.active,
+      username: decoded.username,
+    };
+
     this.#currentUser.set(user);
     this.#authStatus.set(AuthStatus.authenticated);
-    localStorage.setItem('jwt_token', token);
     return true;
   }
 
@@ -30,18 +40,18 @@ export class AuthService {
     const url = `${this._baseUrl}/auth/login`;
     const body = { username, password };
     return this._http.post<ILoginResponse>(url, body).pipe(
-      map(({ user, token }) => this.setAuthentication(user, token)),
+      map(({ token }) => this.setAuthentication(token)),
       catchError((err) => throwError(() => err.error))
     );
   }
 
   logout() {
-    localStorage.removeItem('token');
+    localStorage.clear();
     this.#currentUser.set(null);
     this.#authStatus.set(AuthStatus.notAuthenticated);
   }
 
-  private decodeToken(): any | null {
+  public decodeToken(): any | null {
     const token = localStorage.getItem('jwt_token');
     if (!token) return null;
     try {
@@ -55,28 +65,27 @@ export class AuthService {
     }
   }
 
-  // checkAuthStatus(): Observable<boolean> {
-  //   const url = `${this._baseUrl}/auth/check-status`;
-  //   const token = localStorage.getItem('token');
+  getCurrentUser(): IUser | null {
+    const token = localStorage.getItem('jwt_token');
+    if (!token) return null;
 
-  //   if (!token) {
-  //     this.logout();
-  //     return of(false);
-  //   }
-
-  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-  //   return this._http.get<ICheckTokenResponse>(url, { headers }).pipe(
-  //     map(({ user, token }) => this.setAuthentication(user, token)),
-  //     catchError(() => {
-  //       this.#authStatus.set(AuthStatus.notAuthenticated);
-  //       return of(false);
-  //     })
-  //   );
-  // }
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+      const json = atob(base64);
+      return JSON.parse(json) as IUser; // Asegúrate que IUser contenga `role` y `active`
+    } catch (e) {
+      console.error('Error decoding token:', e);
+      return null;
+    }
+  }
 
   constructor() {
-    //-- SE LANZÁ CUANDO SE USA CUALQUIER SERVICIO DE ESTE ARCHIVO
-    // this.checkAuthStatus().subscribe();
+    const token = localStorage.getItem('jwt_token');
+    if (token) {
+      this.setAuthentication(token);
+    } else {
+      this.logout();
+    }
   }
 }

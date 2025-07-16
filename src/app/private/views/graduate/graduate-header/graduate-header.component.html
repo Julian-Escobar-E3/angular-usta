@@ -13,16 +13,18 @@
           data-bs-toggle="dropdown"
         >
           <span class="d-none d-md-block dropdown-toggle">{{
-            "admin@admin"
+            user()?.username
           }}</span>
         </div>
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="#">
-              <i class="bi bi-box-arrow-right"></i>
-              <span>Cerrar Sesión</span>
-            </a>
-          </li>
+          <div
+            class="dropdown-item d-flex align-items-center text-danger fw-semibold gap-2"
+            (click)="logout()"
+            style="cursor: pointer"
+          >
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Cerrar Sesión</span>
+          </div>
         </ul>
       </li>
     </ul>

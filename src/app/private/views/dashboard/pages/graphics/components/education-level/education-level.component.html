@@ -2,6 +2,7 @@
   <app-title
     title="reportes"
     section="graficas"
+    icon="bi bi-bar-chart-steps"
     [subSection]="'nivel de estudios'"
   ></app-title>
 
@@ -9,8 +10,8 @@
     @if (graphicsService.graphicsLoading()) { <app-spinner /> }@else {
 
     <pie-chart
-      [keysArray]="keysArray()"
-      [valuesArray]="valuesArray()"
+      [keysArray]="keysArray()!"
+      [valuesArray]="valuesArray()!"
       [title]="'nivel educativo de egresados'"
       [colors]="colors"
     />}

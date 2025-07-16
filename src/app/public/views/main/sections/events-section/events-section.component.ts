@@ -1,7 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EventsService } from '@private/views/dashboard/pages/events/services/events.service';
 import { TruncatePipe } from '@shared/pipes/truncate.pipe';
+import { PublicEventsService } from '../../../../services/publicsEvents.service';
+import { PublicEvents } from '../../../../interfaces/events';
+import { CommonModule } from '@angular/common';
 
 const evenMock = [
   {
@@ -26,22 +29,27 @@ const evenMock = [
 @Component({
   selector: 'app-events-section',
   standalone: true,
-  imports: [RouterLink, TruncatePipe],
+  imports: [RouterLink, TruncatePipe, CommonModule],
   templateUrl: './events-section.component.html',
   styleUrl: './events-section.component.css',
 })
 export class EventsSectionComponent {
-  public items = evenMock;
+  eventsService = inject(PublicEventsService);
+  limit = signal(6);
+  totalPages = signal(0);
+  eventsList = signal<PublicEvents[]>([]);
+  visiblePages = signal<number[]>([]);
 
-  public eventsService = inject(EventsService);
-
-  public offset: number = 0;
-  public limit: number = 3;
-
-  ngOnInit(): void {
-    this.loadEvents();
-  }
-  loadEvents() {
-    this.eventsService.getData(this.offset, this.limit, '');
+  constructor() {
+    effect(
+      () => {
+        const limit = this.limit();
+        this.eventsService.getSectionEvents(limit).subscribe((response) => {
+          this.eventsList.set(response.data);
+          this.totalPages.set(response.totalPages);
+        });
+      },
+      { allowSignalWrites: true }
+    );
   }
 }

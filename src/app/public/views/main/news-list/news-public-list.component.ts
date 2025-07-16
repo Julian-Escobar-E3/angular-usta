@@ -1,44 +1,46 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PublicNewsService } from '../../../services/publicNews.service';
 import { TruncatePipe } from '@shared/pipes/truncate.pipe';
+import { PublicNews } from '../../../interfaces/news';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterLink, TruncatePipe],
+  imports: [CommonModule, RouterLink, TruncatePipe, SpinnerComponent],
   templateUrl: './news-public-list.component.html',
   styleUrl: 'news-public-list.component.css',
 })
 export default class NewsPublicComponent {
-  private newsService = inject(PublicNewsService);
-
-  #limit = signal(6);
+  newsService = inject(PublicNewsService);
 
   currentPage = signal(1);
+  limit = signal(6);
   totalPages = signal(0);
-  newsList = signal<any[]>([]);
-
+  newsList = signal<PublicNews[]>([]);
+  visiblePages = signal<number[]>([]);
 
   constructor() {
-    // Efecto para cargar noticias cuando cambia la página o el límite
-    effect(() => {
-      this.loadNews(this.currentPage(), this.#limit());
-    });
+    effect(
+      () => {
+        const page = this.currentPage();
+        const limit = this.limit();
 
-    // Suscripción en el constructor (contexto de inyección)
-    this.newsService
-      .getPublicNewsList(this.currentPage(), this.#limit())
-      .pipe(takeUntilDestroyed())
-      .subscribe((response) => {
-        this.newsList.set(response.data);
-        this.totalPages.set(response.totalPages);
-      });
+        this.newsService
+          .getPublicNewsList(page, limit)
+          .subscribe((response) => {
+            this.newsList.set(response.data);
+            this.totalPages.set(response.totalPages);
+            this.updateVisiblePages();
+          });
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   // Computed para calcular páginas visibles de forma automática
-  visiblePages = computed(() => {
+  updateVisiblePages() {
     const currentPage = this.currentPage();
     const totalPages = this.totalPages();
     const range = 2;
@@ -54,14 +56,9 @@ export default class NewsPublicComponent {
       }
     }
 
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  });
-
-  loadNews(page: number, limit: number) {
-    this.newsService.getPublicNewsList(page, limit).subscribe((response) => {
-      this.newsList.set(response.data);
-      this.totalPages.set(response.totalPages);
-    });
+    this.visiblePages.set(
+      Array.from({ length: end - start + 1 }, (_, i) => start + i)
+    );
   }
 
   goToPage(page: number) {
@@ -80,5 +77,15 @@ export default class NewsPublicComponent {
     if (this.currentPage() > 1) {
       this.currentPage.set(this.currentPage() - 1);
     }
+  }
+
+  loadInitialNews() {
+    this.newsService
+      .getPublicNewsList(this.currentPage(), this.limit())
+      .subscribe((response) => {
+        this.newsList.set(response.data);
+        this.totalPages.set(response.totalPages);
+        this.updateVisiblePages();
+      });
   }
 }

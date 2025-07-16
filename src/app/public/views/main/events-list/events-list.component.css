@@ -1,51 +1,38 @@
-.page-title {
-  font-size: 70px;
-  color: #000000;
+/* Efecto hover en tarjeta */
+.event-flyer {
+  transition: transform 0.2s ease-in-out;
+}
+.event-flyer:hover {
+  transform: scale(1.01);
 }
 
-.post-entry-2 {
-  margin-bottom: 30px;
+/* Imagen de evento */
+.event-image-container {
+  height: 350px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.event-image {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  display: block;
+  border-radius: 10px;
 }
 
-.post-entry-2 .post-meta {
-  font-size: 11px;
-  letter-spacing: 0.07rem;
+/* Información adicional */
+.post-meta {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
   text-transform: uppercase;
-  font-weight: 600;
-  font-family: "Inter", sans-serif;
-  color: rgba(0, 0, 0, 0.4);
-  margin-bottom: 10px;
+  font-weight: 500;
+  gap: 10px;
 }
 
-.post-entry-2 .thumbnail {
-  flex: 0 0 65%;
-}
-
-@media (max-width: 960px) {
-  .post-entry-2 .thumbnail {
-    flex: 0 0 100%;
-    margin-bottom: 20px;
-  }
-}
-
-.post-entry-2.half .thumbnail {
-  flex: 0 0 50%;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .post-entry-2.half .thumbnail {
-    flex: 0 0 100%;
-    margin-bottom: 20px;
-  }
-}
-
-.post-entry-2.small-img .thumbnail {
-  flex: 0 0 30%;
-}
-
-@media (max-width: 768px) {
-  .post-entry-2.small-img .thumbnail {
-    flex: 0 0 100%;
-    margin-bottom: 20px;
+  .event-image-container {
+    height: 200px;
+    max-width: 100% !important;
   }
 }

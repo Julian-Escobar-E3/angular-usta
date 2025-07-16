@@ -1,47 +1,42 @@
 <section class="container">
-  <div class="section-header d-flex justify-content-between align-items-center">
+  <div class="section-header d-flex justify-content-between align-items-center mb-4">
     <h2>Noticias</h2>
     <a [routerLink]="['news-list']" class="more">Ver Noticias</a>
   </div>
 
-  <div class="row">
-    <div class="album py-5 bg-body-tertiary">
-      <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-          @for (news of newsList() ; track $index) {
-          <div class="col">
-            <div class="card shadow-lg">
-              <img
-                [srcset]="[news.images?.l]"
-                class="bd-placeholder-img card-img-top"
-              />
-              <div class="card-body">
-                <p class="card-text mt-3">
-                  {{ news.title }}
-                </p>
-                <p class="card-text">
-                  {{ news.description_1 | truncate }}
-                </p>
-                <div
-                  class="d-flex justify-content-between align-items-center mt-3"
+  <div class="album py-4 bg-body-tertiary">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        @for (news of newsList(); track $index) {
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0 news-card">
+            <img
+              [src]="news.images?.l"
+              [alt]="news.title"
+              class="card-img-top img-fluid news-img"
+            />
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-semibold">{{ news.title }}</h5>
+              <p class="card-text flex-grow-1 text-muted small">
+                {{ news.description_1 | truncate }}
+              </p>
+
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <a
+                  [routerLink]="['news-details', news.id_news]"
+                  class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
                 >
-                  <div class="btn-group">
-                    <a
-                      [routerLink]="['news-details/' + news.id_news]"
-                      class="btn btn-sm btn-outline-secondary"
-                    >
-                      Ver
-                    </a>
-                  </div>
-                  <span class="badge bg-success">{{ news.tag }}</span>
-                </div>
+                  <i class="bi bi-eye-fill"></i> Ver
+                </a>
+                <span class="badge bg-success text-uppercase px-3 py-2 small">
+                  {{ news.tag }}
+                </span>
               </div>
             </div>
           </div>
-          }
         </div>
+        }
       </div>
     </div>
   </div>
 </section>
-<!-- End Culture Category Section -->

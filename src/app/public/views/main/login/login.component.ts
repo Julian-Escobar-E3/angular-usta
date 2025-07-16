@@ -23,8 +23,8 @@ export default class LoginComponent {
   private _router = inject(Router);
 
   public myForm: FormGroup = this._formBuilder.group({
-    username: ['admin@admin', [Validators.required, Validators.email]],
-    password: ['$HolaMundo1', [Validators.required, Validators.minLength(6)]],
+    username: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
   });
   passwordVisible = signal<boolean>(false);
 
@@ -36,7 +36,27 @@ export default class LoginComponent {
 
     this._authService.login(username, password).subscribe({
       next: () => {
-        this._router.navigate(['/admin']);
+        const payload = this._authService.decodeToken();
+
+        if (!payload) {
+          this._router.navigate(['/login']);
+          return;
+        }
+
+        // Redirigir según el rol
+        switch (payload.rol) {
+          case 'ADMIN':
+            this._router.navigate(['/admin']);
+            break;
+          case 'SUPER-USER':
+            this._router.navigate(['/admin']);
+            break;
+          case 'USER':
+            this._router.navigate([`/graduate`]);
+            break;
+          default:
+            this._router.navigate(['/']);
+        }
       },
       error: (message) => {
         Swal.fire('Error', message.ES, 'error');

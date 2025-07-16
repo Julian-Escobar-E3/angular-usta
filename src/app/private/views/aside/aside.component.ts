@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, inject, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { DomUtilsService } from './services/domUtils.service';
 import { ToggleSidebarService } from './services/toggleSidebar.service';
-import { ImagePipe } from '@shared/pipes/image.pipe';
 import IMenuOptions from './interfaces/sidebar.interface';
 import { SidebarOptionsService } from './services/sidebarOptions.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-aside',
@@ -46,5 +46,18 @@ export default class AsideComponent implements OnInit {
       this.sidebarOptions = options;
     });
     this.initToggleSidebar();
+  }
+
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  user = computed(() => this.authService.theUser());
+  isAuthenticated = computed(
+    () => this.authService.authStatus() === 'authenticated'
+  );
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

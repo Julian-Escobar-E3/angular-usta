@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { NewsService } from '../../services/news.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { createFormData } from '@utilities/createFormData';
 
 import { ToastrService } from 'ngx-toastr';
@@ -36,7 +36,6 @@ import { Tags } from '../../enums/tags';
 })
 export default class NewsDetailsComponent implements OnInit {
   private _router = inject(Router);
-  private _activatedRoute = inject(ActivatedRoute);
   // private _id = this._activatedRoute.snapshot.paramMap.get('id');
   id = input.required<string>();
   private _formBuilder = inject(FormBuilder);

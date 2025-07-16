@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -9,4 +10,18 @@ import { RouterLink } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  user = computed(() => this.authService.theUser());
+
+  isAuthenticated = computed(
+    () => this.authService.authStatus() === 'authenticated'
+  );
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
+}

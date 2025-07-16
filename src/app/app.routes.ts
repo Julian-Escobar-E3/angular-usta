@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '@shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -10,12 +11,16 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () => import('./public/views/main/login/login.component'),
   },
-  // {
-  //   path: 'graduate',
-  //   loadComponent: () => import('./private/views/graduate/graduate.component'),
-  // },
+  {
+    path: 'graduate',
+    canActivate: [authGuard],
+    data: { roles: ['USER'] },
+    loadComponent: () => import('./private/views/graduate/graduate.component'),
+  },
   {
     path: 'admin',
+    canActivate: [authGuard],
+    data: { roles: ['SUPER-USER', 'ADMIN'] },
     loadComponent: () =>
       import('./private/views/dashboard/dashboard.component'),
     loadChildren: () => import('./private/views/dashboard/dashboard.routes'),

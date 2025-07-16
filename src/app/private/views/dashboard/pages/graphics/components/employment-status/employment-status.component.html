@@ -2,14 +2,15 @@
   <app-title
     title="reportes"
     section="graficas"
+    icon="bi bi-hdd-network"
     [subSection]="'situación laboral'"
   ></app-title>
 
   <section class="section">
     @if (graphicsService.graphicsLoading()) { <app-spinner /> }@else {
     <pie-chart
-      [keysArray]="keysArray()"
-      [valuesArray]="valuesArray()"
+      [keysArray]="keysArray()!"
+      [valuesArray]="valuesArray()!"
       [title]="'situación laboral de egresados'"
       [colors]="colors"
     />

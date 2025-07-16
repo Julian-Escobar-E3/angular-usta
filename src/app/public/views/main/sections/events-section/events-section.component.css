@@ -3,58 +3,64 @@
 }
 
 .section-header h2 {
-  font-size: 50px;
+  font-size: 42px;
   color: #000000;
+  font-weight: 700;
 }
 
-.section-header a {
+.section-header a.more {
   color: #000000;
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: 0.5px;
   border-bottom: 1.5px solid #000000;
   font-weight: 500;
   padding-bottom: 2px;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
 }
 
-/* Card */
-.card {
-  margin-bottom: 30px;
+.section-header a.more:hover {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+/* Evento - tarjeta personalizada */
+.card.event-card {
   border: none;
-  border-radius: 5px;
-  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+  border-radius: 1rem;
+  box-shadow: 0 6px 18px rgba(1, 41, 112, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  height: 100%;
 }
 
-.card-header,
-.card-footer {
-  border-color: #ebeef4;
-  background-color: #fff;
-  color: #798eb3;
-  padding: 15px;
+.card.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-.card-title {
-  padding: 20px 0 15px 0;
-  font-size: 18px;
-  font-weight: 500;
-  color: #012970;
-  font-family: "Poppins", sans-serif;
+/* Imagen en el evento */
+.card.event-card img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-radius: 1rem 0 0 1rem;
 }
 
-.card-title span {
-  color: #899bbd;
-  font-size: 14px;
-  font-weight: 400;
+/* Badge dinámica */
+.badge.event-status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 0.4rem 0.8rem;
+  text-transform: uppercase;
 }
 
-.card-body {
-  padding: 0 20px 20px 20px;
-}
-
-.card-img-overlay {
-  background-color: rgba(255, 255, 255, 0.6);
-}
-
-.fecha {
-  font-size: small;
+/* Responsive para imagen encima en móviles */
+@media (max-width: 768px) {
+  .card.event-card img {
+    border-radius: 1rem 1rem 0 0;
+    height: 200px;
+  }
 }

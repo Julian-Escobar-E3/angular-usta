@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '@shared/guards/auth.guard';
 
 export const privateRoutes: Routes = [
   {
@@ -21,6 +22,8 @@ export const privateRoutes: Routes = [
   },
   {
     path: 'engineers',
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN'] },
     loadChildren: () => import('./pages/profiles/profiles.routes'),
   },
   {

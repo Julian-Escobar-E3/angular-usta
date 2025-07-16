@@ -6,23 +6,116 @@
   ></app-title>
 
   <section class="section dashboard">
+    @if (graduatesService.graduatesListIsLoading()) {
+    <app-spinner />
+    }@else {
     <div class="card">
       <div class="card-body">
-        <div class="card-title d-flex justify-content-center mb-3 mt-2">
-          <input
-            type="text"
-            [ngModel]="searchValue()"
-            (ngModelChange)="searchInput = $event"
-            placeholder="Buscar..."
-            class="form-control"
-          />
-          <button (click)="onSearch()" class="btn btn-primary">Buscar</button>
+        <!--//* START CARD TITLE --->
+        <div
+          class="card-title d-flex flex-column flex-md-row justify-content-between align-items-start gap-2 mb-2 mt-2"
+        >
+          <div class="input-group w-100">
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              placeholder="Buscar por título..."
+              class="form-control border border-3"
+              [disabled]="isSearchActive()"
+            />
+            @if (!isSearchActive()) {
+            <button (click)="onSearch()" class="btn btn-primary">Buscar</button>
+            } @else {
+            <button (click)="onResetSearch()" class="btn btn-secondary">
+              Reestablecer
+            </button>
+            }
+          </div>
+
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-dark rounded-pill d-flex align-items-center gap-2 dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-gear-fill"></i> Opciones
+            </button>
+            <ul class="dropdown-menu shadow p-2 rounded-3 animated-options">
+              <li>
+                <button
+                  class="dropdown-item d-flex align-items-center gap-2 option-hover"
+                  (click)="onDownloadTemplate()"
+                >
+                  <i class="bi bi-download text-primary"></i> Descargar
+                  plantilla
+                </button>
+              </li>
+              <li>
+                <label
+                  class="dropdown-item d-flex align-items-center gap-2 option-hover m-0"
+                >
+                  <i class="bi bi-upload text-success"></i> Subir CSV para crear
+                  <input
+                    type="file"
+                    accept=".csv"
+                    (change)="onFileSelected($event)"
+                    hidden
+                  />
+                </label>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item d-flex align-items-center gap-2 option-hover"
+                  (click)="onUploadCSV()"
+                >
+                  <i class="bi bi-check-circle text-success"></i> Confirmar
+                  creación
+                </button>
+              </li>
+              <li>
+                <label
+                  class="dropdown-item d-flex align-items-center gap-2 option-hover m-0"
+                >
+                  <i class="bi bi-file-earmark-check text-secondary"></i>
+                  Validar CSV
+                  <input
+                    type="file"
+                    accept=".csv"
+                    (change)="onFileSelected($event)"
+                    hidden
+                  />
+                </label>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item d-flex align-items-center gap-2 option-hover"
+                  (click)="onValidateCSV()"
+                >
+                  <i class="bi bi-shield-check text-warning"></i> Confirmar
+                  validación
+                </button>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item d-flex align-items-center gap-2 option-hover"
+                  (click)="onExportCSV()"
+                >
+                  <i class="bi bi-file-earmark-arrow-down text-info"></i>
+                  Exportar datos
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
+
+        <!--//* END CARD TITLE-->
         <!-- fixed -->
 
         <table class="table table-hover border border-3">
           <thead class="table-primary">
             <tr>
+              <th class="text-center">N°</th>
               @for (column of columns; track $index) {
               <th style="width: auto" class="text-center">
                 {{ column | titlecase }}
@@ -34,6 +127,7 @@
           <tbody>
             @for (graduate of graduatesList() ; track $index) {
             <tr>
+              <td class="text-center fw-bold">{{ $index + 1 }}</td>
               @for (rows of rows; track $index) {
 
               <td class="text-center">{{ graduate[rows] }}</td>
@@ -129,5 +223,6 @@
         </nav>
       </div>
     </div>
+    }
   </section>
 </main>

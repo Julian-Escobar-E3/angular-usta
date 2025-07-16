@@ -1,14 +1,14 @@
 <main id="main" class="main">
-  @if (loading) {
-  <div>Cargando informacion</div>
-  }@else {
-
   <app-title
     title="detalles egresado"
-    section="administrar eresados"
+    section="administrar egresados"
     subSection="detalles egresado"
-  ></app-title>
+    icon="bi bi-people-fill"
+  />
 
+  @if (loading) {
+  <app-spinner />
+  }@else {
   <section class="section dashboard">
     <div class="row">
       <!-- Right side columns -->
@@ -64,6 +64,25 @@
                   @if (isValidField(graduateForm, 'last_name')) {
                   <span class="form-text text-danger">
                     {{ getFieldError(graduateForm, "last_name") }}
+                  </span>
+                  }
+                </div>
+
+                <div class="col-sm-6">
+                  <label class="form-label fw-bold">{{
+                    "documento de identidad" | titlecase
+                  }}</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="identity_document"
+                    formControlName="identity_document"
+                    [class]="getValidationClasses(graduateForm, 'identity_document')"
+                  />
+
+                  @if (isValidField(graduateForm, 'identity_document')) {
+                  <span class="form-text text-danger">
+                    {{ getFieldError(graduateForm, "identity_document") }}
                   </span>
                   }
                 </div>
@@ -331,13 +350,28 @@
 
                 <div class="col-12">
                   <label class="form-label fw-bold">Contraseña</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    formControlName="password"
-                    [class]="getValidationClasses(userFrom, 'password')"
-                  />
+                  <div class="input-group">
+                    <input
+                      [type]="passwordVisible() ? 'text' : 'password'"
+                      class="form-control"
+                      id="password"
+                      formControlName="password"
+                      [class]="getValidationClasses(userFrom, 'password')"
+                    />
+
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      (click)="tooglePasswordVisibility()"
+                    >
+                      <i
+                        [className]="
+                          passwordVisible() ? 'bi bi-eye-slash' : 'bi bi-eye'
+                        "
+                      >
+                      </i>
+                    </button>
+                  </div>
 
                   @if (isValidField(userFrom, 'password')) {
                   <span class="form-text text-danger">

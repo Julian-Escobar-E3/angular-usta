@@ -15,7 +15,7 @@ export const publicRoutes: Routes = [
     loadComponent: () => import('./events-list/events-list.component'),
   },
   {
-    path: 'events-details/:id',
+    path: 'event-details/:id',
     loadComponent: () => import('./events-details/events-details.component'),
   },
 ];

@@ -2,6 +2,7 @@
   <app-title
     title="reportes"
     section="graficas"
+    icon="bi bi-clipboard-data"
     [subSection]="'detalles de postgrado'"
   ></app-title>
 
@@ -9,8 +10,8 @@
     @if (graphicsService.graphicsLoading()) { <app-spinner /> }@else {
 
     <bar-chart
-      [keysArray]="keysArray()"
-      [valuesArray]="valuesArray()"
+      [keysArray]="keysArray()!"
+      [valuesArray]="valuesArray()!"
       [title]="'detalles de postgrado de egresados'"
       [titleY]="'cantidad de egresados' | titlecase"
     />

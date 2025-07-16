@@ -21,11 +21,15 @@ export default class PostgraduateDetailComponent {
 
   readonly keysArray = computed(() => {
     const data = this.graphicsService.graphicsData();
-    return data ? Object.keys(data.result) : [];
+    if (!data?.result) return [];
+    return Object.keys(data.result).filter((key) => key != null && key !== '');
   });
 
   readonly valuesArray = computed(() => {
     const data = this.graphicsService.graphicsData();
-    return data ? Object.values(data.result) : [];
+    if (!data?.result) return [];
+    return Object.values(data.result).filter(
+      (val) => val !== null && val !== undefined && !isNaN(val as any)
+    );
   });
 }

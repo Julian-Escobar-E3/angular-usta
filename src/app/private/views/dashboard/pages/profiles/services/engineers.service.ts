@@ -116,5 +116,19 @@ export class EngineersService {
       })
     );
   }
+
+  updatePassword(password: string, id: string): Observable<IMessageResponse> {
+    const url = `${this._baseUrl}/auth/update-password/${id}`;
+    return this._http.patch<IMessageResponse>(url, { password }).pipe(
+      tap((res) => {
+        this.#engineersMessage.set({ loading: false, response: res });
+      }),
+      catchError((err) => {
+        const msg = err.error;
+        this.#engineersMessage.set({ loading: false, response: msg });
+        return throwError(() => err.error);
+      })
+    );
+  }
   constructor() {}
 }

@@ -6,8 +6,11 @@ import { FooterComponent } from '../../../shared/views/footer/footer.component';
 @Component({
   standalone: true,
   templateUrl: './main.component.html',
-  styles: `section{
-     margin-top: 70px;
+  styles: `
+  div{
+      display:grid;
+     min-height:100dvh;
+    grid-template-rows: auto 1fr auto
   }`,
   imports: [RouterOutlet, NavbarComponent, FooterComponent],
 })

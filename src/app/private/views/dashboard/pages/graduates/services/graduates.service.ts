@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, delay, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '@evn/environment';
@@ -17,11 +17,6 @@ export class GraduatesService {
   private _http = inject(HttpClient);
   private _baseUrl = environment.baseUrl;
 
-  getData(page: number, limit: number, searchTerm: string): Observable<any> {
-    const url = `${this._baseUrl}/graduates?page=${page}&limit=${limit}&param=${searchTerm}`;
-    return this._http.get<any>(url);
-  }
-
   //-- SEÑALES QUE MANEJAN LOS DATOS
   #graduatesListState = signal<State<IGraduatesResponse>>({
     loading: true,
@@ -30,6 +25,26 @@ export class GraduatesService {
 
   graduatesList = computed(() => this.#graduatesListState().response);
   graduatesListIsLoading = computed(() => this.#graduatesListState().loading);
+
+  getData(
+    page: number,
+    limit: number,
+    param: string
+  ): Observable<IGraduatesResponse> {
+    const params = { page, limit, param };
+    const url = `${this._baseUrl}/graduates`;
+    this.#graduatesListState.update((state) => ({ ...state, loading: true }));
+    return this._http.get<IGraduatesResponse>(url, { params }).pipe(
+      delay(500),
+      tap((res) => {
+        this.#graduatesListState.set({ loading: false, response: res });
+      }),
+      catchError((err) => {
+        this.#graduatesListState.set({ loading: false, response: null });
+        return throwError(() => err);
+      })
+    );
+  }
 
   //? Esta señal individual posiblemente ya no vaya
   #oneGraduateState = signal<State<IGraduateResponse>>({
@@ -63,32 +78,10 @@ export class GraduatesService {
       })
     );
   }
-  //* Graduates List ---
-  getGraduates(offset: number = 0, limit: number = 6) {
-    const params = new HttpParams()
-      .set('offset', offset.toString())
-      .set('limit', limit.toString());
 
-    const url = `${this._baseUrl}/graduates`;
-    return this._http
-      .get<IGraduatesResponse>(url, { params })
-      .pipe(
-        catchError((err) => {
-          const msg = err.error;
-          this.#graduateMessage.set({ loading: false, response: msg });
-          return throwError(() => err.error);
-        })
-      )
-      .subscribe((res) => {
-        this.#graduatesListState.set({
-          loading: false,
-          response: res,
-        });
-      });
-  }
   //* List Graduate By ID ---
   getGraduateByID(id: string) {
-    const url = `${this._baseUrl}/graduates/${id}`;
+    const url = `${this._baseUrl}/graduates/details/${id}`;
     this.#oneGraduateState.update((state) => ({ ...state, loading: true }));
     return this._http
       .get<IGraduateResponse>(url)
@@ -105,8 +98,6 @@ export class GraduatesService {
     const url = `${this._baseUrl}/graduates/${id}`;
     return this._http.patch<IMessageResponse>(url, formGraduate).pipe(
       tap((res) => {
-        console.log('Error 1', res);
-
         this.#graduateMessage.set({ loading: false, response: res });
       }),
       catchError((err) => {
@@ -145,5 +136,45 @@ export class GraduatesService {
       })
     );
   }
-  constructor() {}
+  // 📄 ✅ CSV METHODS A PARTIR DE AQUÍ ---------------------
+
+  uploadCSV(file: File): Observable<IMessageResponse> {
+    const url = `${this._baseUrl}/graduates/upload-csv`;
+    const formData = new FormData();
+    formData.append('file', file);
+    return this._http
+      .post<IMessageResponse>(url, formData)
+      .pipe(catchError((err) => throwError(() => err.error)));
+  }
+
+  validateCSV(file: File): Observable<IMessageResponse> {
+    const url = `${this._baseUrl}/graduates/validate-csv`;
+    const formData = new FormData();
+    formData.append('file', file);
+    return this._http
+      .post<IMessageResponse>(url, formData)
+      .pipe(catchError((err) => throwError(() => err.error)));
+  }
+
+  downloadTemplate(): Observable<Blob> {
+    const url = `${this._baseUrl}/graduates/template`;
+    return this._http
+      .get(url, { responseType: 'blob' })
+      .pipe(catchError((err) => throwError(() => err.error)));
+  }
+
+  exportCSV(): Observable<Blob> {
+    const url = `${this._baseUrl}/graduates/export-data`;
+    return this._http.get(url, { responseType: 'blob' });
+  }
+
+  // Puedes dejar esto público si lo usas desde el componente
+  downloadFile(blob: Blob, filename: string) {
+    const a = document.createElement('a');
+    const objectUrl = URL.createObjectURL(blob);
+    a.href = objectUrl;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(objectUrl);
+  }
 }

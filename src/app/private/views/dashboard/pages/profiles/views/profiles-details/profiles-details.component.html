@@ -165,13 +165,28 @@
 
                 <div class="col-12">
                   <label class="form-label fw-bold">Contraseña</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    formControlName="password"
-                    [class]="getValidationClasses(userForm, 'password')"
-                  />
+                  <div class="input-group">
+                    <input
+                      [type]="passwordVisible() ? 'text' : 'password'"
+                      class="form-control"
+                      id="password"
+                      formControlName="password"
+                      [class]="getValidationClasses(userForm, 'password')"
+                    />
+
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      (click)="tooglePasswordVisibility()"
+                    >
+                      <i
+                        [className]="
+                          passwordVisible() ? 'bi bi-eye-slash' : 'bi bi-eye'
+                        "
+                      >
+                      </i>
+                    </button>
+                  </div>
 
                   @if (isValidField(userForm, 'password')) {
                   <span class="form-text text-danger">

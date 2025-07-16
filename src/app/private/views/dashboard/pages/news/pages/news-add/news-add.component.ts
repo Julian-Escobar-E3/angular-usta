@@ -66,7 +66,7 @@ export default class NewsAddComponent {
     const formData = createFormData(this.myForm);
 
     if (this.myForm.controls['file'].value !== null) {
-      formData.append('filew', this.myForm.get('fileSource')?.value);
+      formData.append('file', this.myForm.get('fileSource')?.value);
     }
 
     await firstValueFrom(this._newsService.postNews(formData));

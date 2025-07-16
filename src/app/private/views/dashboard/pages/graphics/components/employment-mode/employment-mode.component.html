@@ -2,6 +2,7 @@
   <app-title
     title="reportes"
     section="graficas"
+    icon="bi bi-briefcase"
     [subSection]="'modalidad de trabajo'"
   ></app-title>
 
@@ -9,8 +10,8 @@
     @if (graphicsService.graphicsLoading()) { <app-spinner /> }@else {
 
     <bar-chart
-      [keysArray]="keysArray()"
-      [valuesArray]="valuesArray()"
+      [keysArray]="keysArray()!"
+      [valuesArray]="valuesArray()!"
       [title]="'modalidad de trabajo de egresados'"
     />
     }

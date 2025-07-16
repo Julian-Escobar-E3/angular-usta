@@ -1,5 +1,66 @@
-<section class="mysection-public">
+<section class="mysection-public py-5">
+  @if (eventsService.oneEventLoading()) {
+  <app-spinner />
+  } @else {
   <div class="container">
-    <p>events-details works!</p>
+    <a [routerLink]="['/']" class="btn btn-outline-danger mb-4">
+      <i class="bi bi-arrow-left"></i>
+      Volver al inicio
+    </a>
+
+    <div class="event-detail shadow rounded-4 bg-white overflow-hidden">
+      <!-- Imagen destacada -->
+      <div class="event-image-container">
+        <img
+          [src]="eventsService.oneEvent()?.data?.images?.xl"
+          [alt]="eventsService.oneEvent()?.data?.title"
+          class="img-fluid w-100 h-100 event-img"
+        />
+      </div>
+
+      <div class="p-4">
+        <!-- Encabezado -->
+        <h1 class="display-5 fw-bold mb-3">
+          {{ eventsService.oneEvent()?.data?.title }}
+        </h1>
+
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+          <span class="text-muted">
+            <i class="bi bi-calendar-event"></i>
+            {{ eventsService.oneEvent()?.data?.eventDate | date }}
+          </span>
+          <span class="text-muted">
+            <i class="bi bi-geo-alt"></i>
+            {{ eventsService.oneEvent()?.data?.location }}
+          </span>
+          <span
+            class="badge rounded-pill px-3 py-2"
+            [ngClass]="{
+              'bg-success': eventsService.oneEvent()?.data?.state === 'activo',
+              'bg-warning text-dark':
+                eventsService.oneEvent()?.data?.state === 'en curso',
+              'bg-secondary':
+                eventsService.oneEvent()?.data?.state === 'finalizado'
+            }"
+          >
+            {{ eventsService.oneEvent()?.data?.state }}
+          </span>
+        </div>
+
+        <!-- Descripciones -->
+        <div class="mb-4">
+          <p class="lead" *ngIf="eventsService.oneEvent()?.data?.description_1">
+            {{ eventsService.oneEvent()?.data?.description_1 }}
+          </p>
+          <p class="lead">
+            {{ eventsService.oneEvent()?.data?.description_2 }}
+          </p>
+          <p class="lead">
+            {{ eventsService.oneEvent()?.data?.description_3 }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
+  }
 </section>

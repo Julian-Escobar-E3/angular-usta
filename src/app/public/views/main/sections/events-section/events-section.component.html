@@ -6,37 +6,49 @@
 
   <div class="album py-5">
     <div class="container-fluid">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
+      <div class="row row-cols-1 row-cols-md-2 g-4">
         @for (event of eventsService.eventsList()?.data; track $index) {
-        <div class="col-md-6">
-          <div
-            class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
-          >
-            <div class="col p-4 d-flex flex-column position-static">
-              <strong class="d-inline-block mb-2 text-primary-emphasis">{{
-                event.event_date
-              }}</strong>
-              <h3 class="mb-0">{{ event.title }}</h3>
-              <div
-                class="mb-1 mt-2 badge rounded-pill bg-success"
-                style="width: 70px"
-              >
-                {{ event.state }}
-              </div>
-              <p class="card-text mb-auto">
-                {{ event.description_1 | truncate }}
-              </p>
-              <a href="#" class="mt-2 text-start">
-                <strong>Ver </strong> <i class="bi-arrow-right"></i>
-              </a>
-            </div>
-            <div class="col-auto d-none d-lg-block">
+        <div class="col">
+          <div class="card event-card d-flex flex-row flex-md-row h-100">
+            <!-- Imagen -->
+            <div class="col-5 d-none d-md-block">
               <img
-                [srcset]="[event.images?.l]"
-                [alt]="[event.title]"
-                class="img-fluid bd-placeholder-img"
-                style="width: 250px; height: 300px"
+                [src]="event.images?.l"
+                [alt]="event.title"
+                class="img-fluid h-100 w-100"
               />
+            </div>
+
+            <!-- Contenido -->
+            <div class="col p-4 d-flex flex-column justify-content-between">
+              <div>
+                <strong class="d-inline-block mb-2 text-primary-emphasis">
+                  {{ event.eventDate }}
+                </strong>
+                <h3 class="mb-2">{{ event.title }}</h3>
+                <span
+                  class="badge event-status mb-2"
+                  [ngClass]="{
+                    'bg-success': event.state === 'activo',
+                    'bg-warning text-dark': event.state === 'en curso',
+                    'bg-secondary': event.state === 'finalizado'
+                  }"
+                >
+                  {{ event.state | titlecase }}
+                </span>
+                <p class="card-text mb-2">
+                  {{ event.description_1 | truncate }}
+                </p>
+              </div>
+
+              <div class="text-end">
+                <a
+                  [routerLink]="['/event-details', event.id_event]"
+                  class="mt-3 text-decoration-none text-primary fw-bold d-inline-flex align-items-center gap-1"
+                >
+                  Ver <i class="bi bi-arrow-right-short fs-5"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -45,4 +57,3 @@
     </div>
   </div>
 </section>
-<!-- End Culture Category Section -->

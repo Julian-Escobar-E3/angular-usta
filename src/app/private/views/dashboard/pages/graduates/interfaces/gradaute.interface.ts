@@ -36,6 +36,6 @@ export interface PostgraduateDegrees {
 }
 
 interface IUser {
-  id_user: string;
+  id: string;
   username: string;
 }

@@ -9,7 +9,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       switch (error.status) {
         case 400:
-          console.log('Erorr como tal', error.message);
+          console.log('Erorr como tal', error);
           toast.error('Bad Request algo malo pasa');
           break;
         case 404:
