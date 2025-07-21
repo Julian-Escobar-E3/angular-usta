@@ -8,9 +8,8 @@ import { DeleteDialogService } from '@private/services/deleteDialog.service';
 import { tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
-import { ToastrService } from 'ngx-toastr';
-import { IMessageResponse } from '@shared/interfaces/message-response.interface';
 import Swal from 'sweetalert2';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-graduates-list',
@@ -38,42 +37,41 @@ export default class GraduatesListComponent {
 
   public graduatesService = inject(GraduatesService);
   private _deleteDialogService = inject(DeleteDialogService);
-  private _toastService = inject(ToastrService);
 
   searchTerm: string = '';
+
+  // CSV Upload
+  selectedFile: File | null = null;
+  uploading = signal(false);
+  uploadError = '';
 
   constructor() {
     effect(
       () => {
         const page = this.currentPage();
         const limit = this.limit();
-
-        // Solo cargar cuando no hay búsqueda activa
         if (!this.isSearchActive()) {
-          this.graduatesService
-            .getData(page, limit, '')
-            .subscribe((response) => {
-              this.graduatesList.set(response.data);
-              this.totalPages.set(response.totalPages);
-              this.updateVisiblePages();
-            });
+          this.graduatesService.getData(page, limit, '').subscribe((res) => {
+            this.graduatesList.set(res.data);
+            this.totalPages.set(res.totalPages);
+            this.updateVisiblePages();
+          });
         }
       },
       { allowSignalWrites: true }
     );
   }
 
-  // ✅ Optimizado para que el Subject maneje la búsqueda
+  // Buscar
   onSearch() {
     if (!this.searchTerm.trim()) return;
-
     this.isSearchActive.set(true);
     this.currentPage.set(1);
     this.graduatesService
-      .getData(this.currentPage(), this.limit(), this.searchTerm)
-      .subscribe((response) => {
-        this.graduatesList.set(response.data);
-        this.totalPages.set(response.totalPages);
+      .getData(1, this.limit(), this.searchTerm)
+      .subscribe((res) => {
+        this.graduatesList.set(res.data);
+        this.totalPages.set(res.totalPages);
         this.updateVisiblePages();
       });
   }
@@ -82,157 +80,65 @@ export default class GraduatesListComponent {
     this.searchTerm = '';
     this.isSearchActive.set(false);
     this.currentPage.set(1);
-    this.graduatesService
-      .getData(this.currentPage(), this.limit(), '')
-      .subscribe((response) => {
-        this.graduatesList.set(response.data);
-        this.totalPages.set(response.totalPages);
-        this.updateVisiblePages();
-      });
+    this.graduatesService.getData(1, this.limit(), '').subscribe((res) => {
+      this.graduatesList.set(res.data);
+      this.totalPages.set(res.totalPages);
+      this.updateVisiblePages();
+    });
+  }
+
+  // CRUD
+  onDelete(id: string): void {
+    this._deleteDialogService.confirmDelete(
+      this.graduatesService
+        .deleteGraduate(id)
+        .pipe(tap(() => this.reloadList())),
+      ''
+    );
+  }
+
+  // Navegación
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) this.currentPage.set(page);
+  }
+  nextPage() {
+    if (this.currentPage() < this.totalPages())
+      this.currentPage.set(this.currentPage() + 1);
+  }
+  previousPage() {
+    if (this.currentPage() > 1) this.currentPage.set(this.currentPage() - 1);
   }
 
   updateVisiblePages() {
-    const currentPage = this.currentPage();
-    const totalPages = this.totalPages();
+    const current = this.currentPage();
+    const total = this.totalPages();
     const range = 2;
-
-    let start = Math.max(1, currentPage - range);
-    let end = Math.min(totalPages, currentPage + range);
-
+    let start = Math.max(1, current - range);
+    let end = Math.min(total, current + range);
     if (end - start < 4) {
-      if (currentPage < totalPages / 2) {
-        end = Math.min(totalPages, start + 4);
-      } else {
-        start = Math.max(1, end - 4);
-      }
+      if (current < total / 2) end = Math.min(total, start + 4);
+      else start = Math.max(1, end - 4);
     }
-
     this.visiblePages.set(
       Array.from({ length: end - start + 1 }, (_, i) => start + i)
     );
   }
 
-  onDelete(id: string): void {
-    this._deleteDialogService.confirmDelete(
-      this.graduatesService.deleteGraduate(id).pipe(
-        tap(() => {
-          this.loadInitialNews();
-        })
-      ),
-      ''
-    );
-  }
-
-  goToPage(page: number) {
-    if (page >= 1 && page <= this.totalPages()) {
-      this.currentPage.set(page);
-    }
-  }
-
-  nextPage() {
-    if (this.currentPage() < this.totalPages()) {
-      this.currentPage.set(this.currentPage() + 1);
-    }
-  }
-
-  previousPage() {
-    if (this.currentPage() > 1) {
-      this.currentPage.set(this.currentPage() - 1);
-    }
-  }
-
-  loadInitialNews() {
+  reloadList() {
     this.graduatesService
       .getData(this.currentPage(), this.limit(), '')
-      .subscribe((response) => {
-        this.graduatesList.set(response.data);
-        this.totalPages.set(response.totalPages);
+      .subscribe((res) => {
+        this.graduatesList.set(res.data);
+        this.totalPages.set(res.totalPages);
         this.updateVisiblePages();
       });
   }
 
-  //*
-
-  // Manejo de archivos
-  selectedFile: File | null = null;
-  validated: boolean = false;
-
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-      this.validated = false;
-      Swal.fire('Archivo cargado', this.selectedFile.name, 'info');
-    }
-  }
-
+  // CSV
   onDownloadTemplate() {
-    this.graduatesService.downloadTemplate().subscribe(() => {
+    this.graduatesService.downloadTemplate().subscribe((blob) => {
+      this.graduatesService.downloadFile(blob, 'plantilla_egresados.csv');
       Swal.fire('Plantilla descargada', '', 'success');
-    });
-  }
-
-  onValidateCSV() {
-    if (!this.selectedFile) {
-      Swal.fire('Error', 'No hay archivo seleccionado para validar', 'error');
-      return;
-    }
-
-    Swal.fire({
-      title: 'Validando...',
-      text: 'Estamos validando el archivo.',
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
-    });
-
-    this.graduatesService.validateCSV(this.selectedFile).subscribe({
-      next: () => {
-        this.validated = true;
-        Swal.fire('Validación exitosa', 'El archivo es válido.', 'success');
-      },
-      error: (err) => {
-        Swal.fire('Error de validación', err.message || '', 'error');
-      },
-    });
-  }
-
-  onUploadCSV() {
-    if (!this.selectedFile) {
-      Swal.fire(
-        'Archivo no seleccionado',
-        'Selecciona un archivo CSV.',
-        'warning'
-      );
-      return;
-    }
-
-    if (!this.validated) {
-      Swal.fire(
-        'Validación requerida',
-        'Debes validar el archivo antes de cargarlo.',
-        'info'
-      );
-      return;
-    }
-
-    Swal.fire({
-      title: 'Cargando...',
-      text: 'Procesando el archivo...',
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
-    });
-
-    this.graduatesService.uploadCSV(this.selectedFile).subscribe({
-      next: (res) => {
-        Swal.fire('Éxito', res.message.ES, 'success').then(() => {
-          this.reloadList(); // recarga los datos
-          this.selectedFile = null;
-          this.validated = false;
-        });
-      },
-      error: (err) => {
-        Swal.fire('Error al cargar', err.message || '', 'error');
-      },
     });
   }
 
@@ -243,15 +149,48 @@ export default class GraduatesListComponent {
     });
   }
 
-  reloadList() {
-    this.isSearchActive.set(false);
-    this.searchTerm = '';
-    this.graduatesService
-      .getData(this.currentPage(), this.limit(), '')
-      .subscribe((res) => {
-        this.graduatesList.set(res.data);
-        this.totalPages.set(res.totalPages);
-        this.updateVisiblePages();
-      });
+  openUploadModal() {
+    const modal = new bootstrap.Modal(document.getElementById('uploadModal')!);
+    modal.show();
+    this.selectedFile = null;
+    this.uploadError = '';
+  }
+
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file || file.type !== 'text/csv') {
+      this.uploadError = 'Solo se permiten archivos CSV';
+      return;
+    }
+    this.selectedFile = file;
+    this.uploadError = '';
+  }
+
+  validateAndUpload() {
+    if (!this.selectedFile) return;
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    this.uploading.set(true);
+
+    this.graduatesService.validateCSV(formData).subscribe({
+      next: () => {
+        this.graduatesService.uploadCSV(formData).subscribe({
+          next: () => {
+            this.uploading.set(false);
+            document.getElementById('uploadModal')?.click();
+            this.reloadList();
+            Swal.fire('Importación exitosa', '', 'success');
+          },
+          error: (err) => {
+            this.uploading.set(false);
+            this.uploadError = err?.error?.message || 'Error al importar CSV';
+          },
+        });
+      },
+      error: (err) => {
+        this.uploading.set(false);
+        this.uploadError = err?.error?.message || 'CSV inválido';
+      },
+    });
   }
 }

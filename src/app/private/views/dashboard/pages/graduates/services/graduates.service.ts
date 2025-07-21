@@ -138,22 +138,14 @@ export class GraduatesService {
   }
   // 📄 ✅ CSV METHODS A PARTIR DE AQUÍ ---------------------
 
-  uploadCSV(file: File): Observable<IMessageResponse> {
-    const url = `${this._baseUrl}/graduates/upload-csv`;
-    const formData = new FormData();
-    formData.append('file', file);
-    return this._http
-      .post<IMessageResponse>(url, formData)
-      .pipe(catchError((err) => throwError(() => err.error)));
+  validateCSV(file: FormData): Observable<any> {
+    const url = `${this._baseUrl}/graduates/validate-csv`;
+    return this._http.post(url, file);
   }
 
-  validateCSV(file: File): Observable<IMessageResponse> {
-    const url = `${this._baseUrl}/graduates/validate-csv`;
-    const formData = new FormData();
-    formData.append('file', file);
-    return this._http
-      .post<IMessageResponse>(url, formData)
-      .pipe(catchError((err) => throwError(() => err.error)));
+  uploadCSV(file: FormData): Observable<any> {
+    const url = `${this._baseUrl}/graduates/upload-csv`;
+    return this._http.post(url, file);
   }
 
   downloadTemplate(): Observable<Blob> {
